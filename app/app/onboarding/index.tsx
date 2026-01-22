@@ -1,10 +1,48 @@
-import { View, Text, Pressable } from 'react-native';
+import { View, Text, Pressable, Alert } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import * as AppleAuthentication from 'expo-apple-authentication';
+import * as Google from 'expo-auth-session/providers/google';
+import * as WebBrowser from 'expo-web-browser';
+import { useEffect } from 'react';
 import { supabase } from '../../lib/supabase';
 import { router } from 'expo-router';
 
+// Required for web browser auth to complete
+WebBrowser.maybeCompleteAuthSession();
+
+const GOOGLE_WEB_CLIENT_ID = process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID;
+
 export default function AuthScreen() {
+  const [request, response, promptAsync] = Google.useAuthRequest({
+    webClientId: GOOGLE_WEB_CLIENT_ID,
+    iosClientId: GOOGLE_WEB_CLIENT_ID, // Use web client ID for Expo Go
+  });
+
+  useEffect(() => {
+    if (response?.type === 'success') {
+      const { id_token } = response.params;
+      handleGoogleToken(id_token);
+    }
+  }, [response]);
+
+  const handleGoogleToken = async (idToken: string) => {
+    try {
+      const { error } = await supabase.auth.signInWithIdToken({
+        provider: 'google',
+        token: idToken,
+      });
+
+      if (error) {
+        Alert.alert('Sign-In Error', error.message);
+      } else {
+        router.replace('/onboarding/questions');
+      }
+    } catch (e: any) {
+      console.error('Google Sign-In Error:', e);
+      Alert.alert('Sign-In Error', 'Something went wrong');
+    }
+  };
+
   const handleAppleSignIn = async () => {
     try {
       const credential = await AppleAuthentication.signInAsync({
@@ -20,21 +58,26 @@ export default function AuthScreen() {
           token: credential.identityToken,
         });
 
-        if (!error) {
+        if (error) {
+          Alert.alert('Sign-In Error', error.message);
+        } else {
           router.replace('/onboarding/questions');
         }
       }
     } catch (e: any) {
       if (e.code !== 'ERR_REQUEST_CANCELED') {
         console.error('Apple Sign-In Error:', e);
+        Alert.alert('Sign-In Error', 'Something went wrong');
       }
     }
   };
 
   const handleGoogleSignIn = async () => {
-    // TODO: Implement Google Sign-In
-    // Requires additional native configuration
-    console.log('Google Sign-In not yet configured');
+    if (!GOOGLE_WEB_CLIENT_ID) {
+      Alert.alert('Config Error', 'Google Client ID not configured');
+      return;
+    }
+    promptAsync();
   };
 
   return (
@@ -62,6 +105,7 @@ export default function AuthScreen() {
 
         <Pressable
           onPress={handleGoogleSignIn}
+          disabled={!request}
           className="bg-white rounded-xl py-4 flex-row justify-center items-center border border-gray-200"
         >
           <Text className="text-gray-800 font-medium text-base">
