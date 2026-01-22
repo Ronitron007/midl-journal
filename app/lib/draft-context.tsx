@@ -1,8 +1,11 @@
 import React, { createContext, useContext, useReducer, ReactNode } from 'react';
 import { Message } from './openai';
 
-// Types
-type ReflectDraft = {
+// ============================================================================
+// TYPES - These are the public API. Keep stable when switching implementations.
+// ============================================================================
+
+export type ReflectDraft = {
   content: string;
   showDetails: boolean;
   duration: number | null;
@@ -11,11 +14,27 @@ type ReflectDraft = {
   skillPracticed: string;
 };
 
-type AskDraft = {
+export type AskDraft = {
   messages: Message[];
   input: string;
   trackProgress: boolean;
 };
+
+// Public hook return type - consumers only depend on this interface
+export type DraftStore = {
+  // Reflect
+  reflectDraft: ReflectDraft | null;
+  setReflectDraft: (draft: ReflectDraft) => void;
+  clearReflectDraft: () => void;
+  // Ask
+  askDraft: AskDraft | null;
+  setAskDraft: (draft: AskDraft) => void;
+  clearAskDraft: () => void;
+};
+
+// ============================================================================
+// IMPLEMENTATION - Can be swapped for Zustand/Jotai/Redux without changing API
+// ============================================================================
 
 type DraftState = {
   reflect: ReflectDraft | null;
@@ -28,13 +47,11 @@ type DraftAction =
   | { type: 'CLEAR_REFLECT_DRAFT' }
   | { type: 'CLEAR_ASK_DRAFT' };
 
-// Initial state
 const initialState: DraftState = {
   reflect: null,
   ask: null,
 };
 
-// Reducer
 function draftReducer(state: DraftState, action: DraftAction): DraftState {
   switch (action.type) {
     case 'SET_REFLECT_DRAFT':
@@ -50,48 +67,38 @@ function draftReducer(state: DraftState, action: DraftAction): DraftState {
   }
 }
 
-// Context
-type DraftContextType = {
-  state: DraftState;
-  setReflectDraft: (draft: ReflectDraft) => void;
-  setAskDraft: (draft: AskDraft) => void;
-  clearReflectDraft: () => void;
-  clearAskDraft: () => void;
-};
+const DraftContext = createContext<DraftStore | null>(null);
 
-const DraftContext = createContext<DraftContextType | null>(null);
+// ============================================================================
+// PROVIDER - Wrap once at app root. To migrate: swap implementation, keep API.
+// ============================================================================
 
-// Provider
 export function DraftProvider({ children }: { children: ReactNode }) {
   const [state, dispatch] = useReducer(draftReducer, initialState);
 
-  const setReflectDraft = (draft: ReflectDraft) => {
-    dispatch({ type: 'SET_REFLECT_DRAFT', payload: draft });
-  };
-
-  const setAskDraft = (draft: AskDraft) => {
-    dispatch({ type: 'SET_ASK_DRAFT', payload: draft });
-  };
-
-  const clearReflectDraft = () => {
-    dispatch({ type: 'CLEAR_REFLECT_DRAFT' });
-  };
-
-  const clearAskDraft = () => {
-    dispatch({ type: 'CLEAR_ASK_DRAFT' });
+  const store: DraftStore = {
+    // Reflect
+    reflectDraft: state.reflect,
+    setReflectDraft: (draft) => dispatch({ type: 'SET_REFLECT_DRAFT', payload: draft }),
+    clearReflectDraft: () => dispatch({ type: 'CLEAR_REFLECT_DRAFT' }),
+    // Ask
+    askDraft: state.ask,
+    setAskDraft: (draft) => dispatch({ type: 'SET_ASK_DRAFT', payload: draft }),
+    clearAskDraft: () => dispatch({ type: 'CLEAR_ASK_DRAFT' }),
   };
 
   return (
-    <DraftContext.Provider
-      value={{ state, setReflectDraft, setAskDraft, clearReflectDraft, clearAskDraft }}
-    >
+    <DraftContext.Provider value={store}>
       {children}
     </DraftContext.Provider>
   );
 }
 
-// Hook
-export function useDraft() {
+// ============================================================================
+// HOOK - The only thing consumers import. Stable API regardless of backend.
+// ============================================================================
+
+export function useDraft(): DraftStore {
   const context = useContext(DraftContext);
   if (!context) {
     throw new Error('useDraft must be used within DraftProvider');
@@ -99,5 +106,23 @@ export function useDraft() {
   return context;
 }
 
-// Export types
-export type { ReflectDraft, AskDraft };
+// ============================================================================
+// MIGRATION GUIDE
+// ============================================================================
+// To switch to Zustand:
+// 1. Create a Zustand store with same shape as DraftStore
+// 2. Update useDraft() to return the Zustand store
+// 3. Make DraftProvider a no-op wrapper or remove it
+// 4. No changes needed in consuming components (reflect.tsx, ask.tsx)
+//
+// Example Zustand migration:
+// const useDraftStore = create<DraftStore>((set) => ({
+//   reflectDraft: null,
+//   setReflectDraft: (draft) => set({ reflectDraft: draft }),
+//   clearReflectDraft: () => set({ reflectDraft: null }),
+//   askDraft: null,
+//   setAskDraft: (draft) => set({ askDraft: draft }),
+//   clearAskDraft: () => set({ askDraft: null }),
+// }));
+// export const useDraft = useDraftStore;
+// export const DraftProvider = ({ children }) => children; // no-op
