@@ -1,8 +1,15 @@
 import { View, Pressable, Text } from 'react-native';
 import { router, usePathname } from 'expo-router';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
+import { useDraft } from '../lib/draft-context';
 
 export default function FloatingButtons() {
   const pathname = usePathname();
+  const insets = useSafeAreaInsets();
+  const { reflectDraft, askDraft } = useDraft();
+
+  const hasReflectDraft = !!reflectDraft?.content;
+  const hasAskDraft = !!(askDraft?.messages?.length || askDraft?.input);
 
   // Hide on modal screens
   if (pathname !== '/tracker' && pathname !== '/(main)/tracker') {
@@ -10,19 +17,84 @@ export default function FloatingButtons() {
   }
 
   return (
-    <View className="absolute bottom-8 left-0 right-0 flex-row justify-center gap-4 px-6">
-      <Pressable
-        onPress={() => router.push('/(main)/reflect')}
-        className="flex-1 bg-white rounded-2xl py-4 shadow-lg border border-gray-100"
-      >
-        <Text className="text-center text-gray-800 font-medium">Reflect</Text>
-      </Pressable>
-      <Pressable
-        onPress={() => router.push('/(main)/ask')}
-        className="flex-1 bg-muted-blue rounded-2xl py-4 shadow-lg"
-      >
-        <Text className="text-center text-white font-medium">Ask</Text>
-      </Pressable>
+    <View
+      style={{
+        position: 'absolute',
+        bottom: insets.bottom + 16,
+        left: 0,
+        right: 0,
+        flexDirection: 'row',
+        justifyContent: 'center',
+        gap: 16,
+        paddingHorizontal: 24,
+      }}
+    >
+      <View style={{ flex: 1, position: 'relative' }}>
+        <Pressable
+          onPress={() => router.push('/(main)/reflect')}
+          style={{
+            backgroundColor: '#ffffff',
+            borderRadius: 16,
+            paddingVertical: 16,
+            borderWidth: 1,
+            borderColor: '#f3f4f6',
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.1,
+            shadowRadius: 8,
+            elevation: 4,
+          }}
+        >
+          <Text style={{ textAlign: 'center', color: '#1f2937', fontWeight: '500' }}>
+            Reflect
+          </Text>
+        </Pressable>
+        {hasReflectDraft && (
+          <View style={{
+            position: 'absolute',
+            top: -4,
+            right: -4,
+            width: 12,
+            height: 12,
+            borderRadius: 6,
+            backgroundColor: '#ef4444',
+            borderWidth: 2,
+            borderColor: '#ffffff',
+          }} />
+        )}
+      </View>
+      <View style={{ flex: 1, position: 'relative' }}>
+        <Pressable
+          onPress={() => router.push('/(main)/ask')}
+          style={{
+            backgroundColor: '#5c9eb7',
+            borderRadius: 16,
+            paddingVertical: 16,
+            shadowColor: '#000',
+            shadowOffset: { width: 0, height: 2 },
+            shadowOpacity: 0.1,
+            shadowRadius: 8,
+            elevation: 4,
+          }}
+        >
+          <Text style={{ textAlign: 'center', color: '#ffffff', fontWeight: '500' }}>
+            Ask
+          </Text>
+        </Pressable>
+        {hasAskDraft && (
+          <View style={{
+            position: 'absolute',
+            top: -4,
+            right: -4,
+            width: 12,
+            height: 12,
+            borderRadius: 6,
+            backgroundColor: '#ef4444',
+            borderWidth: 2,
+            borderColor: '#ffffff',
+          }} />
+        )}
+      </View>
     </View>
   );
 }
