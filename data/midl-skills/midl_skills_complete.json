@@ -1,0 +1,604 @@
+{
+  "metadata": {
+    "course": "MIDL Insight Meditation System",
+    "source": "https://midlmeditation.com",
+    "scraped_date": "2026-01-19",
+    "author": "Stephen Procter",
+    "total_cultivations": 6,
+    "total_skills": 17,
+    "note": "All skills (00-16) have full detailed content"
+  },
+  "cultivations": [
+    {
+      "id": "01",
+      "name": "Mindfulness of Body",
+      "full_name": "Cultivation 01: Mindfulness of Body",
+      "suitability": "Everyone",
+      "membership_required": false,
+      "purpose": "To create a foundation of mindfulness of your body for calm and insight",
+      "learning_outcomes": [
+        "How to lower stress & anxiety",
+        "How to relax your body & mind",
+        "How to soften and let go of distraction",
+        "How to develop mindfulness of your body"
+      ],
+      "skills": [
+        {
+          "id": "00",
+          "name": "Diaphragmatic Breathing",
+          "url": "https://midlmeditation.com/meditation-skill-00",
+          "subtitle": "How to transform stress breathing into diaphragmatic breathing.",
+          "duration": "Meditation Length: 20 minutes daily.",
+          "benefits": "This Skill will desensitise your mind's tendency to respond to stress and anxiety in daily life. It will also help you make diaphragmatic breathing a natural part of your practice in preparation for mindfulness of breathing.",
+          "purpose": "Retrain your breathing patterns to settle the experience of stress and anxiety in preparation for deeper states of calm and insight during mindfulness of breathing.",
+          "marker": "Marker 00: Diaphragmatic Breathing",
+          "hindrance": "Hindrance 00: Stress Breathing",
+          "resources": {
+            "youtube": "https://youtu.be/VWqnvSyqG3I",
+            "soundcloud": "https://soundcloud.com/user-677685629/midl-insight-meditation-skill00-20mi"
+          },
+          "instructions_summary": [
+            "Step 1: Learn how to breathe with your diaphragm.",
+            "Step 2: Gently slow down your breathing rate.",
+            "Step 3: Breathe from your abdomen into your chest.",
+            "Step 4: Lie still and allow your breathing to happen naturally."
+          ],
+          "progression_to": "Meditation Skill 01",
+          "has_detailed_content": true,
+          "raw_file": "skill_00_raw.txt"
+        },
+        {
+          "id": "01",
+          "name": "Body Relaxation",
+          "url": "https://midlmeditation.com/meditation-skill-01",
+          "subtitle": "How to transform physical restlessness into body relaxation",
+          "duration": "Initially 20 minutes, gradually increasing to 30 minutes",
+          "benefits": "This Meditation Skill will teach you how to lower your experience of physical restlessness and access the first stage of meditation, feeling comfortable in your body.",
+          "purpose": "To teach your mind to find enjoyment in relaxing your body and to settle stress-based restlessness as preparation for mindfulness of your body.",
+          "marker": "Marker 01: Body Relaxation",
+          "hindrance": "Hindrance 01: Physical Restlessness",
+          "resources": {
+            "youtube": "https://youtu.be/mloHI_s2XUo",
+            "soundcloud": "https://soundcloud.com/user-677685629/midl-insight-meditation-skill-01-transform-physical-restlessness-into-body-relaxation"
+          },
+          "instructions_summary": [
+            "Step 1: Preparation for meditation",
+            "Step 2: Develop mindfulness",
+            "Step 3: Relax your body with slow breaths",
+            "Step 4: Enjoy the relaxation"
+          ],
+          "progression_to": "Meditation Skill 02",
+          "has_detailed_content": true,
+          "raw_file": "skill_01_raw.txt"
+        },
+        {
+          "id": "02",
+          "name": "Mind Relaxation",
+          "url": "https://midlmeditation.com/meditation-skill-02",
+          "subtitle": "How to transform mental restlessness into mind relaxation",
+          "duration": "30 minutes",
+          "benefits": "This Skill will teach you how to relax mental restlessness caused by intrusive thoughts with gentle breaths and help you to fall asleep at night.",
+          "purpose": "Create space around thoughts and mind narratives by learning to relax your mind's interest in the past and future, thereby increasing awareness of your body.",
+          "marker": "Marker 02: Mind Relaxation",
+          "hindrance": "Hindrance 02: Mental Restlessness",
+          "resources": {
+            "youtube": "https://youtu.be/SWwnLj9UbpY",
+            "soundcloud": "https://soundcloud.com/user-677685629/midl-insight-meditation-skill-02-transform-mental-restlessness-into-mind-relaxation"
+          },
+          "instructions_summary": [
+            "Step 1: Meditation Skill 01",
+            "Step 2: Relax your mind with slow out-breaths",
+            "Step 3: Relax your eyelids to relax your mind",
+            "Step 4: Enjoy the relaxation"
+          ],
+          "progression_to": "Meditation Skill 03",
+          "has_detailed_content": true,
+          "raw_file": "skill_02_raw.txt"
+        },
+        {
+          "id": "03",
+          "name": "Mindful Presence",
+          "url": "https://midlmeditation.com/meditation-skill-03",
+          "subtitle": "How to transform sleepiness & dullness into mindful presence",
+          "duration": "30 minutes",
+          "marker": "Marker 03: Mindful Presence",
+          "hindrance": "Hindrance 03: Sleepiness & Dullness",
+          "progression_to": "Meditation Skill 04",
+          "has_detailed_content": true,
+          "benefits": "This Skill will teach you how to stay present in your body throughout the day and become more aware of your mental habits, allowing you to change them gradually by developing mindful nonparticipation with slow, softening breaths.",
+          "purpose": "Develop a natural mindfulness and clear comprehension of your body in preparation for mindfulness of breathing and insight during your daily activities.",
+          "resources": {
+            "youtube": "https://youtu.be/AYXvIVDAqi8",
+            "soundcloud": "https://soundcloud.com/user-677685629/midl-insight-meditation-skill-03-transform-sleepiness-drifting-into-mindful-presence"
+          },
+          "instructions_summary": [
+            "Step 1: Meditation Skills 01-02",
+            "Step 2: Mindful Presence in your Body",
+            "Step 3: Develop Contentment with this Presence",
+            "Step 4: Introduce the GOSS Formula"
+          ],
+          "raw_file": "skill_03_raw.txt"
+        }
+      ],
+      "support_articles": [
+        {
+          "name": "GOSS Formula",
+          "url": "https://midlmeditation.com/goss-how-to-let-go",
+          "description": "How to Let Go of Distraction"
+        }
+      ]
+    },
+    {
+      "id": "02",
+      "name": "Mindfulness of Breathing",
+      "full_name": "Cultivation 02: Mindfulness of Breathing",
+      "suitability": "Intermediate meditator",
+      "membership_required": true,
+      "purpose": "To develop continuity of mindfulness during mindfulness of breathing",
+      "learning_outcomes": [
+        "How to access the spiritual pleasure of letting go",
+        "How to find contentment and enjoyment in simple things",
+        "How to develop a playful curiosity for insight into mental habits",
+        "How to weaken habitual patterns through the GOSS Formula"
+      ],
+      "skills": [
+        {
+          "id": "04",
+          "name": "Content Presence",
+          "url": "https://midlmeditation.com/meditation-skill-04",
+          "marker": "Marker 04: Content Presence",
+          "hindrance": "Hindrance 04: Habitual Forgetting",
+          "has_detailed_content": true,
+          "subtitle": "How to transform habitual forgetting into present contentment & happiness",
+          "duration": "30 minutes",
+          "benefits": "This Skill will teach you how to find enjoyment in contentment and enjoy simple things in life.",
+          "purpose": "Train your mind to recognise the pleasant spiritual feeling available in letting go and to create the conditions for initial meditative joy by developing contentment to shorten the time your mind is lost in habitually forgetting your meditation.",
+          "resources": {
+            "youtube": "https://youtu.be/cwZu6-uKSJE",
+            "soundcloud": "https://soundcloud.com/user-677685629/midl-insight-meditation-skill04/s-tvVUFF6LYdv"
+          },
+          "instructions_summary": [
+            "Step 1: Meditation Skills 01-03",
+            "Step 2: Enjoy Contentment",
+            "Step 3: Smile with Your Eyes",
+            "Step 4: Apply the GOSS Formula"
+          ],
+          "progression_to": "Meditation Skill 05",
+          "raw_file": "skill_04_raw.txt"
+        },
+        {
+          "id": "05",
+          "name": "Natural Breathing",
+          "url": "https://midlmeditation.com/meditation-skill-05",
+          "marker": "Marker 05: Natural Breathing",
+          "hindrance": "Hindrance 05: Habitual Control",
+          "has_detailed_content": true,
+          "subtitle": "How to transform breath control into mindfulness of natural breathing",
+          "duration": "30 minutes",
+          "benefits": "This Meditation Skill will teach you how to be present with different experiences and situations within your life without the need to control them.",
+          "purpose": "Train your mind to let go of breathing by finding the spiritual pleasantness of letting go, available in the natural flow of in- and out-breaths in your body to weaken any tendency of your mind to control your breathing.",
+          "resources": {
+            "youtube": "https://youtu.be/e4aW0kwplH0",
+            "soundcloud": "https://soundcloud.com/user-677685629/midl-insight-meditation-skill-05-transform-habitual-control-into-natural-breathing-1"
+          },
+          "instructions_summary": [
+            "Step 1: Meditation Skills 01-04",
+            "Step 2: Natural Breathing",
+            "Step 3: Enjoy Your Breathing"
+          ],
+          "progression_to": "Meditation Skill 06",
+          "raw_file": "skill_05_raw.txt"
+        },
+        {
+          "id": "06",
+          "name": "Whole of Each Breath",
+          "url": "https://midlmeditation.com/meditation-skill-06",
+          "marker": "Marker 06: Whole of Each Breath",
+          "hindrance": "Hindrance 06: Mind Wandering",
+          "has_detailed_content": true,
+          "subtitle": "How to transform mind wandering into present breath awareness.",
+          "duration": "Meditation Length: 40 minutes. Due to the increased time it takes to settle the mind at this stage of meditation, increase your meditation time by 10 minutes.",
+          "benefits": "This Meditation Skill will teach you how to improve your focus on your present task in daily life, with the added benefit of reducing mind wandering throughout the day as you become more present in your body.",
+          "purpose": "Increase mindfulness and clear comprehension of the whole of each in- and out-breath as it naturally flows in your body, to shorten forgetting and mind wandering.",
+          "resources": {
+            "youtube": "https://youtu.be/_7Ftx56Jnns",
+            "soundcloud": "https://soundcloud.com/user-677685629/midl-meditation-skill-06-transform-mind-wandering-into-clarity-of-the-length-of-each-breath-2?si=8a582dec7bab414bb41279734ba64e4d&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing"
+          },
+          "instructions_summary": [
+            "Step 1: Meditation Skills 01-05.",
+            "Step 2: Whole Length of each Breath.",
+            "Step 3: Continue to Enjoy Your Breathing."
+          ],
+          "progression_to": "Meditation Skill 07",
+          "raw_file": "skill_06_raw.txt"
+        }
+      ],
+      "support_articles": [
+        {
+          "name": "Meditation Markers",
+          "url": "https://midlmeditation.com/meditation-markers"
+        },
+        {
+          "name": "Meditative Hindrances",
+          "url": "https://midlmeditation.com/meditative-hindrances"
+        }
+      ]
+    },
+    {
+      "id": "03",
+      "name": "Calm & Tranquillity",
+      "full_name": "Cultivation 03: Calm & Tranquillity",
+      "suitability": "Skilled meditator",
+      "membership_required": true,
+      "purpose": "To settle your intellectual mind by developing calm & tranquillity",
+      "learning_outcomes": [
+        "How to calm habitual mind wandering",
+        "How to develop calm and tranquillity",
+        "How to develop sustained attention"
+      ],
+      "skills": [
+        {
+          "id": "07",
+          "name": "Breath Sensations",
+          "url": "https://midlmeditation.com/meditation-skill-07",
+          "marker": "Marker 07: Breath Sensations",
+          "hindrance": "Hindrance 07: Gross Dullness",
+          "has_detailed_content": true,
+          "subtitle": "How to transform gross dullness into clear breath sensation.",
+          "duration": "Meditation Length: 45 minutes. Due to the increased time it takes to develop calm increase your meditation time by 5 minutes.",
+          "benefits": "This Meditation Skill will teach you how to increase your focus on the present task by developing calm within your mind rather than through effort.",
+          "purpose": "Increase mindfulness and clear comprehension of the elemental qualities of breath sensations to increase calm and remove the conditions for gross dullness.",
+          "resources": {
+            "youtube": "https://youtu.be/nRcVzIAFnuk",
+            "soundcloud": "https://soundcloud.com/user-677685629/midl-meditation-skill-07-transform-gross-dullness-into-clarity-of-breath-sensation-3?si=d5264926c9f9457c82dd61de381af02e&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing"
+          },
+          "instructions_summary": [
+            "Step 1: Meditation Skills 01-06.",
+            "Step 2: Calm your body, breathing and mind.",
+            "Step 3: Tune into the elemental quality of each breath.",
+            "Step 4: Enhance your enjoyment in the growing calm."
+          ],
+          "progression_to": "Meditation Skill 08",
+          "raw_file": "skill_07_raw.txt"
+        },
+        {
+          "id": "08",
+          "name": "One Point of Sensation",
+          "url": "https://midlmeditation.com/meditation-skill-08",
+          "marker": "Marker 08: One Point of Sensation",
+          "hindrance": "Hindrance 08: Subtle Dullness",
+          "has_detailed_content": true,
+          "subtitle": "How to transform subtle dullness into tranquil clarity of sensation.",
+          "duration": "Meditation Length: 45 minutes.",
+          "benefits": "This Meditation Skill will teach you how to bring stability and calm to your mind, as well as the ability to shift your attention from habitual negativity to positive, wholesome qualities during your day. Allowing you to be able to direct your mind toward developing qualities that are of benefit, like love, kindness, gratitude, generosity, etc.",
+          "purpose": "Calm the intellectual functions of your mind and remove subtle dullness by relaxing the perception of time and increasing the clarity of breath sensation.",
+          "resources": {
+            "youtube": "https://youtu.be/qbcrzI502j0",
+            "soundcloud": "https://soundcloud.com/user-677685629/midl-insight-meditation-2?utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing&si=63245b474bb8475e8a374944e2476467"
+          },
+          "instructions_summary": [
+            "Step 1: Meditation Skills 01-07.",
+            "Step 2: One-point breath sensation.",
+            "Step 3: Increasing feeling of tranquillity."
+          ],
+          "progression_to": "Meditation Skill 09",
+          "raw_file": "skill_08_raw.txt"
+        },
+        {
+          "id": "09",
+          "name": "Sustained Attention",
+          "url": "https://midlmeditation.com/meditation-skill-09",
+          "marker": "Marker 09: Sustained Attention",
+          "hindrance": "Hindrance 09: Subtle Wandering",
+          "has_detailed_content": true,
+          "subtitle": "How to transform subtle wandering into sustained attention.",
+          "duration": "Meditation Length: 50 minutes. Due to the increased time it takes to sustain attention.",
+          "benefits": "This Meditation Skill will teach you to bring the first five Awakening Factors to mind so that your mind views your life through the wholesome qualities of mindfulness, curiosity, balanced effort, joy and tranquillity.",
+          "purpose": "Sustain the focus of your attention on breath sensation, to tranquilise the intellectual functions of your mind and calm subtle mind wandering.",
+          "resources": {
+            "youtube": "https://youtu.be/oR6A0AJDPC4",
+            "soundcloud": "https://soundcloud.com/user-677685629/midl-insight-meditation-3?si=504af0cf62134e419db343a780073c3e&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing"
+          },
+          "instructions_summary": [
+            "Step 1: Mindful Presence.",
+            "Step 2: Content Presence.",
+            "Step 3: Calm Abiding.",
+            "Step 4: Tranquillity & Seclusion.",
+            "Step 5: Increase Stability."
+          ],
+          "progression_to": "Meditation Skill 10",
+          "raw_file": "skill_09_raw.txt"
+        }
+      ],
+      "support_articles": [
+        {
+          "name": "Working with Dullness",
+          "url": "https://midlmeditation.com/working-with-dullness"
+        }
+      ]
+    },
+    {
+      "id": "04",
+      "name": "Joyfulness & Unification",
+      "full_name": "Cultivation 04: Joyfulness & Unification",
+      "suitability": "Accomplished meditator",
+      "membership_required": true,
+      "purpose": "To develop access concentration in preparation for jhana",
+      "learning_outcomes": [
+        "How to withdraw awareness from your senses",
+        "How to develop access concentration for jhana",
+        "How to cultivate piti and sukha for jhana"
+      ],
+      "skills": [
+        {
+          "id": "10",
+          "name": "Whole-Body Breathing",
+          "url": "https://midlmeditation.com/meditation-skill-10",
+          "marker": "Marker 10: Whole-Body Breathing",
+          "hindrance": "Hindrance 10: Sensory Stimulation",
+          "has_detailed_content": true,
+          "subtitle": "How to transform sensory stimulation into intimate body breathing.",
+          "duration": "Meditation Length: 60 minutes.",
+          "benefits": "This Skill will teach you to develop calmness and non-reactivity to sensory experiences so that your mind is less disturbed by stimulation throughout the day.",
+          "purpose": "Withdraw peripheral awareness from your six sense fields to increase mental seclusion in preparation for access concentration and jhana (wholesome absorption).",
+          "resources": {
+            "youtube": "https://youtu.be/_1T1vkfTwJM",
+            "soundcloud": "https://soundcloud.com/user-677685629/midl-insight-meditation-4?si=8d8644e668d14ff5bb0a190be6066919&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing"
+          },
+          "instructions_summary": [
+            "Step 1: Meditation Skills 01-06.",
+            "Step 2: Breathing throughout Your Body.",
+            "Step 3: Whole Body Breathing."
+          ],
+          "progression_to": "Meditation Skill 11",
+          "raw_file": "skill_10_raw.txt"
+        },
+        {
+          "id": "11",
+          "name": "Sustained Awareness",
+          "url": "https://midlmeditation.com/meditation-skill-11",
+          "marker": "Marker 11: Sustained Awareness",
+          "hindrance": "Hindrance 11: Anticipation of Pleasure",
+          "has_detailed_content": true,
+          "subtitle": "How to transform anticipation of pleasure into sustained awareness.",
+          "duration": "Meditation Length: 60 minutes, twice per day, to give your mind time to develop sukha and absorb into the pleasurable piti feeling.",
+          "benefits": "This Meditation Skill will teach your mind to let go of interest in sensory stimulation in daily life through increased intimacy with the pleasure of letting go within your body and breathing experience.",
+          "purpose": "Increase your mind's intimacy with the enjoyment of your whole-body breathing so that body perception fades and the pleasure of piti and sukha remain as your meditation object for accessing the first pleasure jhana.",
+          "resources": {
+            "youtube": "https://youtu.be/EzI0J44-Bxc",
+            "soundcloud": "https://soundcloud.com/user-677685629/midl-insight-meditation-skill-11-transform-anticipation-of-pleasure-into-sustained-awareness?si=9a9f06ee6cf641169e74655f2c61a9c6&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing"
+          },
+          "instructions_summary": [
+            "Step 1: Meditation Skills 01-10.",
+            "Step 2: Intimacy with pleasantness.",
+            "Step 3: Sustained awareness."
+          ],
+          "progression_to": "Meditation Skill 12",
+          "raw_file": "skill_11_raw.txt"
+        },
+        {
+          "id": "12",
+          "name": "Access Concentration",
+          "url": "https://midlmeditation.com/meditation-skill-12",
+          "marker": "Marker 12: Access Concentration",
+          "hindrance": "Hindrance 12: Fear of Letting Go",
+          "has_detailed_content": true,
+          "subtitle": "How to transform fear of letting go into letting go in access concentration",
+          "duration": "Meditation Length: 60 minutes, twice per day, to give your mind time to absorb into piti. This stage requires a simplification of your life, adherence to sila (morality) and inclining your mind toward that which is kusala (wholesome/skilful). Organised Buddhist meditation retreats create the perfect conditions for accelerating your practice from this point.",
+          "benefits": "This Meditation Skill will teach your mind to incline toward and absorb into wholesome (kusala) pleasure in daily life by releasing interest in habitual identification with hindrances and increased disenchantment with sensory stimulation.",
+          "purpose": "To develop your skill in reaching and resting in access concentration in preparation for the first pleasure jhana.",
+          "resources": {
+            "soundcloud": "https://soundcloud.com/user-677685629/midl-insight-meditation-6?si=a88fd852c7a741348da737064b3df9c2&utm_source=clipboard&utm_medium=text&utm_campaign=social_sharing"
+          },
+          "instructions_summary": [
+            "Step 1: Meditation Skills 01-11.",
+            "Step 2: Access Concentration."
+          ],
+          "progression_to": "Meditation Skill 13",
+          "raw_file": "skill_12_raw.txt"
+        }
+      ],
+      "support_articles": [
+        {
+          "name": "Noble Eightfold Path",
+          "url": "https://midlmeditation.com/noble-eightfold-path"
+        }
+      ]
+    },
+    {
+      "id": "05",
+      "name": "Pleasure Jhana & Equanimity",
+      "full_name": "Cultivation 05: Pleasure Jhana & Equanimity",
+      "suitability": "Proficient meditator",
+      "membership_required": true,
+      "purpose": "To develop the first four pleasure jhanas and equanimity for advanced insight practice",
+      "learning_outcomes": [
+        "How to access the first pleasure jhana",
+        "How to access the second pleasure jhana",
+        "How to access the third pleasure jhana",
+        "How to access the fourth pleasure jhana"
+      ],
+      "skills": [
+        {
+          "id": "13",
+          "name": "First Pleasure Jhana",
+          "url": "https://midlmeditation.com/meditation-skill-13",
+          "has_detailed_content": true,
+          "subtitle": "How to enter the first pleasure jhana through intimacy with piti (blissful pleasure)",
+          "duration": "Meditation Length: 60 minutes, 2-3 times daily, to give your mind time to absorb into piti and abide in the first pleasure jhana. This stage requires a simplification of your life, adherence to sila (morality) and inclining your mind toward that which is kusala (wholesome/skilful).",
+          "benefits": "Regularly entering and experiencing the first pleasure jhana will weaken your mind's attraction to extracting pleasure from worldly experiences (including thinking) and develop an inclination of your mind toward the spiritual pleasure that is only available through letting go of desire for worldly sensory pleasure.",
+          "instructions_summary": [
+            "Step 1: Develop access concentration as in Meditation Skill 12.",
+            "Step 2: Allow the pleasant feeling of piti throughout your body to grow.",
+            "Step 3: Rest awareness on the clearest pleasant feeling of piti in your body.",
+            "Step 4: Be aware of the pleasant feeling of the piti and let it be.",
+            "Step 5: Allow your mind to absorb into the pleasantness."
+          ],
+          "progression_to": "Meditation Skill 14",
+          "raw_file": "skill_13_raw.txt"
+        },
+        {
+          "id": "14",
+          "name": "Second Pleasure Jhana",
+          "url": "https://midlmeditation.com/meditation-skill-14",
+          "has_detailed_content": true,
+          "subtitle": "How to transform blissful pleasure into joyful happiness through refined sukha",
+          "duration": "12\u2192Meditation Length: 60 minutes, 2-3 times daily, to give your mind time to absorb into sukha and abide in the second pleasure jhana. This stage requires a simplification of your life, adherence to sila (morality) and inclining your mind toward that which is kusala (wholesome/skilful). Organised Buddhist meditation retreats create the perfect conditions for accelerating your practice from this point.",
+          "instructions_summary": [
+            "Step 1: Develop Access Concentration and Deepen Contentment.",
+            "Step 2: Absorb into piti for First Pleasure Jhana.",
+            "Step 3: Incline your mind toward the joyfulness and happiness of sukha.",
+            "Step 4: Absorb into the experience of sukha to enter the second pleasure jhana.",
+            "Step 5: Pervade your body and mind with sukha."
+          ],
+          "progression_to": "Meditation Skill 15",
+          "raw_file": "skill_14_raw.txt"
+        },
+        {
+          "id": "15",
+          "name": "Third Pleasure Jhana",
+          "url": "https://midlmeditation.com/meditation-skill-15",
+          "has_detailed_content": true,
+          "subtitle": "How to transform joyful happiness into equanimous contentment",
+          "duration": "12\u2192Meditation Length: 60 minutes, 2-3 times daily, plus developing a continuity of contentment in your daily life is beneficial. The third pleasure jhana requires a simplification of your life, adherence to sila (morality) and inclining your mind toward that which is kusala (wholesome/skilful). Organised Buddhist meditation retreats create the perfect conditions for accelerating your practice from this point.",
+          "instructions_summary": [
+            "Step 1: Spend more time deepening samadhi in access concentration.",
+            "Step 2: Develop and absorb into the first pleasure jhana.",
+            "Step 3: Develop and absorb into the second pleasure jhana.",
+            "Step 4: Learn to separate sukha into joyfulness of mind & happiness of heart.",
+            "Step 5: Rest awareness on the feeling of happiness, bringing it to the foreground."
+          ],
+          "progression_to": "Meditation Skill 16",
+          "raw_file": "skill_15_raw.txt"
+        },
+        {
+          "id": "16",
+          "name": "Fourth Pleasure Jhana",
+          "url": "https://midlmeditation.com/meditation-skill-16",
+          "has_detailed_content": true,
+          "subtitle": "How to transform contentment into equanimous stillness",
+          "duration": "12\u2192Meditation Length: 60 minutes, 2-3 times daily, plus developing continuity of equanimity in daily life. This stage requires a simplification of your life, adherence to sila (morality) and inclining your mind toward that which is kusala (wholesome/skilful). Organised Buddhist meditation retreats create the perfect conditions for accelerating your practice from this point.",
+          "instructions_summary": [
+            "Step 1: Spend more time deepening samadhi in access concentration.",
+            "Step 2: Develop the third pleasure jhana as you did in Meditation Skill 15.",
+            "Step 3: Learn to separate the feeling of happiness from contentment.",
+            "Step 4: Allow your mind to absorb into the fourth pleasure jhana.",
+            "Step 5: Pervade your body and mindfulness with equanimity."
+          ],
+          "raw_file": "skill_16_raw.txt"
+        }
+      ],
+      "support_articles": []
+    },
+    {
+      "id": "06",
+      "name": "Advanced Insight & Application",
+      "full_name": "Cultivation 06: Advanced Insight & Application",
+      "suitability": "Advanced meditator",
+      "membership_required": true,
+      "purpose": "To develop deep insight into anicca, anatta and idappaccayat\u0101 to create the conditions for Sotapanna: Stream Entry",
+      "learning_outcomes": [
+        "How to create the conditions for Sot\u0101panna Insight",
+        "How to recognise the conditions after Sot\u0101panna Insight",
+        "How to create the conditions for Sakad\u0101g\u0101mi Insight",
+        "How to recognise the conditions after Sakad\u0101g\u0101mi Insight"
+      ],
+      "skills": [],
+      "advanced_topics": [
+        {
+          "name": "Sot\u0101panna: Stream Entry",
+          "url": "https://midlmeditation.com/sotapanna-stream-entry"
+        },
+        {
+          "name": "Sakad\u0101g\u0101mi: Once Returner",
+          "url": "https://midlmeditation.com/sakadagami-once-returner"
+        }
+      ],
+      "support_articles": [],
+      "note": "Course-based instruction is no longer effective at this level; in-person guidance with a skilled teacher is recommended"
+    }
+  ],
+  "progression_map": {
+    "description": "Each Meditation Marker is the antidote for its associated Meditative Hindrance. Progress through skills sequentially.",
+    "levels": [
+      {
+        "skill_id": "00",
+        "marker": "Diaphragm Breathing",
+        "hindrance": "Stress Breathing",
+        "cultivation": "01"
+      },
+      {
+        "skill_id": "01",
+        "marker": "Body Relaxation",
+        "hindrance": "Physical Restlessness",
+        "cultivation": "01"
+      },
+      {
+        "skill_id": "02",
+        "marker": "Mind Relaxation",
+        "hindrance": "Mental Restlessness",
+        "cultivation": "01"
+      },
+      {
+        "skill_id": "03",
+        "marker": "Mindful Presence",
+        "hindrance": "Sleepiness & Dullness",
+        "cultivation": "01"
+      },
+      {
+        "skill_id": "04",
+        "marker": "Content Presence",
+        "hindrance": "Habitual Forgetting",
+        "cultivation": "02"
+      },
+      {
+        "skill_id": "05",
+        "marker": "Natural Breathing",
+        "hindrance": "Habitual Control",
+        "cultivation": "02"
+      },
+      {
+        "skill_id": "06",
+        "marker": "Whole of Each Breath",
+        "hindrance": "Mind Wandering",
+        "cultivation": "02"
+      },
+      {
+        "skill_id": "07",
+        "marker": "Breath Sensations",
+        "hindrance": "Gross Dullness",
+        "cultivation": "03"
+      },
+      {
+        "skill_id": "08",
+        "marker": "One Point of Sensation",
+        "hindrance": "Subtle Dullness",
+        "cultivation": "03"
+      },
+      {
+        "skill_id": "09",
+        "marker": "Sustained Attention",
+        "hindrance": "Subtle Wandering",
+        "cultivation": "03"
+      },
+      {
+        "skill_id": "10",
+        "marker": "Whole-Body Breathing",
+        "hindrance": "Sensory Stimulation",
+        "cultivation": "04"
+      },
+      {
+        "skill_id": "11",
+        "marker": "Sustained Awareness",
+        "hindrance": "Anticipation of Pleasure",
+        "cultivation": "04"
+      },
+      {
+        "skill_id": "12",
+        "marker": "Access Concentration",
+        "hindrance": "Fear of Letting Go",
+        "cultivation": "04"
+      }
+    ]
+  }
+}
