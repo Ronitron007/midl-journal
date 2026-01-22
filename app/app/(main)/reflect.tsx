@@ -11,10 +11,12 @@ import {
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { router } from 'expo-router';
 import { useAuth } from '../../lib/auth-context';
+import { useDraft } from '../../lib/draft-context';
 import { createEntry } from '../../lib/entries';
+import { getReflectionFeedback } from '../../lib/ai-feedback';
 
 const DURATION_OPTIONS = [
   { label: '15 min', value: 900 },
@@ -25,14 +27,29 @@ const DURATION_OPTIONS = [
 
 export default function ReflectScreen() {
   const { user } = useAuth();
-  const [content, setContent] = useState('');
-  const [showDetails, setShowDetails] = useState(false);
-  const [duration, setDuration] = useState<number | null>(null);
-  const [isGuided, setIsGuided] = useState(false);
-  const [trackProgress, setTrackProgress] = useState(true);
-  const [skillPracticed, setSkillPracticed] = useState('00');
+  const { reflectDraft, setReflectDraft, clearReflectDraft } = useDraft();
+
+  // Initialize from draft or defaults
+  const [content, setContent] = useState(reflectDraft?.content ?? '');
+  const [showDetails, setShowDetails] = useState(reflectDraft?.showDetails ?? false);
+  const [duration, setDuration] = useState<number | null>(reflectDraft?.duration ?? null);
+  const [isGuided, setIsGuided] = useState(reflectDraft?.isGuided ?? false);
+  const [trackProgress, setTrackProgress] = useState(reflectDraft?.trackProgress ?? true);
+  const [skillPracticed, setSkillPracticed] = useState(reflectDraft?.skillPracticed ?? '00');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [feedback, setFeedback] = useState<string | null>(null);
+
+  // Save draft whenever state changes
+  useEffect(() => {
+    setReflectDraft({
+      content,
+      showDetails,
+      duration,
+      isGuided,
+      trackProgress,
+      skillPracticed,
+    });
+  }, [content, showDetails, duration, isGuided, trackProgress, skillPracticed]);
 
   const handleSubmit = async () => {
     if (!content.trim() || !user) return;
@@ -44,13 +61,19 @@ export default function ReflectScreen() {
       raw_content: content.trim(),
       is_guided: isGuided,
       track_progress: trackProgress,
-      duration_seconds: duration,
+      duration_seconds: duration ?? undefined,
       skill_practiced: skillPracticed,
     });
 
     if (entry) {
-      // TODO: Call AI for feedback (Task 15)
-      setFeedback('Good session. You showed up. That matters.');
+      clearReflectDraft();
+      const aiFeedback = await getReflectionFeedback({
+        content: content.trim(),
+        duration: duration || undefined,
+        isGuided,
+        skillPracticed,
+      });
+      setFeedback(aiFeedback);
     }
 
     setIsSubmitting(false);
