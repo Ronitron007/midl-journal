@@ -1,5 +1,6 @@
 import "jsr:@supabase/functions-js/edge-runtime.d.ts";
 import { verifyAuth } from "./utils/auth.ts";
+import { log } from "./utils/logger.ts";
 import { handleChat } from "./handlers/chat.ts";
 import { handleReflect } from "./handlers/reflect.ts";
 import { handleOnboarding } from "./handlers/onboarding.ts";
@@ -26,6 +27,7 @@ Deno.serve(async (req) => {
   try {
     const auth = await verifyAuth(req);
     if (!auth.ok) {
+      log.warn('Auth failed', { error: auth.error });
       return new Response(JSON.stringify({ error: auth.error }), {
         status: 401,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -35,21 +37,28 @@ Deno.serve(async (req) => {
     const body = await req.json();
     const { type, ...payload } = body;
 
+    log.info('AI request', { type, userId: auth.userId });
+
     const handler = handlers[type];
     if (!handler) {
+      log.warn('Unknown handler type', { type });
       return new Response(JSON.stringify({ error: `Unknown type: ${type}` }), {
         status: 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
+    const start = Date.now();
     const result = await handler({ payload, userId: auth.userId, supabase: auth.supabase });
+    const duration = Date.now() - start;
+
+    log.info('AI response', { type, userId: auth.userId, durationMs: duration });
 
     return new Response(JSON.stringify(result), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (error) {
-    console.error("AI function error:", error);
+    log.error('AI function error', { error: String(error) });
     return new Response(JSON.stringify({ error: "Internal error" }), {
       status: 500,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
