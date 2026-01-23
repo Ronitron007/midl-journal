@@ -62,8 +62,13 @@ export default function AskScreen() {
     setIsLoading(false);
   };
 
-  const handleClose = async () => {
-    // Save conversation as entry if there were messages
+  const handleClose = () => {
+    // Just go back, draft persists
+    router.back();
+  };
+
+  const handleNewChat = async () => {
+    // Save current conversation if there are messages
     if (messages.length > 0 && user) {
       const content = messages
         .map((m) => `${m.role}: ${m.content}`)
@@ -74,9 +79,12 @@ export default function AskScreen() {
         raw_content: content,
         track_progress: trackProgress,
       });
-      clearAskDraft();
     }
-    router.back();
+    // Clear and reset
+    clearAskDraft();
+    setMessages([]);
+    setInput('');
+    setTrackProgress(true);
   };
 
   return (
@@ -96,11 +104,13 @@ export default function AskScreen() {
             paddingBottom: 16,
           }}
         >
-          <Pressable onPress={handleClose}>
+          <Pressable onPress={handleClose} style={{ width: 50 }}>
             <Text style={{ color: '#5c9eb7', fontSize: 16 }}>Done</Text>
           </Pressable>
           <Text style={{ color: '#1f2937', fontWeight: '500' }}>Ask</Text>
-          <View style={{ width: 50 }} />
+          <Pressable onPress={handleNewChat} style={{ width: 50, alignItems: 'flex-end' }}>
+            <Text style={{ color: '#5c9eb7', fontSize: 16 }}>New</Text>
+          </Pressable>
         </View>
 
         {/* Messages */}
