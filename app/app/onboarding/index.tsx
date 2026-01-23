@@ -1,41 +1,64 @@
 import { View, Text, Pressable, Alert } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import * as AppleAuthentication from 'expo-apple-authentication';
-import * as Google from 'expo-auth-session/providers/google';
 import * as WebBrowser from 'expo-web-browser';
-import { useEffect } from 'react';
+import { makeRedirectUri } from 'expo-auth-session';
 import { supabase } from '../../lib/supabase';
 import { router } from 'expo-router';
 
-// Required for web browser auth to complete
-WebBrowser.maybeCompleteAuthSession();
+// For Expo Go, use the proxy. For production builds, use the custom scheme.
+const redirectUrl = makeRedirectUri({
+  // This uses auth.expo.io proxy for Expo Go compatibility
+  preferLocalhost: false,
+});
 
-const GOOGLE_WEB_CLIENT_ID = process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID;
+console.log('Redirect URL:', redirectUrl); // Debug: see what URL is being used
 
 export default function AuthScreen() {
-  const [request, response, promptAsync] = Google.useAuthRequest({
-    webClientId: GOOGLE_WEB_CLIENT_ID,
-    iosClientId: GOOGLE_WEB_CLIENT_ID, // Use web client ID for Expo Go
-  });
-
-  useEffect(() => {
-    if (response?.type === 'success') {
-      const { id_token } = response.params;
-      handleGoogleToken(id_token);
-    }
-  }, [response]);
-
-  const handleGoogleToken = async (idToken: string) => {
+  const handleGoogleSignIn = async () => {
     try {
-      const { error } = await supabase.auth.signInWithIdToken({
+      
+      const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
-        token: idToken,
+        options: {
+          redirectTo: redirectUrl,
+          skipBrowserRedirect: true,
+        },
       });
 
       if (error) {
         Alert.alert('Sign-In Error', error.message);
-      } else {
-        router.replace('/onboarding/questions');
+        return;
+      }
+
+      if (data?.url) {
+        // Open the OAuth URL in a web browser
+        const result = await WebBrowser.openAuthSessionAsync(
+          data.url,
+          redirectUrl
+        );
+
+        if (result.type === 'success' && result.url) {
+          // Extract the URL fragment and set the session
+          const url = new URL(result.url);
+          const params = new URLSearchParams(url.hash.substring(1));
+          const accessToken = params.get('access_token');
+          const refreshToken = params.get('refresh_token');
+
+          if (accessToken && refreshToken) {
+            const { error: sessionError } = await supabase.auth.setSession({
+              access_token: accessToken,
+              refresh_token: refreshToken,
+            });
+
+            if (sessionError) {
+              Alert.alert('Sign-In Error', sessionError.message);
+            } else {
+              // Navigate to onboarding questions after successful login
+              router.replace('/onboarding/questions');
+            }
+          }
+        }
       }
     } catch (e: any) {
       console.error('Google Sign-In Error:', e);
@@ -72,13 +95,6 @@ export default function AuthScreen() {
     }
   };
 
-  const handleGoogleSignIn = async () => {
-    if (!GOOGLE_WEB_CLIENT_ID) {
-      Alert.alert('Config Error', 'Google Client ID not configured');
-      return;
-    }
-    promptAsync();
-  };
 
   return (
     <LinearGradient
@@ -105,7 +121,6 @@ export default function AuthScreen() {
 
         <Pressable
           onPress={handleGoogleSignIn}
-          disabled={!request}
           className="bg-white rounded-xl py-4 flex-row justify-center items-center border border-gray-200"
         >
           <Text className="text-gray-800 font-medium text-base">
