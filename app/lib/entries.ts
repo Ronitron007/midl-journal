@@ -79,6 +79,49 @@ export async function createEntry(
   return entry;
 }
 
+export async function getEntriesForDate(
+  userId: string,
+  date: Date
+): Promise<Entry[]> {
+  const start = new Date(date);
+  start.setHours(0, 0, 0, 0);
+  const end = new Date(date);
+  end.setHours(23, 59, 59, 999);
+
+  const { data, error } = await supabase
+    .from('entries')
+    .select('*')
+    .eq('user_id', userId)
+    .gte('created_at', start.toISOString())
+    .lte('created_at', end.toISOString());
+
+  if (error) {
+    console.error('Error fetching entries for date:', error);
+    return [];
+  }
+  return data || [];
+}
+
+export async function getEntriesForDateRange(
+  userId: string,
+  start: Date,
+  end: Date
+): Promise<Entry[]> {
+  const { data, error } = await supabase
+    .from('entries')
+    .select('*')
+    .eq('user_id', userId)
+    .gte('created_at', start.toISOString())
+    .lte('created_at', end.toISOString())
+    .order('created_at', { ascending: false });
+
+  if (error) {
+    console.error('Error fetching entries for range:', error);
+    return [];
+  }
+  return data || [];
+}
+
 export async function getRecentEntries(
   userId: string,
   limit = 10
