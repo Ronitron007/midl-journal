@@ -1,7 +1,9 @@
-import { View, Text, ScrollView } from 'react-native';
+import { View, Text, ScrollView, Pressable } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useEffect, useState } from 'react';
+import { useRouter } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
 import { useAuth } from '../../lib/auth-context';
 import { supabase } from '../../lib/supabase';
 import { getRecentEntries, Entry } from '../../lib/entries';
@@ -10,6 +12,7 @@ import { SKILLS } from '../../lib/midl-skills';
 
 export default function TrackerScreen() {
   const { user } = useAuth();
+  const router = useRouter();
   const [currentSkill, setCurrentSkill] = useState('00');
   const [stats, setStats] = useState({ streak: 0, current_skill_days: 0 });
   const [entries, setEntries] = useState<Entry[]>([]);
@@ -47,11 +50,18 @@ export default function TrackerScreen() {
     <LinearGradient colors={['#e6e0f5', '#fde8d7']} className="flex-1">
       <SafeAreaView className="flex-1">
         <ScrollView className="flex-1 px-6 pt-4">
-          {/* Skill Map Section */}
-          <View className="mb-6">
-            <Text className="text-lg font-medium text-gray-800 mb-3">
+          {/* Header */}
+          <View className="flex-row justify-between items-center mb-6">
+            <Text className="text-lg font-medium text-gray-800">
               Your Journey
             </Text>
+            <Pressable onPress={() => router.push('/settings')} className="p-1">
+              <Ionicons name="settings-outline" size={22} color="#6b7280" />
+            </Pressable>
+          </View>
+
+          {/* Skill Map Section */}
+          <View className="mb-6">
             <SkillMap currentSkill={currentSkill} />
           </View>
 
