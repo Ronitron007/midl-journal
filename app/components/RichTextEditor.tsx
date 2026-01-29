@@ -104,7 +104,6 @@ const styles = StyleSheet.create({
   editorContainer: {
     flex: 1,
     backgroundColor: '#ffffff',
-    borderRadius: 16,
     overflow: 'hidden',
   },
   toolbarContainer: {
