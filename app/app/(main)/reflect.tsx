@@ -1,7 +1,6 @@
 import {
   View,
   Text,
-  TextInput,
   Pressable,
   ScrollView,
   Switch,
@@ -17,6 +16,8 @@ import { useAuth } from '../../lib/auth-context';
 import { useDraft } from '../../lib/draft-context';
 import { createEntry } from '../../lib/entries';
 import { getReflectionFeedback } from '../../lib/ai-feedback';
+import RichTextEditor from '../../components/RichTextEditor';
+import { isHtmlEmpty, htmlToPlainText } from '../../lib/rich-text-utils';
 
 const DURATION_OPTIONS = [
   { label: '15 min', value: 900 },
@@ -31,6 +32,7 @@ export default function ReflectScreen() {
 
   // Initialize from draft or defaults
   const [content, setContent] = useState(reflectDraft?.content ?? '');
+  const [plainTextContent, setPlainTextContent] = useState('');
   const [showDetails, setShowDetails] = useState(reflectDraft?.showDetails ?? false);
   const [duration, setDuration] = useState<number | null>(reflectDraft?.duration ?? null);
   const [isGuided, setIsGuided] = useState(reflectDraft?.isGuided ?? false);
@@ -38,6 +40,12 @@ export default function ReflectScreen() {
   const [skillPracticed, setSkillPracticed] = useState(reflectDraft?.skillPracticed ?? '00');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [feedback, setFeedback] = useState<string | null>(null);
+
+  // Handle rich text content changes
+  const handleContentChange = (html: string) => {
+    setContent(html);
+    setPlainTextContent(htmlToPlainText(html));
+  };
 
   // Save draft whenever state changes
   useEffect(() => {
@@ -52,13 +60,13 @@ export default function ReflectScreen() {
   }, [content, showDetails, duration, isGuided, trackProgress, skillPracticed]);
 
   const handleSubmit = async () => {
-    if (!content.trim() || !user) return;
+    if (isHtmlEmpty(content) || !user) return;
 
     setIsSubmitting(true);
 
     const entry = await createEntry(user.id, {
       type: 'reflect',
-      raw_content: content.trim(),
+      raw_content: content, // Store as HTML
       is_guided: isGuided,
       track_progress: trackProgress,
       duration_seconds: duration ?? undefined,
@@ -67,8 +75,9 @@ export default function ReflectScreen() {
 
     if (entry) {
       clearReflectDraft();
+      // Pass plain text to AI for feedback
       const aiFeedback = await getReflectionFeedback({
-        content: content.trim(),
+        content: plainTextContent,
         duration: duration || undefined,
         isGuided,
         skillPracticed,
@@ -107,16 +116,17 @@ export default function ReflectScreen() {
                 How was your practice?
               </Text>
 
-              {/* Text Input */}
-              <TextInput
-                placeholder="Write freely..."
-                placeholderTextColor="#9ca3af"
-                multiline
-                className="min-h-[200px] text-base text-gray-800 leading-relaxed"
-                value={content}
-                onChangeText={setContent}
-                textAlignVertical="top"
-              />
+              {/* Rich Text Editor */}
+              <View className="min-h-[200px] -mx-6 -mt-2">
+                <RichTextEditor
+                  initialContent={content}
+                  placeholder="Write freely about your practice..."
+                  onContentChange={handleContentChange}
+                  showToolbar={true}
+                  minHeight={200}
+                  autoFocus={true}
+                />
+              </View>
 
               {/* Add Details Toggle */}
               <Pressable
@@ -182,16 +192,16 @@ export default function ReflectScreen() {
               {/* Submit Button */}
               <Pressable
                 onPress={handleSubmit}
-                disabled={!content.trim() || isSubmitting}
+                disabled={isHtmlEmpty(content) || isSubmitting}
                 className={`mt-6 py-4 rounded-2xl ${
-                  content.trim() && !isSubmitting
+                  !isHtmlEmpty(content) && !isSubmitting
                     ? 'bg-muted-blue'
                     : 'bg-gray-200'
                 }`}
               >
                 <Text
                   className={`text-center font-medium ${
-                    content.trim() && !isSubmitting
+                    !isHtmlEmpty(content) && !isSubmitting
                       ? 'text-white'
                       : 'text-gray-400'
                   }`}
