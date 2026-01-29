@@ -7,6 +7,7 @@ import { supabase } from '../../lib/supabase';
 import { getRecentEntries, Entry } from '../../lib/entries';
 import SkillMap from '../../components/SkillMap';
 import { SKILLS } from '../../lib/midl-skills';
+import HtmlRenderer from '../../components/HtmlRenderer';
 
 export default function TrackerScreen() {
   const { user } = useAuth();
@@ -111,12 +112,17 @@ export default function TrackerScreen() {
                             </Text>
                           </View>
                         </View>
-                        <Text
-                          className="text-gray-800 mt-2"
-                          numberOfLines={2}
-                        >
-                          {entry.summary || entry.raw_content.slice(0, 100)}
-                        </Text>
+                        {entry.summary ? (
+                          <Text className="text-gray-800 mt-2" numberOfLines={2}>
+                            {entry.summary}
+                          </Text>
+                        ) : (
+                          <HtmlRenderer
+                            html={entry.raw_content}
+                            maxLength={100}
+                            style={{ marginTop: 8 }}
+                          />
+                        )}
                       </View>
                     </View>
                   </View>
