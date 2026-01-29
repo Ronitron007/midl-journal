@@ -15,6 +15,10 @@ export default function MainLayout() {
           name="ask"
           options={{ presentation: 'modal', animation: 'slide_from_bottom' }}
         />
+        <Stack.Screen
+          name="entry/[id]"
+          options={{ presentation: 'card' }}
+        />
       </Stack>
       <FloatingButtons />
     </View>

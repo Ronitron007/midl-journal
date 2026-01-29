@@ -1,4 +1,5 @@
-import { View, Text, ScrollView } from 'react-native';
+import { View, Text, ScrollView, Pressable } from 'react-native';
+import { router } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useEffect, useState } from 'react';
@@ -90,8 +91,9 @@ export default function TrackerScreen() {
             ) : (
               <View className="gap-3">
                 {entries.map((entry) => (
-                  <View
+                  <Pressable
                     key={entry.id}
+                    onPress={() => router.push(`/(main)/entry/${entry.id}`)}
                     className="bg-white/80 rounded-2xl p-4"
                   >
                     <View className="flex-row justify-between items-start">
@@ -125,7 +127,7 @@ export default function TrackerScreen() {
                         )}
                       </View>
                     </View>
-                  </View>
+                  </Pressable>
                 ))}
               </View>
             )}
