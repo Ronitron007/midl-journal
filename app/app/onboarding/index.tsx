@@ -15,6 +15,24 @@ const redirectUrl = makeRedirectUri({
 console.log('Redirect URL:', redirectUrl); // Debug: see what URL is being used
 
 export default function AuthScreen() {
+  // Check if user completed onboarding and route accordingly
+  const routeAfterAuth = async () => {
+    const { data: { user } } = await supabase.auth.getUser();
+    if (!user) return;
+
+    const { data } = await supabase
+      .from('users')
+      .select('onboarding_data')
+      .eq('id', user.id)
+      .single();
+
+    if (data?.onboarding_data) {
+      router.replace('/(main)/tracker');
+    } else {
+      router.replace('/onboarding/questions');
+    }
+  };
+
   const handleGoogleSignIn = async () => {
     try {
       
@@ -54,8 +72,7 @@ export default function AuthScreen() {
             if (sessionError) {
               Alert.alert('Sign-In Error', sessionError.message);
             } else {
-              // Navigate to onboarding questions after successful login
-              router.replace('/onboarding/questions');
+              await routeAfterAuth();
             }
           }
         }
@@ -84,7 +101,7 @@ export default function AuthScreen() {
         if (error) {
           Alert.alert('Sign-In Error', error.message);
         } else {
-          router.replace('/onboarding/questions');
+          await routeAfterAuth();
         }
       }
     } catch (e: any) {
