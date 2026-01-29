@@ -1,4 +1,5 @@
 import { supabase } from './supabase';
+import { htmlToPlainText, wordCount } from './rich-text-utils';
 
 type AIType = 'chat' | 'reflect' | 'onboarding' | 'entry-process';
 
@@ -85,8 +86,10 @@ export const ai = {
     }
   },
 
-  async processEntry(entryId: string, content: string): Promise<ProcessedSignals | null> {
-    if (content.split(' ').length < 10) return null;
+  async processEntry(entryId: string, rawContent: string): Promise<ProcessedSignals | null> {
+    // Convert HTML to plain text for processing
+    const content = htmlToPlainText(rawContent);
+    if (wordCount(rawContent) < 10) return null;
     try {
       const result = await callAI<{ signals?: ProcessedSignals; skipped?: boolean }>('entry-process', { entryId, content });
       if (result.skipped) return null;
