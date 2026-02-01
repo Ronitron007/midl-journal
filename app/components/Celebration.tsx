@@ -89,12 +89,12 @@ export function Celebration({ visible, onComplete, message }: Props) {
             🌟
           </Animated.Text>
 
-          <Text className="text-gray-800 text-xl font-serif text-center mb-2">
+          <Text className="text-forest text-xl font-serif text-center mb-2">
             {randomMessage}
           </Text>
 
           {message && (
-            <Text className="text-gray-600 text-base text-center leading-relaxed mt-2 mb-4">
+            <Text className="text-olive text-base text-center leading-relaxed mt-2 mb-4">
               {message}
             </Text>
           )}
@@ -104,7 +104,7 @@ export function Celebration({ visible, onComplete, message }: Props) {
               Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
               onComplete();
             }}
-            className="bg-muted-blue mt-4 py-4 px-8 rounded-2xl w-full"
+            className="bg-terracotta mt-4 py-4 px-8 rounded-2xl w-full"
           >
             <Text className="text-white text-center font-medium text-base">
               Done

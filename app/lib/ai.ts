@@ -1,11 +1,16 @@
-import { supabase } from './supabase';
+import { supabase, getValidSession } from './supabase';
 import { htmlToPlainText, wordCount } from './rich-text-utils';
 
 type AIType = 'chat' | 'reflect' | 'onboarding' | 'entry-process';
 
 async function callAI<T>(type: AIType, payload: Record<string, unknown>): Promise<T> {
+  const session = await getValidSession();
+
   const { data, error } = await supabase.functions.invoke('ai', {
     body: { type, ...payload },
+    headers: {
+      Authorization: `Bearer ${session.access_token}`,
+    },
   });
 
   if (error) throw error;
@@ -42,7 +47,31 @@ export type EvalResult = {
 };
 
 // Entry process types
+export type SamathaTendency = 'strong' | 'moderate' | 'weak' | 'none';
+
 export type ProcessedSignals = {
+  // MIDL-specific (primary) - aligned with Stephen's framework
+  skill_analyzed: string;
+
+  // Samatha (relaxation/calm) assessment
+  samatha_tendency: SamathaTendency;  // tendency toward relaxation and calm
+  marker_present: boolean;
+  marker_notes: string | null;
+
+  // Hindrance assessment
+  hindrance_present: boolean;
+  hindrance_notes: string | null;
+  hindrance_conditions: string[];     // what triggered/led to the hindrance
+
+  // Working with experience
+  balance_approach: string | null;    // how they worked with the hindrance
+  key_understanding: string | null;   // insight or understanding gained
+
+  // Techniques and progression
+  techniques_mentioned: string[];
+  progression_signals: string[];
+
+  // Generic (secondary)
   summary: string;
   mood_score: number;
   mood_tags: string[];
@@ -58,7 +87,15 @@ export const ai = {
     try {
       const result = await callAI<{ content: string }>('chat', { messages });
       return result.content;
-    } catch (error) {
+    } catch (error: unknown) {
+      // Try to get the response body for more details
+      const err = error as { context?: { _bodyBlob?: Blob } };
+      if (err.context?._bodyBlob) {
+        try {
+          const text = await err.context._bodyBlob.text();
+          console.error('Chat error body:', text);
+        } catch {}
+      }
       console.error('Chat error:', error);
       return 'Sorry, I had trouble responding.';
     }
@@ -86,12 +123,12 @@ export const ai = {
     }
   },
 
-  async processEntry(entryId: string, rawContent: string): Promise<ProcessedSignals | null> {
+  async processEntry(entryId: string, rawContent: string, skillPracticed: string): Promise<ProcessedSignals | null> {
     // Convert HTML to plain text for processing
     const content = htmlToPlainText(rawContent);
     if (wordCount(rawContent) < 10) return null;
     try {
-      const result = await callAI<{ signals?: ProcessedSignals; skipped?: boolean }>('entry-process', { entryId, content });
+      const result = await callAI<{ signals?: ProcessedSignals; skipped?: boolean }>('entry-process', { entryId, content, skillPracticed });
       if (result.skipped) return null;
       return result.signals || null;
     } catch (error) {
@@ -105,4 +142,5 @@ export const ai = {
 export const chat = ai.chat;
 export const getReflectionFeedback = ai.reflect;
 export const evaluateOnboarding = ai.onboarding;
-export const processEntry = ai.processEntry;
+export const processEntry = (entryId: string, rawContent: string, skillPracticed: string) =>
+  ai.processEntry(entryId, rawContent, skillPracticed);

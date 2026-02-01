@@ -1,15 +1,41 @@
 import { supabase } from './supabase';
 
+export type SamathaTendency = 'strong' | 'moderate' | 'weak' | 'none';
+
 export type Entry = {
   id: string;
   user_id: string;
   created_at: string;
+  entry_date: string; // YYYY-MM-DD format, user-selectable
   type: 'reflect' | 'ask';
   is_guided: boolean;
   track_progress: boolean;
   raw_content: string;
   duration_seconds: number | null;
   skill_practiced: string | null;
+
+  // MIDL-specific signals (aligned with Stephen's framework)
+  skill_analyzed: string | null;
+
+  // Samatha assessment
+  samatha_tendency: SamathaTendency | null;
+  marker_present: boolean | null;
+  marker_notes: string | null;
+
+  // Hindrance assessment
+  hindrance_present: boolean | null;
+  hindrance_notes: string | null;
+  hindrance_conditions: string[] | null;  // what triggered the hindrance
+
+  // Working with experience
+  balance_approach: string | null;        // how they worked with hindrance
+  key_understanding: string | null;       // insight gained
+
+  // Techniques and progression
+  techniques_mentioned: string[] | null;
+  progression_signals: string[] | null;
+
+  // Generic signals
   summary: string | null;
   mood_score: number | null;
   mood_tags: string[] | null;
@@ -27,6 +53,7 @@ export async function createEntry(
     track_progress?: boolean;
     duration_seconds?: number;
     skill_practiced?: string;
+    entry_date?: string; // YYYY-MM-DD format
   }
 ): Promise<Entry | null> {
   const { data: entry, error } = await supabase
@@ -63,4 +90,15 @@ export async function getRecentEntries(
   }
 
   return data || [];
+}
+
+export async function deleteEntry(entryId: string): Promise<boolean> {
+  const { error } = await supabase.from('entries').delete().eq('id', entryId);
+
+  if (error) {
+    console.error('Error deleting entry:', error);
+    return false;
+  }
+
+  return true;
 }

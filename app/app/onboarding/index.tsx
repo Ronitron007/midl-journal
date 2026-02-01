@@ -1,5 +1,4 @@
 import { View, Text, Pressable, Alert } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
 import * as AppleAuthentication from 'expo-apple-authentication';
 import * as WebBrowser from 'expo-web-browser';
 import { makeRedirectUri } from 'expo-auth-session';
@@ -35,7 +34,7 @@ export default function AuthScreen() {
 
   const handleGoogleSignIn = async () => {
     try {
-      
+
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
@@ -64,6 +63,9 @@ export default function AuthScreen() {
           const refreshToken = params.get('refresh_token');
 
           if (accessToken && refreshToken) {
+            // Clear any stale session first
+            await supabase.auth.signOut();
+
             const { error: sessionError } = await supabase.auth.setSession({
               access_token: accessToken,
               refresh_token: refreshToken,
@@ -114,15 +116,14 @@ export default function AuthScreen() {
 
 
   return (
-    <LinearGradient
-      colors={['#e6e0f5', '#fde8d7']}
-      className="flex-1 justify-center items-center px-8"
+    <View
+      className="flex-1 justify-center items-center px-8 bg-cream"
     >
       <View className="items-center mb-16">
-        <Text className="text-4xl font-serif text-gray-800 mb-2">
+        <Text className="text-4xl font-serif text-forest mb-2">
           MIDL Journal
         </Text>
-        <Text className="text-lg text-gray-600 text-center">
+        <Text className="text-lg text-olive text-center">
           Your meditation companion
         </Text>
       </View>
@@ -138,17 +139,17 @@ export default function AuthScreen() {
 
         <Pressable
           onPress={handleGoogleSignIn}
-          className="bg-white rounded-xl py-4 flex-row justify-center items-center border border-gray-200"
+          className="bg-white rounded-xl py-4 flex-row justify-center items-center border border-olive/20"
         >
-          <Text className="text-gray-800 font-medium text-base">
+          <Text className="text-forest font-medium text-base">
             Continue with Google
           </Text>
         </Pressable>
       </View>
 
-      <Text className="text-gray-500 text-sm mt-8 text-center">
+      <Text className="text-olive text-sm mt-8 text-center">
         By continuing, you agree to our Terms of Service and Privacy Policy
       </Text>
-    </LinearGradient>
+    </View>
   );
 }

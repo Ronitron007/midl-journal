@@ -1,0 +1,3 @@
+# Disable infrastructure-level JWT verification
+# Function handles its own auth in utils/auth.ts
+verify_jwt = false

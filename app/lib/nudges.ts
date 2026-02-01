@@ -179,7 +179,6 @@ const SKILL_PROMPTS: Record<string, {
   },
   '06': {
     samatha: [
-      'What was your attention\'s tendency toward continuity?',
       'How did sustained breath awareness develop?',
     ],
     understanding: [

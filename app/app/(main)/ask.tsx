@@ -7,7 +7,6 @@ import {
   KeyboardAvoidingView,
   Platform,
 } from 'react-native';
-import { LinearGradient } from 'expo-linear-gradient';
 import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import { useState, useRef, useEffect } from 'react';
 import { router } from 'expo-router';
@@ -92,7 +91,7 @@ export default function AskScreen() {
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={{ flex: 1 }}
     >
-      <LinearGradient colors={['#e6e0f5', '#fde8d7']} style={{ flex: 1 }}>
+      <View style={{ flex: 1, backgroundColor: '#f8f4e9' }}>
         {/* Header */}
         <View
           style={{
@@ -105,11 +104,11 @@ export default function AskScreen() {
           }}
         >
           <Pressable onPress={handleClose} style={{ width: 50 }}>
-            <Text style={{ color: '#5c9eb7', fontSize: 16 }}>Done</Text>
+            <Text style={{ color: '#de8649', fontSize: 16 }}>Done</Text>
           </Pressable>
-          <Text style={{ color: '#1f2937', fontWeight: '500' }}>Ask</Text>
+          <Text style={{ color: '#3a5222', fontWeight: '500' }}>Ask</Text>
           <Pressable onPress={handleNewChat} style={{ width: 50, alignItems: 'flex-end' }}>
-            <Text style={{ color: '#5c9eb7', fontSize: 16 }}>New</Text>
+            <Text style={{ color: '#de8649', fontSize: 16 }}>New</Text>
           </Pressable>
         </View>
 
@@ -124,7 +123,7 @@ export default function AskScreen() {
         >
           {messages.length === 0 && (
             <View style={{ alignItems: 'center', marginTop: 32 }}>
-              <Text style={{ color: '#6b7280', textAlign: 'center' }}>
+              <Text style={{ color: '#707927', textAlign: 'center' }}>
                 Ask me anything about MIDL meditation, your practice, or how
                 to work with specific challenges.
               </Text>
@@ -146,14 +145,14 @@ export default function AskScreen() {
                   paddingHorizontal: 16,
                   paddingVertical: 12,
                   backgroundColor:
-                    message.role === 'user' ? '#5c9eb7' : 'rgba(255,255,255,0.9)',
+                    message.role === 'user' ? '#de8649' : '#ffffff',
                 }}
               >
                 <Text
                   style={{
                     fontSize: 16,
                     lineHeight: 24,
-                    color: message.role === 'user' ? '#ffffff' : '#1f2937',
+                    color: message.role === 'user' ? '#ffffff' : '#3a5222',
                   }}
                 >
                   {message.content}
@@ -172,13 +171,13 @@ export default function AskScreen() {
             >
               <View
                 style={{
-                  backgroundColor: 'rgba(255,255,255,0.9)',
+                  backgroundColor: '#ffffff',
                   borderRadius: 16,
                   paddingHorizontal: 16,
                   paddingVertical: 12,
                 }}
               >
-                <Text style={{ color: '#6b7280' }}>Thinking...</Text>
+                <Text style={{ color: '#707927' }}>Thinking...</Text>
               </View>
             </View>
           )}
@@ -206,15 +205,15 @@ export default function AskScreen() {
                 marginRight: 8,
                 alignItems: 'center',
                 justifyContent: 'center',
-                backgroundColor: trackProgress ? '#5c9eb7' : 'transparent',
-                borderColor: trackProgress ? '#5c9eb7' : '#d1d5db',
+                backgroundColor: trackProgress ? '#de8649' : 'transparent',
+                borderColor: trackProgress ? '#de8649' : '#d1d5db',
               }}
             >
               {trackProgress && (
                 <Text style={{ color: '#ffffff', fontSize: 12 }}>✓</Text>
               )}
             </View>
-            <Text style={{ color: '#4b5563', fontSize: 14 }}>
+            <Text style={{ color: '#3a5222', fontSize: 14 }}>
               Track my progress
             </Text>
           </Pressable>
@@ -230,22 +229,22 @@ export default function AskScreen() {
           <View
             style={{
               flexDirection: 'row',
-              backgroundColor: 'rgba(255,255,255,0.9)',
+              backgroundColor: '#ffffff',
               borderRadius: 16,
               borderWidth: 1,
-              borderColor: '#e5e7eb',
+              borderColor: 'rgba(112,121,39,0.2)',
               alignItems: 'center',
             }}
           >
             <TextInput
               placeholder="Ask anything..."
-              placeholderTextColor="#9ca3af"
+              placeholderTextColor="#707927"
               style={{
                 flex: 1,
                 paddingHorizontal: 16,
                 paddingVertical: 12,
                 fontSize: 16,
-                color: '#1f2937',
+                color: '#3a5222',
                 minHeight: 44,
               }}
               value={input}
@@ -261,7 +260,7 @@ export default function AskScreen() {
               <Text
                 style={{
                   fontWeight: '500',
-                  color: input.trim() && !isLoading ? '#5c9eb7' : '#d1d5db',
+                  color: input.trim() && !isLoading ? '#de8649' : '#d1d5db',
                 }}
               >
                 Send
@@ -269,7 +268,7 @@ export default function AskScreen() {
             </Pressable>
           </View>
         </View>
-      </LinearGradient>
+      </View>
     </KeyboardAvoidingView>
   );
 }

@@ -29,7 +29,7 @@ export default function HtmlRenderer({
 
 const styles = StyleSheet.create({
   text: {
-    color: '#1f2937',
+    color: '#3a5222', // forest
     fontSize: 14,
     lineHeight: 20,
   },

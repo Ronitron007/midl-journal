@@ -7,6 +7,7 @@ export default function MainLayout() {
     <View className="flex-1">
       <Stack screenOptions={{ headerShown: false }}>
         <Stack.Screen name="tracker" />
+        <Stack.Screen name="settings" />
         <Stack.Screen
           name="reflect"
           options={{ presentation: 'modal', animation: 'slide_from_bottom' }}

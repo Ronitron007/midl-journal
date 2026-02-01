@@ -1,15 +1,15 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ["./app/**/*.{js,jsx,ts,tsx}"],
+  content: ["./app/**/*.{js,jsx,ts,tsx}", "./components/**/*.{js,jsx,ts,tsx}"],
   presets: [require("nativewind/preset")],
   theme: {
     extend: {
       colors: {
-        lavender: '#e6e0f5',
-        peach: '#fde8d7',
-        sage: '#7c9082',
-        'sage-light': '#b8c4ba',
-        'muted-blue': '#5c9eb7',
+        // Primary 4-color palette
+        cream: '#f8f4e9',
+        terracotta: '#de8649',
+        olive: '#707927',
+        forest: '#3a5222',
       },
     },
   },

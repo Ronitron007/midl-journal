@@ -1,185 +1,153 @@
-import { useEffect, useState } from 'react';
+import { useRef, useState, useCallback } from 'react';
 import {
   View,
   Text,
   Pressable,
   Modal,
   Dimensions,
-  ScrollView,
+  FlatList,
+  NativeSyntheticEvent,
+  NativeScrollEvent,
 } from 'react-native';
-import { BlurView } from 'expo-blur';
+import { useSafeAreaInsets } from 'react-native-safe-area-context';
 import * as Haptics from 'expo-haptics';
-import Animated, {
-  useSharedValue,
-  useAnimatedStyle,
-  withSpring,
-  withDelay,
-  withSequence,
-  FadeIn,
-  FadeOut,
-  SlideInDown,
-} from 'react-native-reanimated';
-import { Nudge, NudgeType } from '../lib/nudges';
+import Animated, { FadeIn, FadeOut } from 'react-native-reanimated';
+import { Nudge } from '../lib/nudges';
 
-const { height: SCREEN_HEIGHT } = Dimensions.get('window');
-
-// Warm colors matching app's lavender/peach/sage palette
-const NUDGE_COLORS: Record<NudgeType, { bg: string; text: string; emoji: string }> = {
-  samatha: { bg: '#dcfce7', text: '#166534', emoji: '🌿' },
-  understanding: { bg: '#e0e7ff', text: '#3730a3', emoji: '💡' },
-  hindrance: { bg: '#fef3c7', text: '#92400e', emoji: '🌊' },
-  conditions: { bg: '#fee2e2', text: '#991b1b', emoji: '🔍' },
-  balance: { bg: '#dbeafe', text: '#1e40af', emoji: '⚖️' },
-  curiosity: { bg: '#f3e8ff', text: '#6b21a8', emoji: '✨' },
-  pattern: { bg: '#fde8d7', text: '#7c2d12', emoji: '🔄' },
-};
-
-const WARM_GREETINGS = [
-  "Before you write...",
-  "A gentle nudge...",
-  "Something to sit with...",
-  "A thought to hold...",
-  "Consider this...",
-];
+const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 
 type Props = {
   visible: boolean;
   nudges: Nudge[];
   onClose: () => void;
-  onSelectNudge: (nudge: Nudge) => void;
-  onSkip: () => void;
+  onComplete: () => void;
 };
 
-export function NudgeOverlay({ visible, nudges, onClose, onSelectNudge, onSkip }: Props) {
-  const [greeting] = useState(() =>
-    WARM_GREETINGS[Math.floor(Math.random() * WARM_GREETINGS.length)]
-  );
+export function NudgeOverlay({ visible, nudges, onClose, onComplete }: Props) {
+  const insets = useSafeAreaInsets();
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const flatListRef = useRef<FlatList<Nudge>>(null);
 
-  const handleSelectNudge = (nudge: Nudge) => {
+  const contentHeight = SCREEN_HEIGHT - insets.top - insets.bottom - 200; // header + dots + button
+
+  const goToNext = useCallback(() => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    onSelectNudge(nudge);
-  };
+    if (currentIndex < nudges.length - 1) {
+      const nextIndex = currentIndex + 1;
+      flatListRef.current?.scrollToOffset({
+        offset: nextIndex * SCREEN_WIDTH,
+        animated: true
+      });
+      setCurrentIndex(nextIndex);
+    } else {
+      handleBeginWriting();
+    }
+  }, [currentIndex, nudges.length]);
 
-  const handleSkip = () => {
+  const handleBeginWriting = useCallback(() => {
+    Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
+    setCurrentIndex(0);
+    onComplete();
+  }, [onComplete]);
+
+  const handleSkip = useCallback(() => {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    onSkip();
-  };
+    setCurrentIndex(0);
+    onClose();
+  }, [onClose]);
 
-  if (!visible) return null;
+  const onScroll = useCallback((event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const offsetX = event.nativeEvent.contentOffset.x;
+    const newIndex = Math.round(offsetX / SCREEN_WIDTH);
+    if (newIndex !== currentIndex && newIndex >= 0 && newIndex < nudges.length) {
+      setCurrentIndex(newIndex);
+      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    }
+  }, [currentIndex, nudges.length]);
+
+  if (!visible || nudges.length === 0) return null;
+
+  const isLastNudge = currentIndex === nudges.length - 1;
 
   return (
     <Modal
       visible={visible}
       transparent
-      animationType="fade"
-      onRequestClose={onClose}
+      animationType="none"
+      onRequestClose={handleSkip}
     >
-      <BlurView intensity={20} tint="light" className="flex-1">
-        <Pressable onPress={onClose} className="flex-1 justify-end">
-          <Pressable onPress={(e) => e.stopPropagation()}>
-            <Animated.View
-              entering={SlideInDown.springify().damping(18)}
-              exiting={FadeOut.duration(200)}
-              className="bg-white rounded-t-3xl px-6 pt-6 pb-10 shadow-2xl"
-              style={{ maxHeight: SCREEN_HEIGHT * 0.7 }}
-            >
-              {/* Header */}
-              <Animated.View entering={FadeIn.delay(100)} className="items-center mb-6">
-                <Text className="text-3xl mb-2">🧘</Text>
-                <Text className="text-gray-800 text-xl font-serif text-center">
-                  {greeting}
-                </Text>
-                <Text className="text-gray-500 text-sm mt-1 text-center">
-                  Pick one to guide your reflection
-                </Text>
-              </Animated.View>
-
-              {/* Nudge Cards */}
-              <ScrollView
-                className="max-h-80"
-                showsVerticalScrollIndicator={false}
-                contentContainerStyle={{ paddingBottom: 16 }}
-              >
-                {nudges.map((nudge, index) => {
-                  const colors = NUDGE_COLORS[nudge.type] || NUDGE_COLORS.samatha;
-                  return (
-                    <NudgeCard
-                      key={index}
-                      nudge={nudge}
-                      colors={colors}
-                      index={index}
-                      onPress={() => handleSelectNudge(nudge)}
-                    />
-                  );
-                })}
-              </ScrollView>
-
-              {/* Skip Button */}
-              <Animated.View entering={FadeIn.delay(400)}>
-                <Pressable
-                  onPress={handleSkip}
-                  className="mt-4 py-3 items-center"
-                >
-                  <Text className="text-gray-400 text-base">
-                    I'll find my own way
-                  </Text>
-                </Pressable>
-              </Animated.View>
-            </Animated.View>
-          </Pressable>
-        </Pressable>
-      </BlurView>
-    </Modal>
-  );
-}
-
-function NudgeCard({
-  nudge,
-  colors,
-  index,
-  onPress,
-}: {
-  nudge: Nudge;
-  colors: { bg: string; text: string; emoji: string };
-  index: number;
-  onPress: () => void;
-}) {
-  const scale = useSharedValue(1);
-
-  const animatedStyle = useAnimatedStyle(() => ({
-    transform: [{ scale: scale.value }],
-  }));
-
-  const handlePressIn = () => {
-    scale.value = withSpring(0.97, { damping: 15 });
-  };
-
-  const handlePressOut = () => {
-    scale.value = withSpring(1, { damping: 15 });
-  };
-
-  return (
-    <Animated.View
-      entering={SlideInDown.delay(100 + index * 80).springify().damping(16)}
-      style={animatedStyle}
-    >
-      <Pressable
-        onPress={onPress}
-        onPressIn={handlePressIn}
-        onPressOut={handlePressOut}
-        className="mb-3 rounded-2xl p-4 flex-row items-start"
-        style={{ backgroundColor: colors.bg }}
+      <Animated.View
+        entering={FadeIn.duration(250)}
+        exiting={FadeOut.duration(200)}
+        className="flex-1 bg-cream"
+        style={{ paddingTop: insets.top, paddingBottom: insets.bottom }}
       >
-        <Text className="text-2xl mr-3">{colors.emoji}</Text>
-        <View className="flex-1">
-          <Text
-            className="text-base leading-6"
-            style={{ color: colors.text }}
-          >
-            {nudge.text}
+        {/* Header */}
+        <View className="px-6 py-4 flex-row justify-between items-center">
+          <View style={{ width: 50 }} />
+          <Text className="text-olive text-sm">
+            {currentIndex + 1} of {nudges.length}
           </Text>
+          <Pressable onPress={handleSkip} hitSlop={12}>
+            <Text className="text-olive text-base">Skip</Text>
+          </Pressable>
         </View>
-      </Pressable>
-    </Animated.View>
+
+        {/* Carousel */}
+        <FlatList
+          ref={flatListRef}
+          data={nudges}
+          horizontal
+          pagingEnabled
+          showsHorizontalScrollIndicator={false}
+          onScroll={onScroll}
+          scrollEventThrottle={16}
+          keyExtractor={(_, index) => index.toString()}
+          getItemLayout={(_, index) => ({
+            length: SCREEN_WIDTH,
+            offset: SCREEN_WIDTH * index,
+            index,
+          })}
+          renderItem={({ item }) => (
+            <View
+              style={{
+                width: SCREEN_WIDTH,
+                height: contentHeight,
+                paddingHorizontal: 32,
+                justifyContent: 'center',
+              }}
+            >
+              <Text className="text-forest text-2xl font-serif text-center leading-relaxed">
+                {item.text}
+              </Text>
+            </View>
+          )}
+        />
+
+        {/* Progress dots */}
+        <View className="flex-row justify-center gap-2 mb-6">
+          {nudges.map((_, index) => (
+            <View
+              key={index}
+              className={`w-2 h-2 rounded-full ${
+                index === currentIndex ? 'bg-terracotta' : 'bg-olive/30'
+              }`}
+            />
+          ))}
+        </View>
+
+        {/* Bottom CTA */}
+        <View className="px-6 pb-4">
+          <Pressable
+            onPress={goToNext}
+            className="bg-terracotta py-4 rounded-2xl items-center"
+          >
+            <Text className="text-white text-base font-medium">
+              {isLastNudge ? 'Begin writing' : 'Next'}
+            </Text>
+          </Pressable>
+        </View>
+      </Animated.View>
+    </Modal>
   );
 }

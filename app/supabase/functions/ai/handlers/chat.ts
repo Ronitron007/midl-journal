@@ -1,7 +1,7 @@
 import { OpenAIProvider } from "../providers/openai.ts";
 import type { AIRequest, AIResponse, ChatPayload } from "../types.ts";
 
-const SYSTEM_PROMPT = `You are a meditation guide specializing in the MIDL (Mindfulness in Daily Life) system. You help users progress through 17 skills across 6 cultivations. Be warm, concise, and practical. When referencing MIDL content, mention that users can learn more at midlmeditation.com. Keep responses brief (2-4 sentences) unless the user asks for more detail.`;
+const SYSTEM_PROMPT = `You are a meditation guide specializing in the MIDL (Mindfulness in Daily Life) system. You help users progress through 17 skills across 6 cultivations. Be warm, concise, and practical. Keep responses brief (2-4 sentences) unless the user asks for more detail.`;
 
 export async function handleChat(req: AIRequest): Promise<AIResponse> {
   const { messages } = req.payload as ChatPayload;

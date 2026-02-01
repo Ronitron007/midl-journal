@@ -37,7 +37,7 @@ export default function FloatingButtons() {
             borderRadius: 16,
             paddingVertical: 16,
             borderWidth: 1,
-            borderColor: '#f3f4f6',
+            borderColor: 'rgba(112,121,39,0.2)',
             shadowColor: '#000',
             shadowOffset: { width: 0, height: 2 },
             shadowOpacity: 0.1,
@@ -45,7 +45,7 @@ export default function FloatingButtons() {
             elevation: 4,
           }}
         >
-          <Text style={{ textAlign: 'center', color: '#1f2937', fontWeight: '500' }}>
+          <Text style={{ textAlign: 'center', color: '#3a5222', fontWeight: '500' }}>
             Reflect
           </Text>
         </Pressable>
@@ -57,7 +57,7 @@ export default function FloatingButtons() {
             width: 12,
             height: 12,
             borderRadius: 6,
-            backgroundColor: '#ef4444',
+            backgroundColor: '#de8649',
             borderWidth: 2,
             borderColor: '#ffffff',
           }} />
@@ -67,7 +67,7 @@ export default function FloatingButtons() {
         <Pressable
           onPress={() => router.push('/(main)/ask')}
           style={{
-            backgroundColor: '#5c9eb7',
+            backgroundColor: '#de8649',
             borderRadius: 16,
             paddingVertical: 16,
             shadowColor: '#000',
@@ -89,7 +89,7 @@ export default function FloatingButtons() {
             width: 12,
             height: 12,
             borderRadius: 6,
-            backgroundColor: '#ef4444',
+            backgroundColor: '#de8649',
             borderWidth: 2,
             borderColor: '#ffffff',
           }} />

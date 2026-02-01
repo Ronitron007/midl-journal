@@ -12,6 +12,7 @@ export type ReflectDraft = {
   isGuided: boolean;
   trackProgress: boolean;
   skillPracticed: string;
+  entryDate: string; // YYYY-MM-DD format
 };
 
 export type AskDraft = {

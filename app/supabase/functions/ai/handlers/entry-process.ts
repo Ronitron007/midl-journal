@@ -1,48 +1,106 @@
 import { OpenAIProvider } from "../providers/openai.ts";
+import { SKILLS_DATA } from "../data/skills.ts";
 import type { AIRequest, AIResponse, EntryProcessPayload, ProcessedSignals } from "../types.ts";
 
 export async function handleEntryProcess(req: AIRequest): Promise<AIResponse> {
-  const { entryId, content } = req.payload as EntryProcessPayload;
+  const { entryId, content, skillPracticed } = req.payload as EntryProcessPayload;
 
   if (content.split(" ").length < 10) {
     return { skipped: true };
   }
 
+  // Get skill data for the practiced skill (default to 00 if not found)
+  const skill = SKILLS_DATA[skillPracticed] || SKILLS_DATA["00"];
+
   const provider = new OpenAIProvider();
 
-  const prompt = `Analyze this meditation journal entry and extract:
-1. A brief summary (1-2 sentences)
-2. Mood score (1-5, where 1=very negative, 5=very positive)
-3. Mood tags (list of emotions like "anxious", "calm", "frustrated", "peaceful")
-4. Themes (topics like "sleep", "work", "restlessness", "breathing")
-5. Whether this describes a breakthrough moment (true/false)
-6. Whether this describes a struggle (true/false)
-7. Whether this contains crisis language like self-harm or suicidal ideation (true/false)
+  // Prompt aligned with Stephen's post-meditation reflection framework:
+  // 1. What was your mind's tendency towards relaxation and calm (samatha)?
+  // 2. What did you understand, what did you experience?
+  // 3. What was the dominant hindrance?
+  // 4. What conditions led to it?
+  // 5. Your understanding to bring them to balance
+  const prompt = `You are analyzing a meditation journal entry through the MIDL framework, which emphasizes developing samatha (relaxation/calm) while understanding hindrances through curious investigation.
+
+The meditator is practicing Skill ${skill.id}: ${skill.name}.
+
+For this skill:
+- MARKER (sign of samatha developing): ${skill.marker}
+- HINDRANCE (obstacle to samatha): ${skill.hindrance}
+- KEY TECHNIQUES: ${skill.techniques.join(", ")}
+- PROGRESSION CRITERIA: ${skill.progressionCriteria}
+
+Analyze this journal entry using Stephen's reflection framework:
 
 Entry: "${content}"
 
-Respond in JSON format:
+Extract the following and respond in JSON:
+
 {
-  "summary": "...",
-  "mood_score": 3,
-  "mood_tags": ["..."],
-  "themes": ["..."],
-  "has_breakthrough": false,
-  "has_struggle": false,
-  "has_crisis_flag": false
-}`;
+  "skill_analyzed": "${skill.id}",
+
+  // SAMATHA ASSESSMENT - "What was your mind's tendency towards relaxation and calm?"
+  "samatha_tendency": <"strong" | "moderate" | "weak" | "none" - overall tendency toward relaxation/calm>,
+  "marker_present": <boolean - did they experience the skill's marker?>,
+  "marker_notes": <string or null - what did they experience related to samatha/the marker?>,
+
+  // HINDRANCE ASSESSMENT - "What was the dominant hindrance?"
+  "hindrance_present": <boolean - did a hindrance arise?>,
+  "hindrance_notes": <string or null - what was the hindrance experience?>,
+  "hindrance_conditions": <string[] - "What conditions led to it?" e.g., ["tired", "stressed from work", "noisy environment"]>,
+
+  // WORKING WITH EXPERIENCE - "Your understanding to bring them to balance"
+  "balance_approach": <string or null - how did they work with the hindrance? what helped?>,
+  "key_understanding": <string or null - "What did you understand?" any insight or learning?>,
+
+  // TECHNIQUES AND PROGRESSION
+  "techniques_mentioned": <string[] - which techniques from this skill did they use?>,
+  "progression_signals": <string[] - signs they're developing toward the next skill>,
+
+  // GENERAL
+  "summary": <string - 1-2 sentence summary>,
+  "mood_score": <number 1-5>,
+  "mood_tags": <string[] - emotions present>,
+  "themes": <string[] - non-MIDL life topics>,
+  "has_breakthrough": <boolean - significant insight or shift?>,
+  "has_struggle": <boolean - significant difficulty?>,
+  "has_crisis_flag": <boolean - crisis language present?>
+}
+
+Be thorough but accurate. Only include information clearly present in the entry. For samatha_tendency:
+- "strong": Clear relaxation, calm, settled mind
+- "moderate": Some relaxation but inconsistent
+- "weak": Minimal tendency toward calm
+- "none": No relaxation/calm experienced`;
 
   try {
     const result = await provider.complete({
       messages: [{ role: "user", content: prompt }],
-      maxTokens: 300,
+      maxTokens: 600,
       jsonMode: true,
     });
     const signals = JSON.parse(result || "{}") as ProcessedSignals;
 
+    // Update entry with all signals
     await req.supabase
       .from("entries")
       .update({
+        // MIDL-specific - Samatha
+        skill_analyzed: signals.skill_analyzed,
+        samatha_tendency: signals.samatha_tendency,
+        marker_present: signals.marker_present,
+        marker_notes: signals.marker_notes,
+        // Hindrance
+        hindrance_present: signals.hindrance_present,
+        hindrance_notes: signals.hindrance_notes,
+        hindrance_conditions: signals.hindrance_conditions,
+        // Working with experience
+        balance_approach: signals.balance_approach,
+        key_understanding: signals.key_understanding,
+        // Techniques and progression
+        techniques_mentioned: signals.techniques_mentioned,
+        progression_signals: signals.progression_signals,
+        // Generic
         summary: signals.summary,
         mood_score: signals.mood_score,
         mood_tags: signals.mood_tags,

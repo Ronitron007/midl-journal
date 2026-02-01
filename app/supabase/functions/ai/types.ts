@@ -41,9 +41,34 @@ export type OnboardingPayload = {
 export type EntryProcessPayload = {
   entryId: string;
   content: string;
+  skillPracticed: string;
 };
 
+export type SamathaTendency = 'strong' | 'moderate' | 'weak' | 'none';
+
 export type ProcessedSignals = {
+  // MIDL-specific (primary) - aligned with Stephen's framework
+  skill_analyzed: string;
+
+  // Samatha (relaxation/calm) assessment
+  samatha_tendency: SamathaTendency;  // tendency toward relaxation and calm
+  marker_present: boolean;
+  marker_notes: string | null;
+
+  // Hindrance assessment
+  hindrance_present: boolean;
+  hindrance_notes: string | null;
+  hindrance_conditions: string[];     // what triggered/led to the hindrance
+
+  // Working with experience
+  balance_approach: string | null;    // how they worked with the hindrance
+  key_understanding: string | null;   // insight or understanding gained
+
+  // Techniques and progression
+  techniques_mentioned: string[];
+  progression_signals: string[];
+
+  // Generic (secondary)
   summary: string;
   mood_score: number;
   mood_tags: string[];

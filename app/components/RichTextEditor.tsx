@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { View, StyleSheet, Platform, KeyboardAvoidingView } from 'react-native';
+import { View, StyleSheet, Platform, KeyboardAvoidingView, Pressable, Text, Keyboard } from 'react-native';
 import {
   RichText,
   Toolbar,
@@ -44,11 +44,11 @@ export default function RichTextEditor({
           min-height: ${minHeight}px;
           font-size: 16px;
           line-height: 1.6;
-          color: #1f2937;
+          color: #3a5222;
         }
         .ProseMirror p.is-editor-empty:first-child::before {
           content: "${placeholder}";
-          color: #9ca3af;
+          color: #707927;
           pointer-events: none;
           float: left;
           height: 0;
@@ -90,7 +90,14 @@ export default function RichTextEditor({
       </View>
       {showToolbar && (
         <View style={styles.toolbarContainer}>
-          <Toolbar editor={editor} items={toolbarItems} />
+          <View style={styles.toolbarRow}>
+            <View style={styles.toolbarItems}>
+              <Toolbar editor={editor} items={toolbarItems} />
+            </View>
+            <Pressable onPress={() => Keyboard.dismiss()} style={styles.doneButton}>
+              <Text style={styles.doneButtonText}>Done</Text>
+            </Pressable>
+          </View>
         </View>
       )}
     </KeyboardAvoidingView>
@@ -107,9 +114,26 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   toolbarContainer: {
-    backgroundColor: '#f9fafb',
+    backgroundColor: '#f8f4e9',
     borderTopWidth: 1,
-    borderTopColor: '#e5e7eb',
+    borderTopColor: 'rgba(112,121,39,0.2)',
     paddingVertical: 8,
+  },
+  toolbarRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between',
+  },
+  toolbarItems: {
+    flex: 1,
+  },
+  doneButton: {
+    paddingHorizontal: 16,
+    paddingVertical: 8,
+  },
+  doneButtonText: {
+    color: '#de8649',
+    fontWeight: '600',
+    fontSize: 16,
   },
 });
