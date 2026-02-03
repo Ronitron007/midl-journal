@@ -29,9 +29,20 @@
 
 ```
 midl-journal/
+├── package.json                                # Root scripts (generate, predeploy:functions)
+├── scripts/
+│   └── generate-shared-data.ts                 # Parses skills MD → JSON + copies to edge functions
+├── data/
+│   └── midl-skills/
+│       ├── SKILL_FORMAT.md                     # Markdown template spec
+│       └── skill_XX.md                         # 17 skill files (00-16)
+├── shared/
+│   ├── skills.json                             # Generated skill data
+│   ├── cultivations.json                       # Generated cultivation data
+│   └── types.ts                                # Shared TypeScript types
 ├── docs/
 │   └── plans/
-│       └── 2026-01-22-implementation-plan.md  # Original implementation plan
+│       └── 2026-01-22-implementation-plan.md   # Original implementation plan
 ├── app/                                        # Expo app root
 │   ├── app/                                    # Expo Router screens
 │   │   ├── _layout.tsx                         # Root layout (SafeAreaProvider, AuthProvider)
@@ -42,27 +53,54 @@ midl-journal/
 │   │   │   └── questions.tsx                   # Onboarding questionnaire
 │   │   └── (main)/
 │   │       ├── _layout.tsx                     # Main app layout + FloatingButtons
-│   │       ├── tracker.tsx                     # Home screen with SkillMap
-│   │       ├── reflect.tsx                     # Journal entry screen
-│   │       └── ask.tsx                         # AI chat screen
+│   │       ├── tracker.tsx                     # Home screen with SkillMap + progression
+│   │       ├── reflect.tsx                     # Journal entry screen + nudges
+│   │       ├── ask.tsx                         # AI chat screen (tool-aware)
+│   │       ├── settings.tsx                    # Settings screen (sign out)
+│   │       └── entry/[id].tsx                  # Entry detail screen
 │   ├── components/
 │   │   ├── FloatingButtons.tsx                 # Reflect/Ask floating action buttons
-│   │   └── SkillMap.tsx                        # Horizontal skill timeline component
+│   │   ├── SkillMap.tsx                        # Horizontal skill timeline component
+│   │   ├── EntryCard.tsx                       # Recent entry card on tracker
+│   │   └── NudgeOverlay.tsx                    # Nudge prompts overlay
 │   ├── lib/
 │   │   ├── supabase.ts                         # Supabase client config
 │   │   ├── auth-context.tsx                    # Auth state management (React Context)
-│   │   ├── entries.ts                          # Entry CRUD helpers
-│   │   ├── openai.ts                           # OpenAI chat helper
-│   │   ├── ai-feedback.ts                      # AI feedback for reflections
-│   │   ├── entry-processor.ts                  # Entry analysis (mood, themes, signals)
-│   │   ├── onboarding-eval.ts                  # AI skill recommendation from onboarding
-│   │   ├── onboarding-types.ts                 # Onboarding data types and options
+│   │   ├── draft-context.tsx                   # Draft persistence (reflect, ask)
+│   │   ├── entries.ts                          # Entry CRUD helpers + types
+│   │   ├── ai.ts                               # OpenAI client (chat + streamChat)
+│   │   ├── progression.ts                      # Skill advancement logic
+│   │   ├── nudges.ts                           # Stephen's framework prompts
 │   │   ├── midl-skills.ts                      # MIDL skill definitions (00-16)
+│   │   ├── onboarding-types.ts                 # Onboarding data types and options
 │   │   └── nativewind-interop.ts               # NativeWind cssInterop for 3rd party components
 │   ├── supabase/
-│   │   └── migrations/
-│   │       ├── 001_initial_schema.sql          # Base schema (users, entries, context_summaries)
-│   │       └── 002_add_user_insert_policy.sql  # RLS INSERT policy fix
+│   │   ├── migrations/
+│   │   │   ├── 001_initial_schema.sql          # Base schema (users, entries, context_summaries)
+│   │   │   ├── 002_add_user_insert_policy.sql  # RLS INSERT policy fix
+│   │   │   ├── 003_add_embeddings.sql          # pgvector HNSW index
+│   │   │   └── 005_add_midl_signals.sql        # MIDL signal columns
+│   │   └── functions/
+│   │       ├── ai/                             # Main AI edge function
+│   │       │   ├── index.ts                    # Router (chat, reflect, onboarding, entry-process)
+│   │       │   ├── handlers/
+│   │       │   │   ├── chat.ts                 # Tool-aware chat (non-streaming)
+│   │       │   │   ├── chat-stream.ts          # SSE streaming chat
+│   │       │   │   ├── entry-process.ts        # MIDL signal extraction
+│   │       │   │   ├── reflect.ts              # Feedback generation
+│   │       │   │   └── onboarding.ts           # Skill recommendation
+│   │       │   ├── tools/
+│   │       │   │   ├── definitions.ts          # Tool schemas (5 tools)
+│   │       │   │   └── handlers.ts             # Tool execution
+│   │       │   ├── prompts/
+│   │       │   │   └── system.ts               # Dynamic context injection
+│   │       │   ├── providers/
+│   │       │   │   └── openai.ts               # Official SDK wrapper + embed()
+│   │       │   └── data/
+│   │       │       ├── skills.ts               # Skill data for tools
+│   │       │       ├── skill-markdown.ts       # Generated: embedded markdown + getSkillMarkdown()
+│   │       │       └── types.ts                # Shared types
+│   │       └── backfill-embeddings/            # Batch embedding generation
 │   ├── .env.example                            # Environment variables template
 │   ├── SETUP.md                                # Development setup guide
 │   ├── app.json                                # Expo config
@@ -109,6 +147,17 @@ midl-journal/
 - has_crisis_flag: BOOLEAN
 - embedding: VECTOR(1536) (for semantic search)
 - processed_at: TIMESTAMPTZ
+# MIDL Signal columns (migration 005)
+- samatha_tendency: TEXT ('strong'|'moderate'|'weak'|'none')
+- marker_present: BOOLEAN
+- marker_notes: TEXT
+- hindrance_present: BOOLEAN
+- hindrance_notes: TEXT
+- hindrance_conditions: TEXT[]
+- balance_approach: TEXT
+- key_understanding: TEXT
+- techniques_mentioned: TEXT[]
+- progression_signals: TEXT[]
 ```
 
 **context_summaries** (rolling summaries for long-term context)
@@ -200,22 +249,49 @@ React Context providing:
 
 ## AI Integration
 
-### OpenAI Helpers
+### Architecture
 
-All use `gpt-4o-mini` model:
+AI is powered by Supabase Edge Functions with official OpenAI SDK:
 
-| File | Purpose | Max Tokens |
-|------|---------|------------|
-| `openai.ts` | Chat conversations (Ask mode) | 500 |
-| `ai-feedback.ts` | Reflection feedback | 150 |
-| `onboarding-eval.ts` | Skill recommendation | 200 |
-| `entry-processor.ts` | Entry analysis (mood, themes) | 300 |
+```
+Client (lib/ai.ts)  -->  Edge Function (supabase/functions/ai)
+                              |
+                              ├── handlers/chat.ts (tool-aware, non-streaming)
+                              ├── handlers/chat-stream.ts (SSE streaming)
+                              ├── handlers/entry-process.ts (MIDL signals)
+                              ├── handlers/reflect.ts (feedback)
+                              └── handlers/onboarding.ts (skill rec)
+```
+
+### AI Tools (Chat Mode)
+
+| Tool | Purpose |
+|------|---------|
+| `get_user_profile` | Current skill, stats, onboarding data |
+| `get_skill_details` | Full skill markdown (instructions, tips, obstacles, etc.) |
+| `get_recent_entries` | Entries with MIDL signals |
+| `get_progression_stats` | Advancement readiness |
+| `get_hindrance_patterns` | Recurring struggles analysis |
+| `get_practice_summary` | Rolling weekly/monthly summaries |
 
 ### System Prompts
 
-- **Chat:** MIDL meditation guide, warm, concise, practical
-- **Feedback:** Acknowledge practice, gentle suggestions, validate effort
-- **Eval:** Recommend skill 00-06 based on experience/struggles/goals
+Located in `supabase/functions/ai/prompts/system.ts`:
+- Dynamic context injection (user profile, current skill)
+- 32k char conversation history window
+- Skill-specific guidance
+
+### Client API (lib/ai.ts)
+
+```typescript
+// Non-streaming (current)
+const response = await chat(messages, userId, trackProgress);
+
+// Streaming (implemented but not used in UI yet)
+for await (const chunk of streamChat(messages, userId, trackProgress)) {
+  // chunk.content for text, chunk.done for completion
+}
+```
 
 ## Environment Variables
 
@@ -297,25 +373,74 @@ supabase link --project-ref yszsiwobkyxtlsgzcezy
 supabase db push
 ```
 
+## Skills Data Pipeline
+
+Source markdown files in `data/midl-skills/` are the single source of truth for all skill content.
+
+### Generate Script
+
+`scripts/generate-shared-data.ts` parses markdown files and outputs:
+- `shared/skills.json` - Full skill objects (parsed)
+- `shared/cultivations.json` - Cultivation groupings
+- `app/supabase/functions/ai/data/skills.json` - Copy for edge functions
+- `app/supabase/functions/ai/data/skill-markdown.ts` - **Embedded raw markdown** (for bundling)
+
+**Why embedded?** Supabase Edge Functions only bundle imported code. Static `.md` files don't deploy. The generate script embeds markdown as template literal strings in TypeScript so they're included in the bundle.
+
+### Pre-Deployment
+
+**Always run before deploying edge functions:**
+```bash
+npm run generate
+# or
+npm run predeploy:functions
+```
+
+### Loading Skill Markdown in Edge Functions
+
+```typescript
+import { getSkillMarkdown } from "../data/skill-markdown.ts";
+
+const markdown = getSkillMarkdown("00"); // Returns full markdown content (sync)
+```
+
+The `get_skill_details` tool returns full markdown instead of just JSON fields:
+```typescript
+{ id: "00", name: "Diaphragmatic Breathing", markdown: "# Skill 00: ..." }
+```
+
 ## Current State
 
 **Completed:**
-- All 18 tasks from implementation plan
 - Full auth flow (Google + Apple)
 - Onboarding with AI skill recommendation
-- Tracker with SkillMap
-- Reflect mode with AI feedback
-- Ask mode with chat
-- Entry processing helpers
-- Database schema with RLS
+- Tracker with SkillMap + recent entries display
+- Skill progression logic (readiness calculation + advancement)
+- Reflect mode with AI feedback + nudges system
+- Ask mode with tool-aware AI chat
+- Entry processing with MIDL signal extraction
+- Entry detail screen with signals display
+- Settings screen (sign out)
+- Draft persistence (reflect, ask)
+- Database schema with RLS + MIDL signals columns
+- Edge function architecture with tools
+- Streaming support (backend only)
+- Backfill-embeddings function (ready to deploy)
+
+**Partially Implemented:**
+- Chat streaming: backend ready, client uses non-streaming
+- Vector search RAG: embedding infrastructure exists, search not wired
 
 **Not Yet Implemented:**
-- Actual embedding generation for entries
-- Context summary generation (rolling summaries)
+- Vector search in chat (`match_entries` RPC, `search_entries` tool)
+- Embedding generation on entry save (backfill exists, realtime missing)
 - Push notifications
-- Skill progression logic (when to advance skills)
-- Session history display on tracker
-- Profile/settings screen
+- Profile editing/preferences
+- Apple Health integration
+
+**Planned/Designed (see plans):**
+- Rolling context summaries (weekly/monthly) - `app/docs/plans/2026-02-03-rolling-context-summaries-HANDOFF.md`
+- Pre-sit guidance (home screen card with patterns + skill recommendations) - same plan file
 
 ## Known Issues
 
@@ -324,6 +449,29 @@ supabase db push
 2. **Expo Go limitations:** Google OAuth uses auth.expo.io proxy. Production builds need proper deep linking setup.
 
 3. **React version conflict:** Project uses React 19.1.0 due to Expo compatibility. Some packages may complain about peer deps - use `--force` if needed.
+
+## Immediate Gaps / TODOs
+
+1. **Vector Search RAG** - Infrastructure ready, wiring missing:
+   - Create `match_entries` SQL RPC function (pgvector similarity search)
+   - Add `search_entries` tool to CHAT_TOOLS
+   - Call `embed()` in entry-process handler on save
+   - Deploy migration for RPC function
+
+2. **Chat Streaming UX** - Backend done, client not using:
+   - Update `ask.tsx` to call `streamChat()` instead of `chat()`
+   - Display tokens as they arrive
+
+3. **Push Notifications** - Zero implementation:
+   - Install `expo-notifications`
+   - Add notification preferences in settings
+   - Create background scheduler
+
+4. **Rolling Summaries + Pre-Sit Guidance** - PLANNED, see `app/docs/plans/2026-02-03-rolling-context-summaries-HANDOFF.md`:
+   - Weekly summaries (3+ entries threshold)
+   - Monthly summaries (cron job)
+   - Pre-sit guidance card on home screen (1 entry threshold)
+   - Based on research: guidance > gamification for meditation apps
 
 ## Code Patterns
 
@@ -366,10 +514,14 @@ router.back(); // Go back
 | Area | Key Files |
 |------|-----------|
 | Auth | `lib/auth-context.tsx`, `onboarding/index.tsx` |
-| Onboarding | `onboarding/questions.tsx`, `lib/onboarding-eval.ts`, `lib/onboarding-types.ts` |
-| Main Screens | `(main)/tracker.tsx`, `(main)/reflect.tsx`, `(main)/ask.tsx` |
-| AI | `lib/openai.ts`, `lib/ai-feedback.ts`, `lib/entry-processor.ts` |
+| Onboarding | `onboarding/questions.tsx`, `lib/onboarding-types.ts` |
+| Main Screens | `(main)/tracker.tsx`, `(main)/reflect.tsx`, `(main)/ask.tsx`, `(main)/entry/[id].tsx` |
+| AI Client | `lib/ai.ts` (chat + streamChat) |
+| AI Edge Functions | `supabase/functions/ai/` (handlers, tools, prompts, providers) |
+| Progression | `lib/progression.ts` (readiness, advancement) |
+| Nudges | `lib/nudges.ts` (Stephen's framework prompts) |
 | Data | `lib/entries.ts`, `lib/midl-skills.ts` |
+| State | `lib/auth-context.tsx`, `lib/draft-context.tsx` |
 | DB | `supabase/migrations/*.sql` |
 | Config | `app.json`, `tailwind.config.js`, `babel.config.js` |
 
@@ -505,7 +657,83 @@ app/
 │           └── Stack
 ```
 
+### 8. Home Screen Philosophy (Research-Backed)
+
+**Key insight:** The app is a bookend to practice, not the practice itself.
+
+```
+BEFORE SIT          SIT              AFTER SIT
+    │                │                   │
+    ▼                ▼                   ▼
+┌─────────┐    ┌──────────┐    ┌─────────────┐
+│ Read &  │    │ (outside │    │   Reflect   │
+│ Intend  │───▶│   app)   │───▶│   & Learn   │
+└─────────┘    └──────────┘    └─────────────┘
+```
+
+**Principles (from trend research):**
+- Guidance > gamification (streaks create anxiety, not growth)
+- Daily reminders = 3x retention (Calm's biggest finding)
+- "What to focus on" > "How many sessions"
+- Frame as skill development, not achievements
+- Grace over guilt (no streak shaming)
+
+**Home screen priorities:**
+1. **Pre-Sit Guidance Card** (primary) - patterns from entries + skill literature recommendation
+2. **SkillMap** - progression visualization
+3. **Recent entries** - quick access to reflect
+4. Floating buttons: Reflect / Ask
+
+**NOT on home screen:** Streak counters, leaderboards, XP/points, social comparison
+
+### 9. MIDL Signals System (Stephen's Framework)
+
+**Entry Processing** extracts meditation-specific signals:
+
+| Signal | Type | Description |
+|--------|------|-------------|
+| `samatha_tendency` | `'strong'|'moderate'|'weak'|'none'` | Relaxation/calm quality |
+| `marker_present` | `boolean` | Skill marker observed |
+| `marker_notes` | `string` | Details of marker observation |
+| `hindrance_present` | `boolean` | Dominant hindrance appeared |
+| `hindrance_notes` | `string` | Details of hindrance |
+| `hindrance_conditions` | `string[]` | What led to hindrance |
+| `balance_approach` | `string` | How meditator worked with hindrance |
+| `key_understanding` | `string` | Insight gained |
+| `techniques_mentioned` | `string[]` | Techniques used |
+| `progression_signals` | `string[]` | Signs of readiness to advance |
+
+**Progression Logic** (`lib/progression.ts`):
+```typescript
+// Requirements for advancement
+const REQUIREMENTS = {
+  markerSessions: 3,      // 3+ sessions with marker observed
+  samathaSessions: 2,     // 2+ sessions with strong samatha
+  progressionSignals: 1,  // At least 1 progression signal
+};
+
+// Progress calculation weights
+const progress = (
+  (markerProgress * 0.5) +   // 50% marker
+  (samathProgress * 0.3) +   // 30% samatha
+  (signalProgress * 0.2)     // 20% signals
+);
+```
+
+### 9. Nudges System
+
+**Categories** (aligned with Stephen's framework):
+- `samatha` - relaxation/calm tendency
+- `understanding` - what was understood/experienced
+- `hindrance` - dominant hindrance
+- `conditions` - what led to it
+- `balance` - how to bring balance
+- `curiosity` - open investigation
+
+Skill-specific nudges defined in `lib/nudges.ts`. Displayed via `NudgeOverlay` component.
+
 ---
 
-**Last Updated:** 2026-01-23
+**Last Updated:** 2026-02-03 (skills markdown packaging for edge functions)
 **Implementation Plan:** `docs/plans/2026-01-22-implementation-plan.md`
+**AI Chat Upgrade Plan:** `docs/plans/2026-02-01-ai-chat-upgrade.md`

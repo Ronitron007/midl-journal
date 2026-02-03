@@ -1,5 +1,6 @@
 import { supabase } from './supabase';
 import { CULTIVATIONS } from './midl-skills';
+import { ai } from './ai';
 
 export type ProgressionStats = {
   skillId: string;
@@ -123,6 +124,9 @@ export async function advanceToNextSkill(
     console.error('Error advancing skill:', error);
     return { success: false, error: 'Failed to update profile' };
   }
+
+  // Regenerate pre-sit guidance with new skill content
+  ai.generateContextSummary('check_and_generate').catch(console.error);
 
   return { success: true, newSkillId: nextSkillId };
 }

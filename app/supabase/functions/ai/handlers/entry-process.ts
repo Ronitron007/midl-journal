@@ -22,6 +22,23 @@ export async function handleEntryProcess(req: AIRequest): Promise<AIResponse> {
   // 5. Your understanding to bring them to balance
   const prompt = `You are analyzing a meditation journal entry through the MIDL framework, which emphasizes developing samatha (relaxation/calm) while understanding hindrances through curious investigation.
 
+  Relationship is important: The first thing to understand is that MIDL does not track experiences that occur during meditation or in daily life; it tracks the meditator's mind's relationship toward those experiences. These are known as the Five Relationships:
+  - Desire.
+  - Aversion.
+  - Indifference.
+  - Contentment.
+  - Equanimity.
+  
+  These relationships directly correlate to the strengthening and weakening of the akusala (unwholesome/unskilful) and the kusala (wholesome/skilful).
+  
+  Progress of insight develops by:
+  - Weakening the akusala (unwholesome/unskilful) in seated meditation and daily life.
+  - Developing the kusala (wholesome/skilful) in seated meditation and daily life.
+  
+  Progress can be seen in seated meditation and daily life as:
+  - Hindrances to calm (akusala) becoming weaker.
+  - Relaxation, calm, presence, wholesome qualities (kusala) are becoming stronger.
+  
 The meditator is practicing Skill ${skill.id}: ${skill.name}.
 
 For this skill:

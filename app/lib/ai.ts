@@ -1,7 +1,9 @@
 import { supabase, getValidSession } from './supabase';
 import { htmlToPlainText, wordCount } from './rich-text-utils';
 
-type AIType = 'chat' | 'reflect' | 'onboarding' | 'entry-process';
+type AIType = 'chat' | 'chat-stream' | 'reflect' | 'onboarding' | 'entry-process' | 'context-summary';
+
+const SUPABASE_URL = process.env.EXPO_PUBLIC_SUPABASE_URL!;
 
 async function callAI<T>(type: AIType, payload: Record<string, unknown>): Promise<T> {
   const session = await getValidSession();
@@ -15,6 +17,76 @@ async function callAI<T>(type: AIType, payload: Record<string, unknown>): Promis
 
   if (error) throw error;
   return data as T;
+}
+
+/**
+ * Stream chat responses via SSE
+ * Calls onChunk for each token received
+ */
+async function streamChat(
+  messages: { role: string; content: string }[],
+  onChunk: (content: string) => void,
+  onError?: (error: Error) => void
+): Promise<void> {
+  const session = await getValidSession();
+
+  try {
+    const response = await fetch(`${SUPABASE_URL}/functions/v1/ai`, {
+      method: 'POST',
+      headers: {
+        Authorization: `Bearer ${session.access_token}`,
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ type: 'chat-stream', messages }),
+    });
+
+    if (!response.ok) {
+      throw new Error(`Stream failed: ${response.status}`);
+    }
+
+    const reader = response.body?.getReader();
+    if (!reader) {
+      throw new Error('No response body');
+    }
+
+    const decoder = new TextDecoder();
+    let buffer = '';
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      buffer += decoder.decode(value, { stream: true });
+
+      // Process complete SSE messages
+      const lines = buffer.split('\n');
+      buffer = lines.pop() || ''; // Keep incomplete line in buffer
+
+      for (const line of lines) {
+        if (line.startsWith('data: ')) {
+          const data = line.slice(6);
+          if (data === '[DONE]') {
+            return;
+          }
+          try {
+            const parsed = JSON.parse(data);
+            if (parsed.content) {
+              onChunk(parsed.content);
+            }
+            if (parsed.error) {
+              throw new Error(parsed.error);
+            }
+          } catch {
+            // Skip malformed JSON
+          }
+        }
+      }
+    }
+  } catch (error) {
+    const err = error instanceof Error ? error : new Error(String(error));
+    onError?.(err);
+    throw err;
+  }
 }
 
 // Chat types
@@ -83,22 +155,28 @@ export type ProcessedSignals = {
 
 // Typed API
 export const ai = {
+  /**
+   * Non-streaming chat (fallback)
+   */
   async chat(messages: Message[]): Promise<string> {
     try {
       const result = await callAI<{ content: string }>('chat', { messages });
       return result.content;
     } catch (error: unknown) {
-      // Try to get the response body for more details
-      const err = error as { context?: { _bodyBlob?: Blob } };
-      if (err.context?._bodyBlob) {
-        try {
-          const text = await err.context._bodyBlob.text();
-          console.error('Chat error body:', text);
-        } catch {}
-      }
       console.error('Chat error:', error);
       return 'Sorry, I had trouble responding.';
     }
+  },
+
+  /**
+   * Streaming chat - tokens arrive via onChunk callback
+   */
+  async chatStream(
+    messages: Message[],
+    onChunk: (content: string) => void,
+    onError?: (error: Error) => void
+  ): Promise<void> {
+    return streamChat(messages, onChunk, onError);
   },
 
   async reflect(context: FeedbackContext): Promise<string> {
@@ -136,10 +214,29 @@ export const ai = {
       return null;
     }
   },
+
+  /**
+   * Generate/update rolling context summaries and pre-sit guidance
+   * Called after entry create/delete to keep summaries current
+   */
+  async generateContextSummary(
+    action: 'check_and_generate' | 'backfill' = 'check_and_generate'
+  ): Promise<{ success?: boolean; skipped?: boolean; reason?: string }> {
+    try {
+      return await callAI<{ success?: boolean; skipped?: boolean; reason?: string }>(
+        'context-summary',
+        { action }
+      );
+    } catch (error) {
+      console.error('Context summary error:', error);
+      return { skipped: true, reason: 'Generation failed' };
+    }
+  },
 };
 
 // Re-export for backwards compatibility
 export const chat = ai.chat;
+export const chatStream = ai.chatStream;
 export const getReflectionFeedback = ai.reflect;
 export const evaluateOnboarding = ai.onboarding;
 export const processEntry = (entryId: string, rawContent: string, skillPracticed: string) =>

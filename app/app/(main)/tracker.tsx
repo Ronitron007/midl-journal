@@ -10,7 +10,9 @@ import { getRecentEntries, deleteEntry, Entry } from '../../lib/entries';
 import SkillMap from '../../components/SkillMap';
 import { SKILLS } from '../../lib/midl-skills';
 import EntryCard from '../../components/EntryCard';
+import PreSitGuidance, { PreSitGuidanceData } from '../../components/PreSitGuidance';
 import { getProgressionStats, advanceToNextSkill, ProgressionStats } from '../../lib/progression';
+import { ai } from '../../lib/ai';
 
 export default function TrackerScreen() {
   const { user } = useAuth();
@@ -19,6 +21,7 @@ export default function TrackerScreen() {
   const [entries, setEntries] = useState<Entry[]>([]);
   const [refreshing, setRefreshing] = useState(false);
   const [progressionStats, setProgressionStats] = useState<ProgressionStats | null>(null);
+  const [preSitGuidance, setPreSitGuidance] = useState<PreSitGuidanceData | null>(null);
 
   // Refresh on screen focus (e.g., returning from reflect screen)
   useFocusEffect(
@@ -30,11 +33,13 @@ export default function TrackerScreen() {
   );
 
   const loadUserData = async (showRefreshing = false) => {
+                                                                                                                                                  
+    // ai.generateContextSummary('backfill'); 
     if (showRefreshing) setRefreshing(true);
     // Load user profile
     const { data: profile } = await supabase
       .from('users')
-      .select('current_skill, stats')
+      .select('current_skill, stats, pre_sit_guidance')
       .eq('id', user!.id)
       .single();
 
@@ -42,6 +47,7 @@ export default function TrackerScreen() {
     if (profile) {
       setCurrentSkill(skill);
       setStats(profile.stats || { streak: 0, current_skill_days: 0 });
+      setPreSitGuidance(profile.pre_sit_guidance as PreSitGuidanceData | null);
     }
 
     // Load progression stats for current skill
@@ -108,6 +114,9 @@ export default function TrackerScreen() {
             </Pressable>
           </View>
 
+          {/* Pre-Sit Guidance */}
+          <PreSitGuidance guidance={preSitGuidance} />
+
           {/* Skill Map Section */}
           <View className="mb-6">
             <SkillMap
@@ -118,23 +127,7 @@ export default function TrackerScreen() {
           </View>
 
           {/* Stats Section */}
-          <View className="flex-row gap-4 mb-6">
-            <View className="flex-1 bg-white rounded-2xl p-4">
-              <Text className="text-olive text-sm">Streak</Text>
-              <Text className="text-2xl font-bold text-forest">
-                {stats.streak} days
-              </Text>
-            </View>
-            <View className="flex-1 bg-white rounded-2xl p-4">
-              <Text className="text-olive text-sm">Current Skill</Text>
-              <Text className="text-lg font-bold text-forest" numberOfLines={2}>
-                {SKILLS[currentSkill]?.name || 'Getting Started'}
-              </Text>
-              <Text className="text-olive text-sm">
-                Day {stats.current_skill_days || 1}
-              </Text>
-            </View>
-          </View>
+          
 
           {/* Session History */}
           <View className="mb-32">

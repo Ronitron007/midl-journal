@@ -13,7 +13,7 @@ import { router } from 'expo-router';
 import { useAuth } from '../../lib/auth-context';
 import { useDraft } from '../../lib/draft-context';
 import { createEntry } from '../../lib/entries';
-import { chat, Message } from '../../lib/openai';
+import { chat, Message } from '../../lib/ai';
 
 export default function AskScreen() {
   const { user } = useAuth();
@@ -48,8 +48,7 @@ export default function AskScreen() {
 
     try {
       const response = await chat(newMessages);
-      const assistantMessage: Message = { role: 'assistant', content: response };
-      setMessages([...newMessages, assistantMessage]);
+      setMessages([...newMessages, { role: 'assistant', content: response }]);
     } catch (error) {
       console.error('Chat error:', error);
       setMessages([
@@ -161,6 +160,7 @@ export default function AskScreen() {
             </View>
           ))}
 
+          {/* Show typing indicator when loading */}
           {isLoading && (
             <View
               style={{
@@ -177,7 +177,7 @@ export default function AskScreen() {
                   paddingVertical: 12,
                 }}
               >
-                <Text style={{ color: '#707927' }}>Thinking...</Text>
+                <Text style={{ color: '#707927' }}>...</Text>
               </View>
             </View>
           )}

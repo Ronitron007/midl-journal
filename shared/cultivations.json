@@ -1,0 +1,69 @@
+{
+  "01": {
+    "id": "01",
+    "name": "Mindfulness of Body",
+    "suitability": "Everyone",
+    "membership_required": false,
+    "purpose": "",
+    "what_you_will_learn": [],
+    "skill_ids": [
+      "00",
+      "01",
+      "02",
+      "03"
+    ]
+  },
+  "02": {
+    "id": "02",
+    "name": "Mindfulness of Breathing",
+    "suitability": "Intermediate meditator",
+    "membership_required": true,
+    "purpose": "",
+    "what_you_will_learn": [],
+    "skill_ids": [
+      "04",
+      "05",
+      "06"
+    ]
+  },
+  "03": {
+    "id": "03",
+    "name": "Calm & Tranquillity",
+    "suitability": "Skilled meditator",
+    "membership_required": true,
+    "purpose": "",
+    "what_you_will_learn": [],
+    "skill_ids": [
+      "07",
+      "08",
+      "09"
+    ]
+  },
+  "04": {
+    "id": "04",
+    "name": "Joyfulness & Unification",
+    "suitability": "Accomplished meditator",
+    "membership_required": true,
+    "purpose": "",
+    "what_you_will_learn": [],
+    "skill_ids": [
+      "10",
+      "11",
+      "12"
+    ]
+  },
+  "05": {
+    "id": "05",
+    "name": "Pleasure Jhana & Equanimity",
+    "suitability": "Proficient meditator",
+    "membership_required": true,
+    "purpose": "",
+    "what_you_will_learn": [],
+    "skill_ids": [
+      "13",
+      "14",
+      "15",
+      "16"
+    ]
+  }
+}

@@ -1,4 +1,5 @@
 import { supabase } from './supabase';
+import { ai } from './ai';
 
 export type SamathaTendency = 'strong' | 'moderate' | 'weak' | 'none';
 
@@ -70,6 +71,11 @@ export async function createEntry(
     return null;
   }
 
+  // Fire and forget - regenerate rolling summaries and pre-sit guidance
+  if (data.track_progress !== false) {
+    ai.generateContextSummary('check_and_generate').catch(console.error);
+  }
+
   return entry;
 }
 
@@ -99,6 +105,9 @@ export async function deleteEntry(entryId: string): Promise<boolean> {
     console.error('Error deleting entry:', error);
     return false;
   }
+
+  // Fire and forget - regenerate summaries since entry set changed
+  ai.generateContextSummary('check_and_generate').catch(console.error);
 
   return true;
 }

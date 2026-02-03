@@ -1,0 +1,9 @@
+{
+  "name": "midl-journal",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "generate": "node --experimental-strip-types scripts/generate-shared-data.ts",
+    "predeploy:functions": "npm run generate"
+  }
+}

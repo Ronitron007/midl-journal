@@ -1,3 +1,16 @@
+/**
+ * MIDL Skills and Cultivations
+ * Data imported from shared/skills.json (source of truth: data/midl-skills/*.md)
+ */
+
+import skillsData from '../../shared/skills.json';
+import cultivationsData from '../../shared/cultivations.json';
+import type { Skill as FullSkill, Cultivation as FullCultivation, SkillId, CultivationId } from '../../shared/types';
+
+// Re-export full types for advanced usage
+export type { FullSkill, FullCultivation, SkillId, CultivationId };
+
+// Simplified skill type for backward compatibility
 export type Skill = {
   id: string;
   name: string;
@@ -6,147 +19,65 @@ export type Skill = {
   hindrance: string;
 };
 
-export const CULTIVATIONS = [
-  { id: 1, name: 'Mindfulness of Body', skills: ['00', '01', '02', '03'] },
-  { id: 2, name: 'Mindfulness of Breathing', skills: ['04', '05', '06'] },
-  { id: 3, name: 'Calm & Tranquillity', skills: ['07', '08', '09'] },
-  { id: 4, name: 'Joyfulness & Unification', skills: ['10', '11', '12'] },
-  { id: 5, name: 'Pleasure Jhana & Equanimity', skills: ['13', '14', '15', '16'] },
-];
-
-export const SKILLS: Record<string, Skill> = {
-  '00': {
-    id: '00',
-    name: 'Diaphragmatic Breathing',
-    cultivation: 1,
-    marker: 'Diaphragm Breathing',
-    hindrance: 'Stress Breathing',
-  },
-  '01': {
-    id: '01',
-    name: 'Body Relaxation',
-    cultivation: 1,
-    marker: 'Body Relaxation',
-    hindrance: 'Physical Restlessness',
-  },
-  '02': {
-    id: '02',
-    name: 'Mind Relaxation',
-    cultivation: 1,
-    marker: 'Mind Relaxation',
-    hindrance: 'Mental Restlessness',
-  },
-  '03': {
-    id: '03',
-    name: 'Mindful Presence',
-    cultivation: 1,
-    marker: 'Mindful Presence',
-    hindrance: 'Sleepiness & Dullness',
-  },
-  '04': {
-    id: '04',
-    name: 'Content Presence',
-    cultivation: 2,
-    marker: 'Content Presence',
-    hindrance: 'Habitual Forgetting',
-  },
-  '05': {
-    id: '05',
-    name: 'Natural Breathing',
-    cultivation: 2,
-    marker: 'Natural Breathing',
-    hindrance: 'Habitual Control',
-  },
-  '06': {
-    id: '06',
-    name: 'Whole of Each Breath',
-    cultivation: 2,
-    marker: 'Whole of Each Breath',
-    hindrance: 'Mind Wandering',
-  },
-  '07': {
-    id: '07',
-    name: 'Breath Sensations',
-    cultivation: 3,
-    marker: 'Breath Sensations',
-    hindrance: 'Gross Dullness',
-  },
-  '08': {
-    id: '08',
-    name: 'One Point of Sensation',
-    cultivation: 3,
-    marker: 'One Point of Sensation',
-    hindrance: 'Subtle Dullness',
-  },
-  '09': {
-    id: '09',
-    name: 'Sustained Attention',
-    cultivation: 3,
-    marker: 'Sustained Attention',
-    hindrance: 'Subtle Wandering',
-  },
-  '10': {
-    id: '10',
-    name: 'Whole-Body Breathing',
-    cultivation: 4,
-    marker: 'Whole-Body Breathing',
-    hindrance: 'Sensory Stimulation',
-  },
-  '11': {
-    id: '11',
-    name: 'Sustained Awareness',
-    cultivation: 4,
-    marker: 'Sustained Awareness',
-    hindrance: 'Anticipation of Pleasure',
-  },
-  '12': {
-    id: '12',
-    name: 'Access Concentration',
-    cultivation: 4,
-    marker: 'Access Concentration',
-    hindrance: 'Fear of Letting Go',
-  },
-  '13': {
-    id: '13',
-    name: 'Pleasure Jhana',
-    cultivation: 5,
-    marker: 'Pleasure Jhana',
-    hindrance: 'Attachment to Pleasure',
-  },
-  '14': {
-    id: '14',
-    name: 'Happy Jhana',
-    cultivation: 5,
-    marker: 'Happy Jhana',
-    hindrance: 'Restless Energy',
-  },
-  '15': {
-    id: '15',
-    name: 'Content Jhana',
-    cultivation: 5,
-    marker: 'Content Jhana',
-    hindrance: 'Subtle Discontent',
-  },
-  '16': {
-    id: '16',
-    name: 'Equanimity Jhana',
-    cultivation: 5,
-    marker: 'Equanimity Jhana',
-    hindrance: 'Subtle Preferences',
-  },
+// Simplified cultivation type for backward compatibility
+export type CultivationType = {
+  id: number;
+  name: string;
+  skills: string[];
 };
 
+// Build CULTIVATIONS array from JSON
+export const CULTIVATIONS: CultivationType[] = Object.values(cultivationsData).map((c: FullCultivation) => ({
+  id: parseInt(c.id, 10),
+  name: c.name,
+  skills: c.skill_ids,
+}));
+
+// Build SKILLS record from JSON
+export const SKILLS: Record<string, Skill> = Object.fromEntries(
+  Object.entries(skillsData).map(([id, skill]: [string, FullSkill]) => [
+    id,
+    {
+      id: skill.id,
+      name: skill.name,
+      cultivation: parseInt(skill.cultivation_id, 10),
+      marker: skill.insight?.marker?.replace(/^\d+\s*-\s*/, '') || skill.name,
+      hindrance: skill.insight?.hindrance?.replace(/^\d+\s*-\s*/, '') || '',
+    },
+  ])
+);
+
+// Full skills data for advanced usage
+export const SKILLS_FULL: Record<SkillId, FullSkill> = skillsData as Record<SkillId, FullSkill>;
+export const CULTIVATIONS_FULL: Record<CultivationId, FullCultivation> = cultivationsData as Record<CultivationId, FullCultivation>;
+
+// Utility functions
 export function getSkillNumber(skillId: string): number {
   return parseInt(skillId, 10);
 }
 
-export function isSkillCompleted(
-  skillId: string,
-  currentSkill: string
-): boolean {
+export function isSkillCompleted(skillId: string, currentSkill: string): boolean {
   return getSkillNumber(skillId) < getSkillNumber(currentSkill);
 }
 
 export function isCurrentSkill(skillId: string, currentSkill: string): boolean {
   return skillId === currentSkill;
+}
+
+export function getSkill(skillId: string): Skill | undefined {
+  return SKILLS[skillId];
+}
+
+export function getFullSkill(skillId: SkillId): FullSkill | undefined {
+  return SKILLS_FULL[skillId];
+}
+
+export function getCultivation(cultivationId: number): CultivationType | undefined {
+  return CULTIVATIONS.find(c => c.id === cultivationId);
+}
+
+export function getSkillsForCultivation(cultivationId: number): Skill[] {
+  const cultivation = getCultivation(cultivationId);
+  if (!cultivation) return [];
+  return cultivation.skills.map(id => SKILLS[id]).filter(Boolean);
 }
