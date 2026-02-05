@@ -1,6 +1,7 @@
 import { OpenAIProvider } from "../providers/openai.ts";
 import { SKILLS_DATA } from "../data/skills.ts";
 import type { AIRequest, AIResponse, EntryProcessPayload, ProcessedSignals } from "../types.ts";
+import { getSkillMarkdown } from "../data/skill-markdown.js";
 
 export async function handleEntryProcess(req: AIRequest): Promise<AIResponse> {
   const { entryId, content, skillPracticed } = req.payload as EntryProcessPayload;
@@ -13,6 +14,8 @@ export async function handleEntryProcess(req: AIRequest): Promise<AIResponse> {
   const skill = SKILLS_DATA[skillPracticed] || SKILLS_DATA["00"];
 
   const provider = new OpenAIProvider();
+
+  const skillMarkdown = getSkillMarkdown(skillPracticed);
 
   // Prompt aligned with Stephen's post-meditation reflection framework:
   // 1. What was your mind's tendency towards relaxation and calm (samatha)?
@@ -41,11 +44,8 @@ export async function handleEntryProcess(req: AIRequest): Promise<AIResponse> {
   
 The meditator is practicing Skill ${skill.id}: ${skill.name}.
 
-For this skill:
-- MARKER (sign of samatha developing): ${skill.marker}
-- HINDRANCE (obstacle to samatha): ${skill.hindrance}
-- KEY TECHNIQUES: ${skill.techniques.join(", ")}
-- PROGRESSION CRITERIA: ${skill.progressionCriteria}
+${skillMarkdown ? `For this skill, here is all the literature available to you:\n\n${skillMarkdown}` : ''}
+
 
 Analyze this journal entry using Stephen's reflection framework:
 

@@ -65,7 +65,7 @@ export default function ReflectScreen() {
   const { reflectDraft, setReflectDraft, clearReflectDraft } = useDraft();
 
   // User's current skill from profile (fetched on mount)
-  const [userCurrentSkill, setUserCurrentSkill] = useState<string>('00');
+  const [userCurrentSkill, setUserCurrentSkill] = useState<string | null>(null);
 
   // Initialize from draft or defaults
   const [content, setContent] = useState(reflectDraft?.content ?? '');
@@ -81,7 +81,7 @@ export default function ReflectScreen() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [feedback, setFeedback] = useState<string | null>(null);
   const [nudges, setNudges] = useState<Nudge[]>([]);
-  const [nudgesLoading, setNudgesLoading] = useState(false);
+  const [nudgesLoading, setNudgesLoading] = useState(true); // Start true to show loading
   const [showNudgeOverlay, setShowNudgeOverlay] = useState(true);
   const [showCelebration, setShowCelebration] = useState(false);
 
@@ -111,19 +111,47 @@ export default function ReflectScreen() {
     })();
   }, [user]);
 
-  // Fetch nudges when skill changes
+  // Fetch nudges when skill is determined
+  // Wait for either: draft skill OR profile loaded (userCurrentSkill not null)
+
   useEffect(() => {
-    if (!user) return;
-
-    // Show static nudges immediately
-    setNudges(getStaticNudges(skillPracticed));
-
-    // Then fetch personalized nudges in background
+    console.log('userCurrentSkill', userCurrentSkill);
+    console.log('user', user);
+    if (!(user && userCurrentSkill)) return;
+    console.log('user and userCurrentSkill are defined');
+    let cancelled = false;
     setNudgesLoading(true);
-    generateNudges(user.id, skillPracticed)
-      .then(setNudges)
-      .finally(() => setNudgesLoading(false));
-  }, [user, skillPracticed]);
+
+    // Timeout fallback for slow fetches
+    // const timeoutId = setTimeout(() => {
+    //   if (!cancelled) {
+    //     setNudges((current) => (current.length === 0 ? getStaticNudges(userCurrentSkill) : current));
+    //   }
+    // }, 500);
+
+    generateNudges(user.id, userCurrentSkill)
+      .then((personalized) => {
+        if (!cancelled) {
+          //clearTimeout(timeoutId);
+          setNudges(personalized);
+        }
+      })
+      .catch(() => {
+        if (!cancelled) {
+          // setNudges(getStaticNudges(userCurrentSkill));
+        }
+      })
+      .finally(() => {
+        if (!cancelled) {
+          setNudgesLoading(false);
+        }
+      });
+
+    return () => {
+      cancelled = true;
+     // clearTimeout(timeoutId);
+    };
+  }, [user, userCurrentSkill]);
 
   // Handle rich text content changes
   const handleContentChange = (html: string) => {
@@ -191,7 +219,6 @@ export default function ReflectScreen() {
   };
 
   // Show nudge overlay first, then editor
-  // Wait for static nudges to load before deciding
   if (showNudgeOverlay) {
     // If we have nudges, show the overlay
     if (nudges.length > 0) {
@@ -206,8 +233,14 @@ export default function ReflectScreen() {
         </View>
       );
     }
-    // If still loading and no static nudges yet, show minimal loading state
-    // Static nudges load synchronously so this is just a fallback
+    // Still loading personalized nudges - show minimal loading state
+    if (nudgesLoading) {
+      return (
+        <View className="flex-1 bg-cream items-center justify-center">
+          <Text className="text-olive">Preparing your reflection...</Text>
+        </View>
+      );
+    }
   }
 
   return (
@@ -377,7 +410,7 @@ export default function ReflectScreen() {
                     <Text className="text-forest">
                       {skillPracticed} - {SKILLS[skillPracticed]?.name}
                     </Text>
-                    {skillPracticed !== userCurrentSkill && (
+                    {userCurrentSkill && skillPracticed !== userCurrentSkill && (
                       <Text className="text-olive text-xs mt-1">
                         Your current skill is {userCurrentSkill}
                       </Text>
