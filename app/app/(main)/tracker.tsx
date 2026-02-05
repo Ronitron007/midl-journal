@@ -33,8 +33,8 @@ export default function TrackerScreen() {
   );
 
   const loadUserData = async (showRefreshing = false) => {
-                                                                                                                                                  
-    // ai.generateContextSummary('backfill'); 
+
+    // ai.generateContextSummary('backfill');
     if (showRefreshing) setRefreshing(true);
     // Load user profile
     const { data: profile } = await supabase
@@ -127,7 +127,7 @@ export default function TrackerScreen() {
           </View>
 
           {/* Stats Section */}
-          
+
 
           {/* Session History */}
           <View className="mb-32">
