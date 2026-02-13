@@ -22,3 +22,10 @@ midl-journal/
 ## Design
 
 See [docs/plans/2026-01-22-meditation-app-design.md](docs/plans/2026-01-22-meditation-app-design.md)
+
+
+
+gcloud compute ssh midl-dev-server --zone=asia-southeast1-b
+
+To stop (save cost):  gcloud compute instances stop midl-dev-server --zone=asia-southeast1-b
+To start again:       gcloud compute instances start midl-dev-server --zone=asia-southeast1-b

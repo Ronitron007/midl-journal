@@ -305,7 +305,7 @@ export default function ReflectScreen() {
                   initialContent={content}
                   placeholder="Write freely about your practice..."
                   onContentChange={handleContentChange}
-                  showToolbar={true}
+                  showToolbar={false}
                   minHeight={200}
                   autoFocus={true}
                 />
