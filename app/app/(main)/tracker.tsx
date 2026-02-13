@@ -12,7 +12,6 @@ import { SKILLS } from '../../lib/midl-skills';
 import EntryCard from '../../components/EntryCard';
 import PreSitGuidance, { PreSitGuidanceData } from '../../components/PreSitGuidance';
 import { getProgressionStats, advanceToNextSkill, ProgressionStats } from '../../lib/progression';
-import { ai } from '../../lib/ai';
 
 export default function TrackerScreen() {
   const { user } = useAuth();

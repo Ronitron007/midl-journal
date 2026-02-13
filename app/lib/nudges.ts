@@ -475,12 +475,14 @@ export type Nudge = {
 type HistoryPattern = {
   hindranceCount: number;
   commonConditions: string[];
+  recentConditions: string[]; // Conditions from most recent hindrance (even if not repeated)
   recentBalanceApproaches: string[];
   avgSamathaTendency: SamathaTendency | null;
 };
 
 /**
  * Fetch recent entries to analyze patterns
+ * First tries current skill, falls back to all recent entries if insufficient
  */
 async function getRecentSkillHistory(
   userId: string,
@@ -492,15 +494,31 @@ async function getRecentSkillHistory(
   balance_approach: string | null;
   samatha_tendency: SamathaTendency | null;
 }[]> {
-  const { data } = await supabase
+  // First try: entries for current skill only
+  const { data: skillEntries } = await supabase
     .from('entries')
     .select('hindrance_present, hindrance_conditions, balance_approach, samatha_tendency')
     .eq('user_id', userId)
+    .eq('type', 'reflect') // Only reflect entries have MIDL signals
     .eq('skill_practiced', skillId)
     .order('created_at', { ascending: false })
     .limit(limit);
 
-  return data || [];
+  // If we have enough entries for pattern detection (2+), use them
+  if (skillEntries && skillEntries.length >= 2) {
+    return skillEntries;
+  }
+
+  // Fallback: get recent entries across all skills for broader patterns
+  const { data: allEntries } = await supabase
+    .from('entries')
+    .select('hindrance_present, hindrance_conditions, balance_approach, samatha_tendency')
+    .eq('user_id', userId)
+    .eq('type', 'reflect')
+    .order('created_at', { ascending: false })
+    .limit(limit);
+
+  return allEntries || [];
 }
 
 /**
@@ -529,6 +547,9 @@ function analyzePatterns(
     .map(([condition]) => condition)
     .slice(0, 3);
 
+  // Get conditions from most recent hindrance entry (for single-entry personalization)
+  const recentConditions = hindranceEntries[0]?.hindrance_conditions?.slice(0, 3) || [];
+
   // Get recent successful balance approaches
   const recentBalanceApproaches = entries
     .map((e) => e.balance_approach)
@@ -552,6 +573,7 @@ function analyzePatterns(
   return {
     hindranceCount: hindranceEntries.length,
     commonConditions,
+    recentConditions,
     recentBalanceApproaches,
     avgSamathaTendency,
   };
@@ -567,7 +589,7 @@ export async function generateNudges(
   const nudges: Nudge[] = [];
   const prompts = SKILL_PROMPTS[skillId] || SKILL_PROMPTS['00'];
   const skillName = SKILLS[skillId]?.name || 'this skill';
-  const hindrance = SKILLS[skillId]?.hindrance || 'the hindrance';
+  const hindrance = SKILLS[skillId]?.hindrance || '';
 
   // 1. Always start with samatha question (Stephen's first question)
   nudges.push({
@@ -580,19 +602,34 @@ export async function generateNudges(
   const history = await getRecentSkillHistory(userId, skillId);
   const patterns = analyzePatterns(history);
 
-  // 3. If recurring hindrances with common conditions - high priority pattern nudge
+  // Debug: log what we found
+  console.log('[nudges] history entries:', history.length);
+  console.log('[nudges] first 3 entries:', JSON.stringify(history.slice(0, 3), null, 2));
+  console.log('[nudges] patterns:', JSON.stringify(patterns));
+
+  // 3. Pattern nudges based on hindrance history
   if (patterns.hindranceCount >= 2 && patterns.commonConditions.length > 0) {
+    // Recurring pattern with common conditions
     const conditionText = patterns.commonConditions.slice(0, 2).join(' or ');
     nudges.push({
       type: 'pattern',
-      text: `You've noticed ${hindrance.toLowerCase()} when ${conditionText}. Watch for these conditions today.`,
+      text: `You've noticed the hindrance; ${hindrance} arising when ${conditionText}. Watch for these conditions today.`,
       priority: 15,
     });
   } else if (patterns.hindranceCount >= 2) {
+    // Multiple hindrance sessions but no common conditions yet
     nudges.push({
       type: 'pattern',
-      text: `${hindrance} has arisen in ${patterns.hindranceCount} recent sessions. Be curious: what conditions lead to it?`,
+      text: `The hindrance; ${hindrance} has arisen in ${patterns.hindranceCount} recent sessions. Be curious: what conditions lead to it?`,
       priority: 15,
+    });
+  } else if (patterns.hindranceCount === 1 && patterns.recentConditions.length > 0) {
+    // Single hindrance entry with conditions - still personalize
+    const conditionText = patterns.recentConditions.slice(0, 2).join(' or ');
+    nudges.push({
+      type: 'pattern',
+      text: `Last time, the hindrance; ${hindrance} arose when ${conditionText}. Notice if similar conditions are present.`,
+      priority: 14,
     });
   }
 
