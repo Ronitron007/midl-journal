@@ -7,6 +7,7 @@ import {
   Modal,
   KeyboardAvoidingView,
   Platform,
+  ActivityIndicator,
 } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { SafeAreaView } from 'react-native-safe-area-context';
@@ -15,21 +16,25 @@ import { router } from 'expo-router';
 import { useAuth } from '../../lib/auth-context';
 import { useDraft } from '../../lib/draft-context';
 import { createEntry } from '../../lib/entries';
-import { getReflectionFeedback } from '../../lib/ai-feedback';
 import { processEntry } from '../../lib/ai';
+import type { SkillPhase } from '../../../shared/types';
 import RichTextEditor from '../../components/RichTextEditor';
 import { isHtmlEmpty, htmlToPlainText } from '../../lib/rich-text-utils';
 import { SKILLS, CULTIVATIONS } from '../../lib/midl-skills';
 import { supabase } from '../../lib/supabase';
-import { generateNudges, getStaticNudges, Nudge } from '../../lib/nudges';
+import { generateNudges, Nudge } from '../../lib/nudges';
 import { NudgeOverlay } from '../../components/NudgeOverlay';
 import { Celebration } from '../../components/Celebration';
 import * as Haptics from 'expo-haptics';
 
-// Build ordered skill list from cultivations
-const SKILL_OPTIONS = CULTIVATIONS.flatMap((c) =>
-  c.skills.map((id) => ({ id, name: SKILLS[id].name }))
-);
+// "Don't know..." option + ordered skill list from cultivations
+const DONT_KNOW_OPTION = { id: 'unknown', name: "Don't know..." };
+const SKILL_OPTIONS = [
+  DONT_KNOW_OPTION,
+  ...CULTIVATIONS.flatMap((c) =>
+    c.skills.map((id) => ({ id, name: SKILLS[id].name }))
+  ),
+];
 
 const DURATION_OPTIONS = [
   { label: '15 min', value: 900 },
@@ -89,11 +94,13 @@ export default function ReflectScreen() {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showSkillPicker, setShowSkillPicker] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [feedback, setFeedback] = useState<string | null>(null);
+  const [isProcessing, setIsProcessing] = useState(false);
   const [nudges, setNudges] = useState<Nudge[]>([]);
-  const [nudgesLoading, setNudgesLoading] = useState(true); // Start true to show loading
+  const [nudgesLoading, setNudgesLoading] = useState(true);
   const [showNudgeOverlay, setShowNudgeOverlay] = useState(true);
   const [showCelebration, setShowCelebration] = useState(false);
+  const [celebrationPhases, setCelebrationPhases] = useState<SkillPhase[] | null>(null);
+  const [celebrationFrontier, setCelebrationFrontier] = useState('00');
 
   // Hide overlay if there's already content in draft
   useEffect(() => {
@@ -113,7 +120,6 @@ export default function ReflectScreen() {
         .single();
       if (data?.current_skill) {
         setUserCurrentSkill(data.current_skill);
-        // Only set skillPracticed if no draft value
         if (!reflectDraft?.skillPracticed) {
           setSkillPracticed(data.current_skill);
         }
@@ -122,48 +128,25 @@ export default function ReflectScreen() {
   }, [user]);
 
   // Fetch nudges when skill is determined
-  // Wait for either: draft skill OR profile loaded (userCurrentSkill not null)
-
   useEffect(() => {
-    console.log('userCurrentSkill', userCurrentSkill);
-    console.log('user', user);
     if (!(user && userCurrentSkill)) return;
-    console.log('user and userCurrentSkill are defined');
     let cancelled = false;
     setNudgesLoading(true);
 
-    // Timeout fallback for slow fetches
-    // const timeoutId = setTimeout(() => {
-    //   if (!cancelled) {
-    //     setNudges((current) => (current.length === 0 ? getStaticNudges(userCurrentSkill) : current));
-    //   }
-    // }, 500);
-
     generateNudges(user.id, userCurrentSkill)
       .then((personalized) => {
-        if (!cancelled) {
-          //clearTimeout(timeoutId);
-          setNudges(personalized);
-        }
+        if (!cancelled) setNudges(personalized);
       })
-      .catch(() => {
-        if (!cancelled) {
-          // setNudges(getStaticNudges(userCurrentSkill));
-        }
-      })
+      .catch(() => {})
       .finally(() => {
-        if (!cancelled) {
-          setNudgesLoading(false);
-        }
+        if (!cancelled) setNudgesLoading(false);
       });
 
     return () => {
       cancelled = true;
-      // clearTimeout(timeoutId);
     };
   }, [user, userCurrentSkill]);
 
-  // Handle rich text content changes
   const handleContentChange = (html: string) => {
     setContent(html);
     setPlainTextContent(htmlToPlainText(html));
@@ -196,35 +179,38 @@ export default function ReflectScreen() {
     Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
     setIsSubmitting(true);
 
+    // Determine frontier skill: use selected skill, or user's current if "unknown"
+    const frontierSkill =
+      skillPracticed === 'unknown'
+        ? userCurrentSkill || '00'
+        : skillPracticed;
+
     const entry = await createEntry(user.id, {
       type: 'reflect',
-      raw_content: content, // Store as HTML
+      raw_content: content,
       is_guided: isGuided,
       track_progress: trackProgress,
       duration_seconds: duration ?? undefined,
-      skill_practiced: skillPracticed,
+      skill_practiced: frontierSkill,
+      frontier_skill: frontierSkill,
       entry_date: entryDate,
     });
 
     if (entry) {
       clearReflectDraft();
-      // Get immediate feedback for the user
-      const aiFeedback = await getReflectionFeedback({
-        content: plainTextContent,
-        duration: duration || undefined,
-        isGuided,
-        skillPracticed,
-      });
-      setFeedback(aiFeedback);
+      setIsSubmitting(false);
+      setIsProcessing(true);
+
+      // Wait for processEntry to complete before showing celebration
+      const signals = await processEntry(entry.id, content, frontierSkill);
+
+      setCelebrationPhases(signals?.skill_phases ?? null);
+      setCelebrationFrontier(signals?.frontier_skill_inferred ?? frontierSkill);
+      setIsProcessing(false);
       setShowCelebration(true);
-
-      // Process entry for MIDL signals in background (don't block UI)
-      processEntry(entry.id, content, skillPracticed).catch((err) =>
-        console.error('Entry processing failed:', err)
-      );
+    } else {
+      setIsSubmitting(false);
     }
-
-    setIsSubmitting(false);
   };
 
   const handleClose = () => {
@@ -236,9 +222,14 @@ export default function ReflectScreen() {
     router.back();
   };
 
+  // Skill display name for picker button
+  const skillDisplayName =
+    skillPracticed === 'unknown'
+      ? "Don't know..."
+      : `${skillPracticed} - ${SKILLS[skillPracticed]?.name || ''}`;
+
   // Show nudge overlay first, then editor
   if (showNudgeOverlay) {
-    // If we have nudges, show the overlay
     if (nudges.length > 0) {
       return (
         <View className="flex-1 bg-cream">
@@ -251,7 +242,6 @@ export default function ReflectScreen() {
         </View>
       );
     }
-    // Still loading personalized nudges - show minimal loading state
     if (nudgesLoading) {
       return (
         <View className="flex-1 bg-cream items-center justify-center">
@@ -288,12 +278,11 @@ export default function ReflectScreen() {
           <ScrollView className="flex-1 px-6" keyboardDismissMode="on-drag">
             {/* Main Card */}
             <View className="bg-white rounded-3xl p-6 shadow-sm">
-              {/* Header */}
               <Text className="text-xl font-serif text-forest mb-2">
                 How was your practice?
               </Text>
 
-              {/* Nudges - reflection prompts */}
+              {/* Nudges */}
               {nudges.length > 0 && (
                 <View className="mb-4">
                   <ScrollView
@@ -424,17 +413,16 @@ export default function ReflectScreen() {
                     />
                   </View>
 
-                  {/* Skill Practiced */}
-                  <Text className="text-olive mb-2">Skill practiced</Text>
+                  {/* Practiced up to */}
+                  <Text className="text-olive mb-2">Practiced up to</Text>
                   <Pressable
                     onPress={() => setShowSkillPicker(true)}
                     className="px-4 py-3 rounded-xl bg-cream mb-4"
                   >
-                    <Text className="text-forest">
-                      {skillPracticed} - {SKILLS[skillPracticed]?.name}
-                    </Text>
+                    <Text className="text-forest">{skillDisplayName}</Text>
                     {userCurrentSkill &&
-                      skillPracticed !== userCurrentSkill && (
+                      skillPracticed !== userCurrentSkill &&
+                      skillPracticed !== 'unknown' && (
                         <Text className="text-olive text-xs mt-1">
                           Your current skill is {userCurrentSkill}
                         </Text>
@@ -446,24 +434,33 @@ export default function ReflectScreen() {
               {/* Submit Button */}
               <Pressable
                 onPress={handleSubmit}
-                disabled={isHtmlEmpty(content) || isSubmitting}
+                disabled={isHtmlEmpty(content) || isSubmitting || isProcessing}
                 className={`mt-6 py-4 rounded-2xl ${
-                  !isHtmlEmpty(content) && !isSubmitting
+                  !isHtmlEmpty(content) && !isSubmitting && !isProcessing
                     ? 'bg-terracotta'
                     : 'bg-olive/20'
                 }`}
               >
-                <Text
-                  className={`text-center font-medium ${
-                    !isHtmlEmpty(content) && !isSubmitting
-                      ? 'text-white'
-                      : 'text-olive'
-                  }`}
-                >
-                  {isSubmitting
-                    ? 'Saving your reflection...'
-                    : 'Save & Get Insights'}
-                </Text>
+                {isProcessing ? (
+                  <View className="flex-row items-center justify-center gap-2">
+                    <ActivityIndicator size="small" color="#ffffff" />
+                    <Text className="text-white font-medium">
+                      Analyzing your sit...
+                    </Text>
+                  </View>
+                ) : (
+                  <Text
+                    className={`text-center font-medium ${
+                      !isHtmlEmpty(content) && !isSubmitting
+                        ? 'text-white'
+                        : 'text-olive'
+                    }`}
+                  >
+                    {isSubmitting
+                      ? 'Saving your reflection...'
+                      : 'Save & Get Insights'}
+                  </Text>
+                )}
               </Pressable>
             </View>
           </ScrollView>
@@ -471,7 +468,8 @@ export default function ReflectScreen() {
           {/* Celebration Modal */}
           <Celebration
             visible={showCelebration}
-            message={feedback}
+            skillPhases={celebrationPhases}
+            frontierSkill={celebrationFrontier}
             onComplete={handleCelebrationComplete}
           />
 
@@ -481,7 +479,7 @@ export default function ReflectScreen() {
               <View className="bg-white rounded-t-3xl max-h-[70%]">
                 <View className="flex-row justify-between items-center px-6 py-4 border-b border-olive/10">
                   <Text className="text-lg font-medium text-forest">
-                    Skill practiced
+                    Practiced up to
                   </Text>
                   <Pressable onPress={() => setShowSkillPicker(false)}>
                     <Text className="text-terracotta font-medium">Done</Text>
@@ -508,7 +506,9 @@ export default function ReflectScreen() {
                             : 'text-forest'
                         }
                       >
-                        {skill.id} - {skill.name}
+                        {skill.id === 'unknown'
+                          ? skill.name
+                          : `${skill.id} - ${skill.name}`}
                       </Text>
                       {skill.id === userCurrentSkill && (
                         <Text

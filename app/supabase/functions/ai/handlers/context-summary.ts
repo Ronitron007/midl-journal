@@ -1,6 +1,6 @@
 import { OpenAIProvider } from '../providers/openai.ts';
 import { SKILLS_FULL, getSkill } from '../data/skills.ts';
-import type { AIRequest, AIResponse } from '../types.ts';
+import type { AIRequest, AIResponse, SkillPhase } from '../types.ts';
 import { log } from '../utils/logger.ts';
 import { getSkillMarkdown } from '../data/skill-markdown.ts';
 
@@ -19,15 +19,6 @@ type SummaryData = {
   techniques_used: string[];
   avg_mood_score: number;
   entry_count: number;
-};
-
-type PreSitGuidance = {
-  patterns: string[];
-  suggestion: string;
-  check_in: string;
-  skill_id: string;
-  skill_name: string;
-  generated_at: string;
 };
 
 const MIN_ENTRIES_FOR_WEEKLY = 3;
@@ -50,13 +41,11 @@ export async function handleContextSummary(
 }
 
 async function checkAndGenerateWeekly(req: AIRequest): Promise<AIResponse> {
-  // Get current week boundaries
   const now = new Date();
   const weekStart = getWeekStart(now);
   const weekEnd = new Date(weekStart);
   weekEnd.setDate(weekEnd.getDate() + 7);
 
-  // Check if summary already exists for this week
   const { data: existingSummary } = await req.supabase
     .from('context_summaries')
     .select('id, entry_ids')
@@ -66,7 +55,6 @@ async function checkAndGenerateWeekly(req: AIRequest): Promise<AIResponse> {
     .lt('date_range_end', weekEnd.toISOString())
     .single();
 
-  // Get entries for this week
   const { data: entries, error } = await req.supabase
     .from('entries')
     .select(
@@ -75,7 +63,8 @@ async function checkAndGenerateWeekly(req: AIRequest): Promise<AIResponse> {
       samatha_tendency, marker_present, marker_notes,
       hindrance_present, hindrance_notes, hindrance_conditions,
       balance_approach, key_understanding, techniques_mentioned,
-      has_breakthrough, has_struggle, skill_practiced
+      has_breakthrough, has_struggle, skill_practiced,
+      frontier_skill, skill_phases
     `
     )
     .eq('user_id', req.userId)
@@ -91,7 +80,7 @@ async function checkAndGenerateWeekly(req: AIRequest): Promise<AIResponse> {
     return { error: 'Failed to fetch entries' };
   }
 
-  // Always regenerate pre-sit guidance if user has at least 1 entry
+  // Always regenerate pre-sit guidance + progress report if user has entries
   const { count: totalEntries } = await req.supabase
     .from('entries')
     .select('id', { count: 'exact', head: true })
@@ -101,11 +90,11 @@ async function checkAndGenerateWeekly(req: AIRequest): Promise<AIResponse> {
 
   if (totalEntries && totalEntries >= 1) {
     await generatePreSitGuidance(req);
+    await generateProgressReport(req);
   }
 
   const typedEntries = entries as EntryRow[] | null;
 
-  // Check if we have enough entries for weekly summary
   if (!typedEntries || typedEntries.length < MIN_ENTRIES_FOR_WEEKLY) {
     return {
       skipped: true,
@@ -114,7 +103,6 @@ async function checkAndGenerateWeekly(req: AIRequest): Promise<AIResponse> {
     };
   }
 
-  // Check if entry set has changed (for regeneration)
   const currentEntryIds = typedEntries.map((e) => e.id).sort();
   if (existingSummary) {
     const existingIds = (existingSummary.entry_ids || []).sort();
@@ -123,10 +111,8 @@ async function checkAndGenerateWeekly(req: AIRequest): Promise<AIResponse> {
     }
   }
 
-  // Generate summary
   const summaryData = await generateWeeklySummary(typedEntries);
 
-  // Upsert summary
   const summaryRecord = {
     user_id: req.userId,
     summary_type: 'weekly',
@@ -180,6 +166,8 @@ type EntryRow = {
   has_breakthrough: boolean;
   has_struggle: boolean;
   skill_practiced: string | null;
+  frontier_skill: string | null;
+  skill_phases: SkillPhase[] | null;
 };
 
 async function generateWeeklySummary(
@@ -187,10 +175,9 @@ async function generateWeeklySummary(
 ): Promise<SummaryData> {
   const provider = new OpenAIProvider();
 
-  // Prepare entry data for prompt
   const entryData = entries.map((e) => ({
     date: new Date(e.created_at as string).toLocaleDateString(),
-    skill: e.skill_practiced,
+    skill: e.frontier_skill || e.skill_practiced,
     summary: e.summary,
     mood: e.mood_score,
     samatha: e.samatha_tendency,
@@ -204,27 +191,12 @@ async function generateWeeklySummary(
     techniques: e.techniques_mentioned,
     breakthrough: e.has_breakthrough,
     struggle: e.has_struggle,
+    skill_phases: e.skill_phases,
   }));
 
   const prompt = `You are analyzing a week of meditation journal entries from a MIDL practitioner.
 
-The first thing to understand is that MIDL does not track experiences that occur during meditation or in daily life; it tracks the meditator's mind's relationship toward those experiences. These are known as the Five Relationships:
-- Desire.
-- Aversion.
-- Indifference.
-- Contentment.
-- Equanimity.
-
-These relationships directly correlate to the strengthening and weakening of the akusala (unwholesome/unskilful) and the kusala (wholesome/skilful).
-
-Progress of insight develops by:
-- Weakening the akusala (unwholesome/unskilful) in seated meditation and daily life.
-- Developing the kusala (wholesome/skilful) in seated meditation and daily life.
-
-Progress can be seen in seated meditation and daily life as:
-- Hindrances to calm (akusala) becoming weaker.
-- Relaxation, calm, presence, wholesome qualities (kusala) are becoming stronger.
-
+MIDL tracks the meditator's mind's relationship toward experiences (Desire, Aversion, Indifference, Contentment, Equanimity). Progress = weakening akusala (hindrances) + strengthening kusala (markers/calm).
 
 ENTRIES THIS WEEK:
 ${JSON.stringify(entryData, null, 2)}
@@ -232,16 +204,16 @@ ${JSON.stringify(entryData, null, 2)}
 Generate a rolling summary that captures their practice patterns. Respond in JSON:
 
 {
-  "summary": "<2-3 sentence narrative of their week's practice - what they worked on, how it went, any notable shifts>",
-  "key_themes": ["<3-5 recurring themes from their practice>"],
+  "summary": "<2-3 sentence narrative of their week's practice>",
+  "key_themes": ["<3-5 recurring themes>"],
   "mood_trend": "<'improving' | 'stable' | 'challenging' | 'variable'>",
-  "samatha_trend": "<'strengthening' | 'stable' | 'struggling' | 'variable' - based on samatha_tendency across entries>",
-  "notable_events": ["<any breakthroughs, significant struggles, or key insights worth remembering>"],
+  "samatha_trend": "<'strengthening' | 'stable' | 'struggling' | 'variable'>",
+  "notable_events": ["<breakthroughs, struggles, key insights>"],
   "hindrance_frequency": {"<condition>": <count>, ...},
   "techniques_used": ["<techniques they practiced most>"]
 }
 
-Focus on patterns, not individual sessions. Be concise but capture the essence of their week.`;
+Focus on patterns, not individual sessions. Be concise.`;
 
   const result = await provider.complete({
     messages: [{ role: 'user', content: prompt }],
@@ -251,7 +223,6 @@ Focus on patterns, not individual sessions. Be concise but capture the essence o
 
   const parsed = JSON.parse(result || '{}');
 
-  // Calculate avg mood from entries
   const moodScores = entries
     .filter((e) => e.mood_score !== null)
     .map((e) => e.mood_score as number);
@@ -275,7 +246,6 @@ async function regenerateWeek(
   const weekEnd = new Date(weekStart);
   weekEnd.setDate(weekEnd.getDate() + 7);
 
-  // Get entries for this specific week
   const { data: entries, error } = await req.supabase
     .from('entries')
     .select(
@@ -284,7 +254,8 @@ async function regenerateWeek(
       samatha_tendency, marker_present, marker_notes,
       hindrance_present, hindrance_notes, hindrance_conditions,
       balance_approach, key_understanding, techniques_mentioned,
-      has_breakthrough, has_struggle, skill_practiced
+      has_breakthrough, has_struggle, skill_practiced,
+      frontier_skill, skill_phases
     `
     )
     .eq('user_id', req.userId)
@@ -307,7 +278,6 @@ async function regenerateWeek(
   const summaryData = await generateWeeklySummary(typedEntries);
   const currentEntryIds = typedEntries.map((e) => e.id).sort();
 
-  // Upsert summary
   const { data: existing } = await req.supabase
     .from('context_summaries')
     .select('id')
@@ -347,7 +317,6 @@ async function regenerateWeek(
 }
 
 async function backfillSummaries(req: AIRequest): Promise<AIResponse> {
-  // Get all entries grouped by week
   const { data: entries } = await req.supabase
     .from('entries')
     .select('created_at')
@@ -361,7 +330,6 @@ async function backfillSummaries(req: AIRequest): Promise<AIResponse> {
     return { skipped: true, reason: 'No entries to backfill' };
   }
 
-  // Group entries by week
   const weekCounts: Record<string, number> = {};
   for (const entry of entries as { created_at: string }[]) {
     const weekStart = getWeekStart(new Date(entry.created_at));
@@ -369,7 +337,6 @@ async function backfillSummaries(req: AIRequest): Promise<AIResponse> {
     weekCounts[key] = (weekCounts[key] || 0) + 1;
   }
 
-  // Generate summaries for qualifying weeks
   let generated = 0;
   for (const [weekStartStr, count] of Object.entries(weekCounts)) {
     if (count >= MIN_ENTRIES_FOR_WEEKLY) {
@@ -378,46 +345,46 @@ async function backfillSummaries(req: AIRequest): Promise<AIResponse> {
     }
   }
 
-  // Also regenerate pre-sit guidance
   await generatePreSitGuidance(req);
+  await generateProgressReport(req);
 
   return { success: true, weeksProcessed: generated };
 }
 
 // =============================================================================
-// PRE-SIT GUIDANCE GENERATION
+// PRE-SIT GUIDANCE GENERATION (rewritten for sequential skill practice)
 // =============================================================================
 
 async function generatePreSitGuidance(req: AIRequest): Promise<void> {
-  const provider = new OpenAIProvider();
-
   // 1. Get user's current skill
   const { data: user } = await req.supabase
     .from('users')
-    .select('current_skill')
+    .select('current_skill, progress_report')
     .eq('id', req.userId)
     .single();
 
   if (!user) return;
 
-  // 2. Get recent entries (last 10, track_progress=true)
+  const frontierSkillId = user.current_skill || '00';
+  const frontierSkill = getSkill(frontierSkillId);
+  if (!frontierSkill) return;
+
+  const frontierNum = parseInt(frontierSkillId, 10);
+  const prevSkillId =
+    frontierNum > 0 ? String(frontierNum - 1).padStart(2, '0') : null;
+  const prevSkill = prevSkillId ? getSkill(prevSkillId) : null;
+
+  // 2. Get recent entries with skill_phases
   const { data: entries } = await req.supabase
     .from('entries')
-    .select(
-      `
-      summary, hindrance_notes, hindrance_conditions,
-      balance_approach, samatha_tendency, marker_notes,
-      key_understanding, skill_practiced
-    `
-    )
+    .select('skill_phases, frontier_skill')
     .eq('user_id', req.userId)
     .eq('track_progress', true)
     .not('processed_at', 'is', null)
     .order('created_at', { ascending: false })
-    .limit(10);
+    .limit(20);
 
   if (!entries || entries.length === 0) {
-    // Clear guidance if no entries
     await req.supabase
       .from('users')
       .update({ pre_sit_guidance: null })
@@ -425,147 +392,293 @@ async function generatePreSitGuidance(req: AIRequest): Promise<void> {
     return;
   }
 
-  // 2b. Get most recent weekly summary for aggregated context
-  const { data: weeklySummary } = await req.supabase
-    .from('context_summaries')
-    .select(
-      `
-      summary, key_themes, samatha_trend, mood_trend,
-      notable_events, hindrance_frequency, techniques_used
-    `
-    )
-    .eq('user_id', req.userId)
-    .eq('summary_type', 'weekly')
-    .order('date_range_end', { ascending: false })
-    .limit(1)
-    .single();
+  // 3. Aggregate skill_phases for recurring patterns (count >= 2)
+  const hindranceCounts: Record<string, { count: number; conditions: Set<string> }> = {};
+  const markerCounts: Record<string, number> = {};
 
-  // 3. Load skill content
-  const skillContent = getSkill(user.current_skill)!;
-  const skillMarkdown = skillContent
-    ? await getSkillMarkdown(user.current_skill)
-    : '';
-
-  // 4. Build weekly summary context if available
-  const weeklySummaryContext = weeklySummary
-    ? `
-WEEKLY PRACTICE SUMMARY:
-${weeklySummary.summary}
-- Samatha trend: ${weeklySummary.samatha_trend || 'unknown'}
-- Mood trend: ${weeklySummary.mood_trend || 'unknown'}
-- Key themes: ${(weeklySummary.key_themes as string[] | null)?.join(', ') || 'none'}
-- Common hindrances: ${
-        Object.entries(
-          (weeklySummary.hindrance_frequency as Record<string, number>) || {}
-        )
-          .map(([k, v]) => `${k} (${v}x)`)
-          .join(', ') || 'none'
+  for (const entry of entries as { skill_phases: SkillPhase[] | null }[]) {
+    if (!entry.skill_phases) continue;
+    for (const phase of entry.skill_phases) {
+      for (const h of phase.hindrances_observed) {
+        if (!hindranceCounts[h]) hindranceCounts[h] = { count: 0, conditions: new Set() };
+        hindranceCounts[h].count++;
       }
-- Techniques used: ${(weeklySummary.techniques_used as string[] | null)?.join(', ') || 'none'}
-${(weeklySummary.notable_events as string[] | null)?.length ? `- Notable: ${(weeklySummary.notable_events as string[]).join('; ')}` : ''}`
-    : '';
+      for (const m of phase.markers_observed) {
+        markerCounts[m] = (markerCounts[m] || 0) + 1;
+      }
+    }
+  }
 
-  // 5. Generate guidance
-  const prompt = `You are preparing a MIDL meditator for their next meditation sit.
+  // Filter to count >= 2
+  const recurringHindrances = Object.entries(hindranceCounts)
+    .filter(([, v]) => v.count >= 2)
+    .map(([id, v]) => ({
+      hindrance_id: id,
+      name: getHindranceName(id),
+      count: v.count,
+      conditions: Array.from(v.conditions),
+    }))
+    .sort((a, b) => b.count - a.count);
 
-CURRENT SKILL: ${user.current_skill} - ${skillContent?.name || 'Unknown skill'}
+  const recurringMarkers = Object.entries(markerCounts)
+    .filter(([, count]) => count >= 2)
+    .map(([id, count]) => ({
+      marker_id: id,
+      name: getMarkerName(id),
+      count,
+    }))
+    .sort((a, b) => b.count - a.count);
 
-SKILL LITERATURE:
-${skillMarkdown}
-Weekly summary:
-${weeklySummaryContext}
+  // 4. Build reading material — verbatim excerpts from skill markdown
+  const readingMaterial: { skill_id: string; skill_name: string; excerpt: string }[] = [];
 
-RECENT ENTRIES (last few sits):
-${(
-  entries as {
-    summary: string | null;
-    samatha_tendency: string | null;
-    hindrance_notes: string | null;
-    balance_approach: string | null;
-  }[]
-)
-  .map(
-    (e) => `- ${e.summary || 'No summary'}
-  Samatha: ${e.samatha_tendency || 'unknown'}
-  Hindrance: ${e.hindrance_notes || 'none noted'}
-  What helped: ${e.balance_approach || 'not specified'}`
-  )
-  .join('\n')}
+  // Frontier skill: instructions + tips + antidote
+  const frontierMd = getSkillMarkdown(frontierSkillId);
+  if (frontierMd) {
+    const excerpt = extractReadingExcerpt(frontierMd, recurringHindrances);
+    if (excerpt) {
+      readingMaterial.push({
+        skill_id: frontierSkillId,
+        skill_name: frontierSkill.name,
+        excerpt,
+      });
+    }
+  }
 
-Generate pre-sit guidance based on their patterns. Be suggestive, not prescriptive ("You might try..." not "You should..."). Use the weekly summary for overall trends and recent entries for specifics. Respond in JSON:
-{
-  "patterns": ["<1-3 one to two word observations from their practice patterns - what's showing up>"],
-  "suggestion": "<one or two things to try from the skill literature, relevant to their patterns and hindrances. Be specific and not vague.>",
-  "check_in": "<the daily application check-in question from this skill>"
-}`;
+  // Frontier-1 skill: insight section
+  if (prevSkillId && prevSkill) {
+    const prevMd = getSkillMarkdown(prevSkillId);
+    if (prevMd) {
+      const excerpt = extractInsightExcerpt(prevMd);
+      if (excerpt) {
+        readingMaterial.push({
+          skill_id: prevSkillId,
+          skill_name: prevSkill.name,
+          excerpt,
+        });
+      }
+    }
+  }
 
-  const result = await provider.complete({
-    messages: [{ role: 'user', content: prompt }],
-    maxTokens: 1000,
-    jsonMode: true,
-  });
+  // 5. Self-advice from progress report
+  const progressReport = user.progress_report as Record<string, unknown> | null;
+  const selfAdvice = progressReport?.self_advice as string | null ?? null;
 
-  const guidance = JSON.parse(result || '{}');
-
-  // 6. Store on user profile
-  const preSitGuidance: PreSitGuidance = {
-    ...guidance,
-    skill_id: user.current_skill,
-    skill_name: skillContent.name,
+  // 6. Store guidance
+  const guidance = {
+    frontier_skill_id: frontierSkillId,
+    frontier_skill_name: frontierSkill.name,
+    reading_material: readingMaterial,
+    recurring_hindrances: recurringHindrances,
+    recurring_markers: recurringMarkers,
+    self_advice: selfAdvice,
     generated_at: new Date().toISOString(),
   };
 
   await req.supabase
     .from('users')
-    .update({ pre_sit_guidance: preSitGuidance })
+    .update({ pre_sit_guidance: guidance })
     .eq('id', req.userId);
 
   log.info('Generated pre-sit guidance', {
     userId: req.userId,
-    skillId: user.current_skill,
+    skillId: frontierSkillId,
     entryCount: entries.length,
   });
 }
 
-// Load skill content for pre-sit guidance prompt
-function loadSkillContent(skillId: string): {
-  name: string;
-  overview: string;
-  marker: string;
-  benefits: string[];
-  purpose: string;
+// =============================================================================
+// ROLLING PROGRESS REPORT GENERATION (Phase 2d)
+// =============================================================================
 
-  hindrance: string;
-  antidote: string;
-  tips: string;
-  checkIn: string;
-} {
-  const skill = getSkill(skillId);
-  if (!skill) {
-    return {
-      name: `Skill ${skillId}`,
-      overview: '',
-      marker: '',
-      benefits: [],
-      purpose: '',
-      hindrance: '',
-      antidote: '',
-      tips: '',
-      checkIn: 'How was your practice?',
-    };
+async function generateProgressReport(req: AIRequest): Promise<void> {
+  const provider = new OpenAIProvider();
+
+  // 1. Get user + previous report
+  const { data: user } = await req.supabase
+    .from('users')
+    .select('current_skill, progress_report')
+    .eq('id', req.userId)
+    .single();
+
+  if (!user) return;
+
+  // 2. Get last 20 entries with skill_phases
+  const { data: entries } = await req.supabase
+    .from('entries')
+    .select(
+      `
+      created_at, frontier_skill, skill_phases,
+      samatha_tendency, summary, mood_score,
+      has_breakthrough, has_struggle
+    `
+    )
+    .eq('user_id', req.userId)
+    .eq('track_progress', true)
+    .not('processed_at', 'is', null)
+    .order('created_at', { ascending: false })
+    .limit(20);
+
+  if (!entries || entries.length < 3) return; // Need min entries for meaningful report
+
+  const prevReport = user.progress_report
+    ? JSON.stringify(user.progress_report)
+    : 'No previous report.';
+
+  const prompt = `You are generating a structured progress report for a MIDL meditation practitioner.
+
+Current skill: ${user.current_skill}
+Previous report: ${prevReport}
+
+Recent entries (newest first):
+${JSON.stringify(
+  (entries as {
+    created_at: string;
+    frontier_skill: string | null;
+    skill_phases: SkillPhase[] | null;
+    samatha_tendency: string | null;
+    summary: string | null;
+    mood_score: number | null;
+    has_breakthrough: boolean;
+    has_struggle: boolean;
+  }[]).map((e) => ({
+    date: new Date(e.created_at).toLocaleDateString(),
+    frontier: e.frontier_skill,
+    phases: e.skill_phases,
+    samatha: e.samatha_tendency,
+    summary: e.summary,
+  })),
+  null,
+  2
+)}
+
+Generate a structured progress report. Respond in JSON:
+
+{
+  "frontier_skill": "${user.current_skill}",
+  "skill_summaries": [
+    {
+      "skill_id": "<only skills with notable data>",
+      "status": "<established|developing|emerging|not_seen>",
+      "marker_freq": <times marker observed across entries>,
+      "hindrance_freq": <times hindrance observed>,
+      "trend": "<improving|stable|declining>",
+      "note": "<brief factual note or null>"
+    }
+  ],
+  "recurring_hindrances": [{"id": "<H00-H13>", "count": <n>, "conditions": ["<triggers>"]}],
+  "recurring_markers": [{"id": "<M00-M12>", "count": <n>}],
+  "overall_samatha_trend": "<strengthening|stable|weakening|variable>",
+  "progression_readiness": "<ready|approaching|not_yet>",
+  "self_advice": null
+}
+
+Rules:
+- Only include skill_summaries for skills with actual data
+- Count markers/hindrances from skill_phases across all entries
+- Be factual and data-driven, not encouraging
+- self_advice is null for now (future: user-set)`;
+
+  try {
+    const result = await provider.complete({
+      messages: [{ role: 'user', content: prompt }],
+      maxTokens: 600,
+      jsonMode: true,
+    });
+
+    const report = JSON.parse(result || '{}');
+    report.updated_at = new Date().toISOString();
+    report.frontier_skill = user.current_skill;
+
+    await req.supabase
+      .from('users')
+      .update({ progress_report: report })
+      .eq('id', req.userId);
+
+    log.info('Generated progress report', { userId: req.userId });
+  } catch (error) {
+    console.error('Progress report generation error:', error);
+  }
+}
+
+// =============================================================================
+// HELPERS
+// =============================================================================
+
+/** Extract a reading excerpt focused on instructions, tips, and antidote */
+function extractReadingExcerpt(
+  markdown: string,
+  _recurringHindrances: { hindrance_id: string }[]
+): string | null {
+  const sections: string[] = [];
+
+  // Extract Tips section
+  const tipsMatch = markdown.match(/## Tips\n([\s\S]*?)(?=\n## |\n$)/);
+  if (tipsMatch) {
+    sections.push(tipsMatch[1].trim().slice(0, 400));
   }
 
-  return {
-    name: skill.name,
-    overview: skill.overview || '',
-    benefits: skill.benefits || [],
-    purpose: skill.purpose || '',
-    marker: skill.insight?.marker || '',
-    hindrance: skill.insight?.hindrance || '',
-    antidote: skill.insight?.antidote || '',
-    tips: skill.tips?.join('\n') || '',
-    checkIn: skill.daily_application?.check_in || 'How was your practice?',
-  };
+  // Extract Insight/Antidote section
+  const insightMatch = markdown.match(/## Insight\n([\s\S]*?)(?=\n## |\n$)/);
+  if (insightMatch) {
+    // Get just the antidote part
+    const antidoteMatch = insightMatch[1].match(
+      /- Antidote:\s*([\s\S]*?)(?=\n- |\n$)/
+    );
+    if (antidoteMatch) {
+      sections.push(antidoteMatch[1].trim().slice(0, 500));
+    }
+  }
+
+  return sections.length > 0 ? sections.join('\n\n') : null;
+}
+
+/** Extract just the insight section from skill markdown */
+function extractInsightExcerpt(markdown: string): string | null {
+  const match = markdown.match(/## Insight\n([\s\S]*?)(?=\n## |\n$)/);
+  return match ? match[1].trim().slice(0, 500) : null;
+}
+
+// Hindrance/Marker name lookups
+const HINDRANCE_NAMES: Record<string, string> = {
+  H00: 'Stress Breathing',
+  H01: 'Physical Restlessness',
+  H02: 'Mental Restlessness',
+  H03: 'Sleepiness & Dullness',
+  H04: 'Habitual Forgetting',
+  H05: 'Habitual Control',
+  H06: 'Mind Wandering',
+  H07: 'Gross Dullness',
+  H08: 'Subtle Dullness',
+  H09: 'Subtle Wandering',
+  H10: 'Sensory Stimulation',
+  H11: 'Anticipation of Pleasure',
+  H12: 'Fear of Letting Go',
+  H13: 'Doubt',
+};
+
+const MARKER_NAMES: Record<string, string> = {
+  M00: 'Diaphragm Breathing',
+  M01: 'Body Relaxation',
+  M02: 'Mind Relaxation',
+  M03: 'Mindful Presence',
+  M04: 'Content Presence',
+  M05: 'Natural Breathing',
+  M06: 'Whole of Each Breath',
+  M07: 'Breath Sensations',
+  M08: 'One Point of Sensation',
+  M09: 'Sustained Attention',
+  M10: 'Whole-Body Breathing',
+  M11: 'Sustained Awareness',
+  M12: 'Access Concentration',
+};
+
+function getHindranceName(id: string): string {
+  return HINDRANCE_NAMES[id] || id;
+}
+
+function getMarkerName(id: string): string {
+  return MARKER_NAMES[id] || id;
 }
 
 function getWeekStart(date: Date): Date {
@@ -577,5 +690,4 @@ function getWeekStart(date: Date): Date {
   return d;
 }
 
-// Export for use in skill advancement
-export { generatePreSitGuidance };
+export { generatePreSitGuidance, generateProgressReport };

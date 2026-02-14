@@ -1,0 +1,80 @@
+[
+  {
+    "id": "M00",
+    "name": "Diaphragm Breathing",
+    "skill_id": "00",
+    "description": "Body continues to breathe with diaphragm by itself; breathing feels free from strain."
+  },
+  {
+    "id": "M01",
+    "name": "Body Relaxation",
+    "skill_id": "01",
+    "description": "Physical relaxation deepens through slow, deliberate releasing with each exhale."
+  },
+  {
+    "id": "M02",
+    "name": "Mind Relaxation",
+    "skill_id": "02",
+    "description": "Mental effort relaxes; frontal lobe area softens along with eyelids."
+  },
+  {
+    "id": "M03",
+    "name": "Mindful Presence",
+    "skill_id": "03",
+    "description": "Sustained body awareness with clarity; sleepiness and dullness do not arise."
+  },
+  {
+    "id": "M04",
+    "name": "Content Presence",
+    "skill_id": "04",
+    "description": "Enjoyment and contentment with present experience; mind returns quickly from wandering."
+  },
+  {
+    "id": "M05",
+    "name": "Natural Breathing",
+    "skill_id": "05",
+    "description": "Breathing occurs naturally without control; body breathes by itself."
+  },
+  {
+    "id": "M06",
+    "name": "Whole of Each Breath",
+    "skill_id": "06",
+    "description": "Intimate awareness of the entire breathing cycle; mind stays with each breath."
+  },
+  {
+    "id": "M07",
+    "name": "Breath Sensations",
+    "skill_id": "07",
+    "description": "Clear perception of elemental qualities within each breath; sharpened awareness."
+  },
+  {
+    "id": "M08",
+    "name": "One Point of Sensation",
+    "skill_id": "08",
+    "description": "Increased clarity of sensations at a single point (e.g., tip of nose) with body awareness in background."
+  },
+  {
+    "id": "M09",
+    "name": "Sustained Attention",
+    "skill_id": "09",
+    "description": "Effortless, stable attention on the meditation object; subtle wandering ceases."
+  },
+  {
+    "id": "M10",
+    "name": "Whole-Body Breathing",
+    "skill_id": "10",
+    "description": "Awareness of breathing throughout the entire body; sensory fields begin to fade."
+  },
+  {
+    "id": "M11",
+    "name": "Sustained Awareness",
+    "skill_id": "11",
+    "description": "Awareness sustains itself; intimacy with pleasantness of whole-body breathing withdraws energy from craving."
+  },
+  {
+    "id": "M12",
+    "name": "Access Concentration",
+    "skill_id": "12",
+    "description": "Deep letting go; all anticipation and fear drop away; threshold of jhana."
+  }
+]

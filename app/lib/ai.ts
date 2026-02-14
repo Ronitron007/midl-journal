@@ -128,27 +128,24 @@ export type EvalResult = {
 };
 
 // Entry process types
-export type SamathaTendency = 'strong' | 'moderate' | 'weak' | 'none';
+import type { SkillPhase, SamathaTendency } from '../../shared/types';
+export type { SamathaTendency };
 
 export type ProcessedSignals = {
-  // MIDL-specific (primary) - aligned with Stephen's framework
-  skill_analyzed: string;
+  // Multi-skill phase data
+  frontier_skill_inferred: string;
+  skill_phases: SkillPhase[] | null;
 
-  // Samatha (relaxation/calm) assessment
-  samatha_tendency: SamathaTendency; // tendency toward relaxation and calm
+  // MIDL-specific (primary) — flat columns from frontier skill phase (backward compat)
+  skill_analyzed: string;
+  samatha_tendency: SamathaTendency;
   marker_present: boolean;
   marker_notes: string | null;
-
-  // Hindrance assessment
   hindrance_present: boolean;
   hindrance_notes: string | null;
-  hindrance_conditions: string[]; // what triggered/led to the hindrance
-
-  // Working with experience
-  balance_approach: string | null; // how they worked with the hindrance
-  key_understanding: string | null; // insight or understanding gained
-
-  // Techniques and progression
+  hindrance_conditions: string[];
+  balance_approach: string | null;
+  key_understanding: string | null;
   techniques_mentioned: string[];
   progression_signals: string[];
 
@@ -214,7 +211,7 @@ export const ai = {
   async processEntry(
     entryId: string,
     rawContent: string,
-    skillPracticed: string
+    frontierSkill: string
   ): Promise<ProcessedSignals | null> {
     // Convert HTML to plain text for processing
     const content = htmlToPlainText(rawContent);
@@ -223,7 +220,13 @@ export const ai = {
       const result = await callAI<{
         signals?: ProcessedSignals;
         skipped?: boolean;
-      }>('entry-process', { entryId, content, skillPracticed });
+      }>('entry-process', {
+        entryId,
+        content,
+        frontierSkill,
+        // backward compat: also send as skillPracticed
+        skillPracticed: frontierSkill,
+      });
       if (result.skipped) return null;
       return result.signals || null;
     } catch (error) {
@@ -260,5 +263,5 @@ export const evaluateOnboarding = ai.onboarding;
 export const processEntry = (
   entryId: string,
   rawContent: string,
-  skillPracticed: string
-) => ai.processEntry(entryId, rawContent, skillPracticed);
+  frontierSkill: string
+) => ai.processEntry(entryId, rawContent, frontierSkill);
