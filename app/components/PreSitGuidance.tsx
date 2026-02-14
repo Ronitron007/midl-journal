@@ -126,8 +126,8 @@ export default function PreSitGuidance({ guidance }: Props) {
       )}
 
       {/* Recurring Patterns */}
-      {(guidance.recurring_hindrances.length > 0 ||
-        guidance.recurring_markers.length > 0) && (
+      {((guidance.recurring_hindrances?.length ?? 0) > 0 ||
+        (guidance.recurring_markers?.length ?? 0) > 0) && (
         <View style={{ marginBottom: 16 }}>
           <Text
             style={{
@@ -140,7 +140,7 @@ export default function PreSitGuidance({ guidance }: Props) {
           </Text>
 
           {/* Recurring hindrances */}
-          {guidance.recurring_hindrances.map((h, i) => (
+          {(guidance.recurring_hindrances ?? []).map((h, i) => (
             <View
               key={`h-${i}`}
               style={{
@@ -176,7 +176,7 @@ export default function PreSitGuidance({ guidance }: Props) {
           ))}
 
           {/* Recurring markers */}
-          {guidance.recurring_markers.map((m, i) => (
+          {(guidance.recurring_markers ?? []).map((m, i) => (
             <View
               key={`m-${i}`}
               style={{
