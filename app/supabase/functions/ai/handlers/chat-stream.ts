@@ -1,7 +1,10 @@
-import { OpenAIProvider } from "../providers/openai.ts";
-import { buildSystemPrompt, trimConversationHistory } from "../prompts/system.ts";
-import { log } from "../utils/logger.ts";
-import type { AIRequest, ChatPayload } from "../types.ts";
+import { OpenAIProvider } from '../providers/openai.ts';
+import {
+  buildSystemPrompt,
+  trimConversationHistory,
+} from '../prompts/system.ts';
+import { log } from '../utils/logger.ts';
+import type { AIRequest, ChatPayload } from '../types.ts';
 
 const MAX_HISTORY_CHARS = 32000; // ~8k tokens
 
@@ -17,16 +20,16 @@ export async function handleChatStream(
 
   // Fetch user profile for context
   const { data: profile } = await req.supabase
-    .from("users")
-    .select("current_skill, stats, onboarding_data")
-    .eq("id", req.userId)
+    .from('users')
+    .select('current_skill, stats, onboarding_data')
+    .eq('id', req.userId)
     .single();
 
   // Build dynamic system prompt
   const systemPrompt = buildSystemPrompt(
     profile
       ? {
-          current_skill: profile.current_skill || "00",
+          current_skill: profile.current_skill || '00',
           stats: profile.stats || {},
           onboarding: profile.onboarding_data,
         }
@@ -36,14 +39,14 @@ export async function handleChatStream(
   // Trim to token budget
   const trimmedMessages = trimConversationHistory(messages, MAX_HISTORY_CHARS);
   const allMessages = [
-    { role: "system" as const, content: systemPrompt },
+    { role: 'system' as const, content: systemPrompt },
     ...trimmedMessages.map((m) => ({
-      role: m.role as "user" | "assistant",
+      role: m.role as 'user' | 'assistant',
       content: m.content,
     })),
   ];
 
-  log.info("Chat stream start", {
+  log.info('Chat stream start', {
     userId: req.userId,
     messageCount: messages.length,
     trimmedCount: trimmedMessages.length,
@@ -64,11 +67,14 @@ export async function handleChatStream(
         }
 
         // Signal completion
-        controller.enqueue(encoder.encode("data: [DONE]\n\n"));
-        log.info("Chat stream complete", { userId: req.userId });
+        controller.enqueue(encoder.encode('data: [DONE]\n\n'));
+        log.info('Chat stream complete', { userId: req.userId });
       } catch (error) {
-        log.error("Chat stream error", { userId: req.userId, error: String(error) });
-        const errorData = JSON.stringify({ error: "Stream failed" });
+        log.error('Chat stream error', {
+          userId: req.userId,
+          error: String(error),
+        });
+        const errorData = JSON.stringify({ error: 'Stream failed' });
         controller.enqueue(encoder.encode(`data: ${errorData}\n\n`));
       } finally {
         controller.close();
@@ -79,9 +85,9 @@ export async function handleChatStream(
   return new Response(stream, {
     headers: {
       ...corsHeaders,
-      "Content-Type": "text/event-stream",
-      "Cache-Control": "no-cache",
-      Connection: "keep-alive",
+      'Content-Type': 'text/event-stream',
+      'Cache-Control': 'no-cache',
+      Connection: 'keep-alive',
     },
   });
 }

@@ -1,6 +1,11 @@
 type LogLevel = 'debug' | 'info' | 'warn' | 'error';
 
-const LEVELS: Record<LogLevel, number> = { debug: 0, info: 1, warn: 2, error: 3 };
+const LEVELS: Record<LogLevel, number> = {
+  debug: 0,
+  info: 1,
+  warn: 2,
+  error: 3,
+};
 
 const AXIOM_TOKEN = Deno.env.get('AXIOM_TOKEN');
 const AXIOM_DATASET = Deno.env.get('AXIOM_DATASET') || 'midl-logs';
@@ -14,7 +19,10 @@ async function send(level: LogLevel, message: string, data?: object) {
   if (LEVELS[level] < getMinLevel()) return;
 
   // Always log to console for Supabase logs
-  console[level](`[${level.toUpperCase()}] ${message}`, data ? JSON.stringify(data) : '');
+  console[level](
+    `[${level.toUpperCase()}] ${message}`,
+    data ? JSON.stringify(data) : ''
+  );
 
   // Send to Axiom
   if (!AXIOM_TOKEN) return;

@@ -1,4 +1,11 @@
-import { View, Text, ScrollView, Pressable, RefreshControl, Alert } from 'react-native';
+import {
+  View,
+  Text,
+  ScrollView,
+  Pressable,
+  RefreshControl,
+  Alert,
+} from 'react-native';
 import { router, useFocusEffect } from 'expo-router';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useState, useCallback } from 'react';
@@ -10,8 +17,14 @@ import { getRecentEntries, deleteEntry, Entry } from '../../lib/entries';
 import SkillMap from '../../components/SkillMap';
 import { SKILLS } from '../../lib/midl-skills';
 import EntryCard from '../../components/EntryCard';
-import PreSitGuidance, { PreSitGuidanceData } from '../../components/PreSitGuidance';
-import { getProgressionStats, advanceToNextSkill, ProgressionStats } from '../../lib/progression';
+import PreSitGuidance, {
+  PreSitGuidanceData,
+} from '../../components/PreSitGuidance';
+import {
+  getProgressionStats,
+  advanceToNextSkill,
+  ProgressionStats,
+} from '../../lib/progression';
 
 export default function TrackerScreen() {
   const { user } = useAuth();
@@ -19,8 +32,10 @@ export default function TrackerScreen() {
   const [stats, setStats] = useState({ streak: 0, current_skill_days: 0 });
   const [entries, setEntries] = useState<Entry[]>([]);
   const [refreshing, setRefreshing] = useState(false);
-  const [progressionStats, setProgressionStats] = useState<ProgressionStats | null>(null);
-  const [preSitGuidance, setPreSitGuidance] = useState<PreSitGuidanceData | null>(null);
+  const [progressionStats, setProgressionStats] =
+    useState<ProgressionStats | null>(null);
+  const [preSitGuidance, setPreSitGuidance] =
+    useState<PreSitGuidanceData | null>(null);
 
   // Refresh on screen focus (e.g., returning from reflect screen)
   useFocusEffect(
@@ -32,7 +47,6 @@ export default function TrackerScreen() {
   );
 
   const loadUserData = async (showRefreshing = false) => {
-
     // ai.generateContextSummary('backfill');
     if (showRefreshing) setRefreshing(true);
     // Load user profile
@@ -69,9 +83,12 @@ export default function TrackerScreen() {
   };
 
   const handleAdvance = async () => {
-    if (!progressionStats?.readyToAdvance || !progressionStats?.nextSkillId) return;
+    if (!progressionStats?.readyToAdvance || !progressionStats?.nextSkillId)
+      return;
 
-    const nextSkillName = SKILLS[progressionStats.nextSkillId]?.name || progressionStats.nextSkillId;
+    const nextSkillName =
+      SKILLS[progressionStats.nextSkillId]?.name ||
+      progressionStats.nextSkillId;
 
     Alert.alert(
       'Advance to Next Skill?',
@@ -126,7 +143,6 @@ export default function TrackerScreen() {
           </View>
 
           {/* Stats Section */}
-
 
           {/* Session History */}
           <View className="mb-32">

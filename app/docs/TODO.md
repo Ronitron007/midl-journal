@@ -3,6 +3,7 @@
 ## Recently Completed ✅
 
 ### App Redesign (Jan 30, 2026)
+
 - [x] **Signals Redesign** - MIDL-specific signal extraction aligned with Stephen's framework
   - Samatha tendency, hindrance conditions, balance approach, key understanding
   - Skill-aware entry processing with marker/hindrance detection
@@ -18,14 +19,17 @@ See handoff docs: `docs/plans/2026-01-30-*-HANDOFF.md`
 ## In Progress 🔨
 
 ### AI Chat Upgrade (Priority: HIGH)
+
 Production-grade AI implementation with tools.
 
 **Phase 1: Foundation** ✅
+
 - [x] Replace fetch-based OpenAI with official `openai` package
 - [x] Proper error handling and retry logic
 - [x] ~Streaming support~ - deferred (React Native fetch doesn't support ReadableStream)
 
 **Phase 2: Context & Tools** ✅
+
 - [x] `get_user_profile` - current skill, stats, onboarding data
 - [x] `get_skill_details` - marker, hindrance, techniques for any skill
 - [x] `get_recent_entries` - last N entries with signals
@@ -34,11 +38,13 @@ Production-grade AI implementation with tools.
 - [x] Tool usage logging (count and names per request)
 
 **Phase 3: RAG** - Skipped for now
+
 - [ ] Add `embed()` function to OpenAI provider
 - [ ] Populate embeddings in `processEntry` flow
 - [ ] `search_past_entries` - vector similarity search
 
 **Phase 4: Smart Context** ✅
+
 - [x] Inject user context into system prompt dynamically
 - [x] Conversation memory within session (32k char window)
 
@@ -46,8 +52,7 @@ Production-grade AI implementation with tools.
 
 ## Immediate
 
-1. **[BLOCKED]** Set up TestFlight/internal distribution - waiting on Apple Developer account
-2. **[NEXT]** Add meditation & journaling reminders
+1. **[NEXT]** Add meditation & journaling reminders
    - Meditation: scheduled time
    - Journaling: conditional (only if no entry for day)
 
@@ -67,6 +72,7 @@ Production-grade AI implementation with tools.
 7. **Chat Streaming** - React Native's fetch doesn't support ReadableStream
    - Options: polyfill (`react-native-polyfill-globals`), WebSocket via Supabase Realtime, or wait for RN improvements
    - Low priority unless users complain about response latency
+8. Set up TestFlight/internal distribution - waiting on Apple Developer account
 
 ---
 
@@ -75,6 +81,7 @@ Production-grade AI implementation with tools.
 **When:** March 2026 (after SDK 55 exits beta)
 
 **Why:**
+
 - SDK 54 is the LAST version to support Legacy Architecture
 - SDK 55 brings React Native 0.83.1 and React 19.2.0
 - Hermes v1 engine with 15-30% performance improvements
@@ -87,6 +94,7 @@ Production-grade AI implementation with tools.
 | `react-native-webview` | 13.15.0 | 13.16.0+ |
 
 **Pre-upgrade Checklist:**
+
 - [ ] Verify `@10play/tentap-editor` supports New Architecture
 - [ ] Check all dependencies for New Architecture compatibility
 - [ ] Test in a separate branch before merging

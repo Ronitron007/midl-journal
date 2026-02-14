@@ -23,7 +23,6 @@ midl-journal/
 
 See [docs/plans/2026-01-22-meditation-app-design.md](docs/plans/2026-01-22-meditation-app-design.md)
 
-
 ## Remote Dev Server (GCP)
 
 VM: `midl-dev-server` in `asia-southeast1-b`

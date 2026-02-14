@@ -3,6 +3,7 @@
 ## Summary
 
 Implement rolling context summaries that aggregate journal entries over time, plus personalized pre-sit guidance for the home screen. These serve three purposes:
+
 1. **LLM Context**: Provide AI with compressed historical context without sending all raw entries
 2. **User Stats**: Display practice patterns and trends to users over time
 3. **Pre-Sit Guidance**: Help users focus on what matters for their next meditation session
@@ -10,11 +11,12 @@ Implement rolling context summaries that aggregate journal entries over time, pl
 ## Architecture Decision
 
 ### Trigger Strategy
-| Feature | Trigger | Min Entries | Rationale |
-|---------|---------|-------------|-----------|
-| **Weekly Summary** | Post-entry hook (create/delete) | 3 | Meaningful patterns need multiple sessions |
-| **Monthly Summary** | Cron job (Supabase pg_cron) | 3 weeks | Less frequent, batch processing acceptable |
-| **Pre-Sit Guidance** | Post-entry hook (create/delete) | 1 | Useful from first reflection |
+
+| Feature              | Trigger                         | Min Entries | Rationale                                  |
+| -------------------- | ------------------------------- | ----------- | ------------------------------------------ |
+| **Weekly Summary**   | Post-entry hook (create/delete) | 3           | Meaningful patterns need multiple sessions |
+| **Monthly Summary**  | Cron job (Supabase pg_cron)     | 3 weeks     | Less frequent, batch processing acceptable |
+| **Pre-Sit Guidance** | Post-entry hook (create/delete) | 1           | Useful from first reflection               |
 
 ### Data Flow
 
@@ -69,7 +71,7 @@ Skill Advancement
 
 ```sql
 -- Add new columns to context_summaries table
-ALTER TABLE context_summaries ADD COLUMN IF NOT EXISTS 
+ALTER TABLE context_summaries ADD COLUMN IF NOT EXISTS
   summary_type TEXT CHECK (summary_type IN ('weekly', 'monthly'));
 
 ALTER TABLE context_summaries ADD COLUMN IF NOT EXISTS
@@ -92,17 +94,17 @@ ALTER TABLE users ADD COLUMN IF NOT EXISTS
   pre_sit_guidance JSONB DEFAULT NULL;
 
 -- Index for efficient lookups
-CREATE INDEX IF NOT EXISTS idx_context_summaries_type 
+CREATE INDEX IF NOT EXISTS idx_context_summaries_type
   ON context_summaries(user_id, summary_type, date_range_end DESC);
 
 -- Function to get week boundaries
-CREATE OR REPLACE FUNCTION get_week_start(ts TIMESTAMPTZ) 
+CREATE OR REPLACE FUNCTION get_week_start(ts TIMESTAMPTZ)
 RETURNS TIMESTAMPTZ AS $$
   SELECT date_trunc('week', ts);
 $$ LANGUAGE SQL IMMUTABLE;
 
 -- Index on week boundary for efficient weekly lookups
-CREATE INDEX IF NOT EXISTS idx_entries_week 
+CREATE INDEX IF NOT EXISTS idx_entries_week
   ON entries(user_id, (date_trunc('week', created_at)));
 ```
 
@@ -113,20 +115,20 @@ CREATE INDEX IF NOT EXISTS idx_entries_week
 ### 1. `supabase/functions/ai/handlers/context-summary.ts`
 
 ```typescript
-import { OpenAIProvider } from "../providers/openai.ts";
-import type { AIRequest, AIResponse } from "../types.ts";
-import { log } from "../utils/logger.ts";
+import { OpenAIProvider } from '../providers/openai.ts';
+import type { AIRequest, AIResponse } from '../types.ts';
+import { log } from '../utils/logger.ts';
 
 type WeeklySummaryPayload = {
-  action: "check_and_generate" | "regenerate_week" | "backfill";
+  action: 'check_and_generate' | 'regenerate_week' | 'backfill';
   weekStart?: string; // ISO date for specific week
 };
 
 type SummaryData = {
   summary: string;
   key_themes: string[];
-  mood_trend: "improving" | "stable" | "challenging" | "variable";
-  samatha_trend: "strengthening" | "stable" | "struggling" | "variable";
+  mood_trend: 'improving' | 'stable' | 'challenging' | 'variable';
+  samatha_trend: 'strengthening' | 'stable' | 'struggling' | 'variable';
   notable_events: string[];
   hindrance_frequency: Record<string, number>;
   techniques_used: string[];
@@ -136,18 +138,20 @@ type SummaryData = {
 
 const MIN_ENTRIES_FOR_WEEKLY = 3;
 
-export async function handleContextSummary(req: AIRequest): Promise<AIResponse> {
+export async function handleContextSummary(
+  req: AIRequest
+): Promise<AIResponse> {
   const { action, weekStart } = req.payload as WeeklySummaryPayload;
 
   switch (action) {
-    case "check_and_generate":
+    case 'check_and_generate':
       return checkAndGenerateWeekly(req);
-    case "regenerate_week":
+    case 'regenerate_week':
       return regenerateWeek(req, weekStart!);
-    case "backfill":
+    case 'backfill':
       return backfillSummaries(req);
     default:
-      return { error: "Unknown action" };
+      return { error: 'Unknown action' };
   }
 }
 
@@ -160,50 +164,52 @@ async function checkAndGenerateWeekly(req: AIRequest): Promise<AIResponse> {
 
   // Check if summary already exists for this week
   const { data: existingSummary } = await req.supabase
-    .from("context_summaries")
-    .select("id, entry_ids")
-    .eq("user_id", req.userId)
-    .eq("summary_type", "weekly")
-    .gte("date_range_start", weekStart.toISOString())
-    .lt("date_range_end", weekEnd.toISOString())
+    .from('context_summaries')
+    .select('id, entry_ids')
+    .eq('user_id', req.userId)
+    .eq('summary_type', 'weekly')
+    .gte('date_range_start', weekStart.toISOString())
+    .lt('date_range_end', weekEnd.toISOString())
     .single();
 
   // Get entries for this week
   const { data: entries, error } = await req.supabase
-    .from("entries")
-    .select(`
+    .from('entries')
+    .select(
+      `
       id, created_at, summary, mood_score, mood_tags,
       samatha_tendency, marker_present, marker_notes,
       hindrance_present, hindrance_notes, hindrance_conditions,
       balance_approach, key_understanding, techniques_mentioned,
       has_breakthrough, has_struggle, skill_practiced
-    `)
-    .eq("user_id", req.userId)
-    .eq("type", "reflect")
-    .gte("created_at", weekStart.toISOString())
-    .lt("created_at", weekEnd.toISOString())
-    .not("processed_at", "is", null)
-    .order("created_at", { ascending: true });
+    `
+    )
+    .eq('user_id', req.userId)
+    .eq('type', 'reflect')
+    .gte('created_at', weekStart.toISOString())
+    .lt('created_at', weekEnd.toISOString())
+    .not('processed_at', 'is', null)
+    .order('created_at', { ascending: true });
 
   if (error) {
-    log.error("Failed to fetch entries for summary", { error: error.message });
-    return { error: "Failed to fetch entries" };
+    log.error('Failed to fetch entries for summary', { error: error.message });
+    return { error: 'Failed to fetch entries' };
   }
 
   // Check if we have enough entries
   if (entries.length < MIN_ENTRIES_FOR_WEEKLY) {
-    return { 
-      skipped: true, 
-      reason: `Only ${entries.length} entries, need ${MIN_ENTRIES_FOR_WEEKLY}` 
+    return {
+      skipped: true,
+      reason: `Only ${entries.length} entries, need ${MIN_ENTRIES_FOR_WEEKLY}`,
     };
   }
 
   // Check if entry set has changed (for regeneration)
-  const currentEntryIds = entries.map(e => e.id).sort();
+  const currentEntryIds = entries.map((e) => e.id).sort();
   if (existingSummary) {
     const existingIds = (existingSummary.entry_ids || []).sort();
     if (JSON.stringify(currentEntryIds) === JSON.stringify(existingIds)) {
-      return { skipped: true, reason: "Summary already up to date" };
+      return { skipped: true, reason: 'Summary already up to date' };
     }
   }
 
@@ -213,7 +219,7 @@ async function checkAndGenerateWeekly(req: AIRequest): Promise<AIResponse> {
   // Upsert summary
   const summaryRecord = {
     user_id: req.userId,
-    summary_type: "weekly",
+    summary_type: 'weekly',
     entry_ids: currentEntryIds,
     date_range_start: weekStart.toISOString(),
     date_range_end: weekEnd.toISOString(),
@@ -230,16 +236,14 @@ async function checkAndGenerateWeekly(req: AIRequest): Promise<AIResponse> {
 
   if (existingSummary) {
     await req.supabase
-      .from("context_summaries")
+      .from('context_summaries')
       .update(summaryRecord)
-      .eq("id", existingSummary.id);
+      .eq('id', existingSummary.id);
   } else {
-    await req.supabase
-      .from("context_summaries")
-      .insert(summaryRecord);
+    await req.supabase.from('context_summaries').insert(summaryRecord);
   }
 
-  log.info("Generated weekly summary", {
+  log.info('Generated weekly summary', {
     userId: req.userId,
     weekStart: weekStart.toISOString(),
     entryCount: entries.length,
@@ -255,11 +259,11 @@ async function checkAndGenerateWeekly(req: AIRequest): Promise<AIResponse> {
 // but user has at least 1 entry
 async function ensurePreSitGuidance(req: AIRequest): Promise<void> {
   const { count } = await req.supabase
-    .from("entries")
-    .select("id", { count: "exact", head: true })
-    .eq("user_id", req.userId)
-    .eq("track_progress", true)
-    .not("processed_at", "is", null);
+    .from('entries')
+    .select('id', { count: 'exact', head: true })
+    .eq('user_id', req.userId)
+    .eq('track_progress', true)
+    .not('processed_at', 'is', null);
 
   if (count && count >= 1) {
     await generatePreSitGuidance(req);
@@ -270,7 +274,7 @@ async function generateWeeklySummary(entries: any[]): Promise<SummaryData> {
   const provider = new OpenAIProvider();
 
   // Prepare entry data for prompt
-  const entryData = entries.map(e => ({
+  const entryData = entries.map((e) => ({
     date: new Date(e.created_at).toLocaleDateString(),
     skill: e.skill_practiced,
     summary: e.summary,
@@ -308,18 +312,21 @@ Generate a rolling summary that captures their practice patterns. Respond in JSO
 Focus on patterns, not individual sessions. Be concise but capture the essence of their week.`;
 
   const result = await provider.complete({
-    messages: [{ role: "user", content: prompt }],
+    messages: [{ role: 'user', content: prompt }],
     maxTokens: 500,
     jsonMode: true,
   });
 
-  const parsed = JSON.parse(result || "{}");
+  const parsed = JSON.parse(result || '{}');
 
   // Calculate avg mood from entries
-  const moodScores = entries.filter(e => e.mood_score).map(e => e.mood_score);
-  const avgMood = moodScores.length > 0 
-    ? moodScores.reduce((a, b) => a + b, 0) / moodScores.length 
-    : 0;
+  const moodScores = entries
+    .filter((e) => e.mood_score)
+    .map((e) => e.mood_score);
+  const avgMood =
+    moodScores.length > 0
+      ? moodScores.reduce((a, b) => a + b, 0) / moodScores.length
+      : 0;
 
   return {
     ...parsed,
@@ -328,7 +335,10 @@ Focus on patterns, not individual sessions. Be concise but capture the essence o
   };
 }
 
-async function regenerateWeek(req: AIRequest, weekStartStr: string): Promise<AIResponse> {
+async function regenerateWeek(
+  req: AIRequest,
+  weekStartStr: string
+): Promise<AIResponse> {
   // Parse week start and generate summary for that specific week
   const weekStart = new Date(weekStartStr);
   // ... similar to checkAndGenerateWeekly but for specific week
@@ -337,8 +347,10 @@ async function regenerateWeek(req: AIRequest, weekStartStr: string): Promise<AIR
 
 async function backfillSummaries(req: AIRequest): Promise<AIResponse> {
   // Get all weeks with sufficient entries
-  const { data: weekCounts } = await req.supabase
-    .rpc("get_weeks_with_entries", { p_user_id: req.userId, p_min_entries: MIN_ENTRIES_FOR_WEEKLY });
+  const { data: weekCounts } = await req.supabase.rpc(
+    'get_weeks_with_entries',
+    { p_user_id: req.userId, p_min_entries: MIN_ENTRIES_FOR_WEEKLY }
+  );
 
   // Generate summaries for each week
   let generated = 0;
@@ -369,33 +381,35 @@ async function generatePreSitGuidance(req: AIRequest): Promise<void> {
 
   // 1. Get user's current skill
   const { data: user } = await req.supabase
-    .from("users")
-    .select("current_skill")
-    .eq("id", req.userId)
+    .from('users')
+    .select('current_skill')
+    .eq('id', req.userId)
     .single();
 
   if (!user) return;
 
   // 2. Get recent entries (last 10, track_progress=true)
   const { data: entries } = await req.supabase
-    .from("entries")
-    .select(`
+    .from('entries')
+    .select(
+      `
       summary, hindrance_notes, hindrance_conditions,
       balance_approach, samatha_tendency, marker_notes,
       key_understanding, skill_practiced
-    `)
-    .eq("user_id", req.userId)
-    .eq("track_progress", true)
-    .not("processed_at", "is", null)
-    .order("created_at", { ascending: false })
+    `
+    )
+    .eq('user_id', req.userId)
+    .eq('track_progress', true)
+    .not('processed_at', 'is', null)
+    .order('created_at', { ascending: false })
     .limit(10);
 
   if (!entries || entries.length === 0) {
     // Clear guidance if no entries
     await req.supabase
-      .from("users")
+      .from('users')
       .update({ pre_sit_guidance: null })
-      .eq("id", req.userId);
+      .eq('id', req.userId);
     return;
   }
 
@@ -420,10 +434,14 @@ ${skillContent.tips}
 Daily check-in: "${skillContent.checkIn}"
 
 RECENT PRACTICE (from their journal):
-${entries.map(e => `- ${e.summary || 'No summary'}
+${entries
+  .map(
+    (e) => `- ${e.summary || 'No summary'}
   Samatha: ${e.samatha_tendency || 'unknown'}
   Hindrance: ${e.hindrance_notes || 'none noted'}
-  What helped: ${e.balance_approach || 'not specified'}`).join('\n')}
+  What helped: ${e.balance_approach || 'not specified'}`
+  )
+  .join('\n')}
 
 Generate pre-sit guidance. Be suggestive, not prescriptive ("You might try..." not "You should..."). Respond in JSON:
 {
@@ -433,27 +451,27 @@ Generate pre-sit guidance. Be suggestive, not prescriptive ("You might try..." n
 }`;
 
   const result = await provider.complete({
-    messages: [{ role: "user", content: prompt }],
+    messages: [{ role: 'user', content: prompt }],
     maxTokens: 300,
     jsonMode: true,
   });
 
-  const guidance = JSON.parse(result || "{}");
+  const guidance = JSON.parse(result || '{}');
 
   // 5. Store on user profile
   await req.supabase
-    .from("users")
+    .from('users')
     .update({
       pre_sit_guidance: {
         ...guidance,
         skill_id: user.current_skill,
         skill_name: skillContent.name,
         generated_at: new Date().toISOString(),
-      }
+      },
     })
-    .eq("id", req.userId);
+    .eq('id', req.userId);
 
-  log.info("Generated pre-sit guidance", {
+  log.info('Generated pre-sit guidance', {
     userId: req.userId,
     skillId: user.current_skill,
     entryCount: entries.length,
@@ -478,23 +496,23 @@ async function loadSkillMarkdown(skillId: string): Promise<{
   if (!skill) {
     return {
       name: `Skill ${skillId}`,
-      overview: "",
-      marker: "",
-      hindrance: "",
-      antidote: "",
-      tips: "",
-      checkIn: "How was your practice?",
+      overview: '',
+      marker: '',
+      hindrance: '',
+      antidote: '',
+      tips: '',
+      checkIn: 'How was your practice?',
     };
   }
 
   return {
     name: skill.name,
-    overview: skill.overview || "",
-    marker: skill.insight?.marker || "",
-    hindrance: skill.insight?.hindrance || "",
-    antidote: skill.insight?.antidote || "",
-    tips: skill.tips?.join("\n") || "",
-    checkIn: skill.daily_application?.check_in || "How was your practice?",
+    overview: skill.overview || '',
+    marker: skill.insight?.marker || '',
+    hindrance: skill.insight?.hindrance || '',
+    antidote: skill.insight?.antidote || '',
+    tips: skill.tips?.join('\n') || '',
+    checkIn: skill.daily_application?.check_in || 'How was your practice?',
   };
 }
 ```
@@ -502,13 +520,15 @@ async function loadSkillMarkdown(skillId: string): Promise<{
 ### 2. `supabase/functions/ai/handlers/monthly-summary.ts`
 
 ```typescript
-import { OpenAIProvider } from "../providers/openai.ts";
-import type { AIRequest, AIResponse } from "../types.ts";
-import { log } from "../utils/logger.ts";
+import { OpenAIProvider } from '../providers/openai.ts';
+import type { AIRequest, AIResponse } from '../types.ts';
+import { log } from '../utils/logger.ts';
 
 const MIN_WEEKS_FOR_MONTHLY = 3;
 
-export async function handleMonthlySummary(req: AIRequest): Promise<AIResponse> {
+export async function handleMonthlySummary(
+  req: AIRequest
+): Promise<AIResponse> {
   // Get current month boundaries
   const now = new Date();
   const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
@@ -516,18 +536,22 @@ export async function handleMonthlySummary(req: AIRequest): Promise<AIResponse> 
 
   // Get weekly summaries for this month
   const { data: weeklySummaries, error } = await req.supabase
-    .from("context_summaries")
-    .select("*")
-    .eq("user_id", req.userId)
-    .eq("summary_type", "weekly")
-    .gte("date_range_start", monthStart.toISOString())
-    .lte("date_range_end", monthEnd.toISOString())
-    .order("date_range_start", { ascending: true });
+    .from('context_summaries')
+    .select('*')
+    .eq('user_id', req.userId)
+    .eq('summary_type', 'weekly')
+    .gte('date_range_start', monthStart.toISOString())
+    .lte('date_range_end', monthEnd.toISOString())
+    .order('date_range_start', { ascending: true });
 
-  if (error || !weeklySummaries || weeklySummaries.length < MIN_WEEKS_FOR_MONTHLY) {
-    return { 
-      skipped: true, 
-      reason: `Only ${weeklySummaries?.length || 0} weekly summaries, need ${MIN_WEEKS_FOR_MONTHLY}` 
+  if (
+    error ||
+    !weeklySummaries ||
+    weeklySummaries.length < MIN_WEEKS_FOR_MONTHLY
+  ) {
+    return {
+      skipped: true,
+      reason: `Only ${weeklySummaries?.length || 0} weekly summaries, need ${MIN_WEEKS_FOR_MONTHLY}`,
     };
   }
 
@@ -536,14 +560,18 @@ export async function handleMonthlySummary(req: AIRequest): Promise<AIResponse> 
   const prompt = `You are creating a monthly summary from these weekly meditation practice summaries:
 
 WEEKLY SUMMARIES:
-${weeklySummaries.map(w => `
+${weeklySummaries
+  .map(
+    (w) => `
 Week of ${new Date(w.date_range_start).toLocaleDateString()}:
 - Summary: ${w.summary}
 - Samatha trend: ${w.samatha_trend}
 - Mood trend: ${w.mood_trend}
-- Key themes: ${w.key_themes?.join(", ")}
-- Notable: ${w.notable_events?.join("; ")}
-`).join("\n")}
+- Key themes: ${w.key_themes?.join(', ')}
+- Notable: ${w.notable_events?.join('; ')}
+`
+  )
+  .join('\n')}
 
 Generate a monthly summary. Respond in JSON:
 
@@ -557,22 +585,27 @@ Generate a monthly summary. Respond in JSON:
 }`;
 
   const result = await provider.complete({
-    messages: [{ role: "user", content: prompt }],
+    messages: [{ role: 'user', content: prompt }],
     maxTokens: 500,
     jsonMode: true,
   });
 
-  const parsed = JSON.parse(result || "{}");
+  const parsed = JSON.parse(result || '{}');
 
   // Calculate aggregates
-  const totalEntries = weeklySummaries.reduce((sum, w) => sum + (w.entry_count || 0), 0);
-  const avgMood = weeklySummaries.reduce((sum, w) => sum + (w.avg_mood_score || 0), 0) / weeklySummaries.length;
+  const totalEntries = weeklySummaries.reduce(
+    (sum, w) => sum + (w.entry_count || 0),
+    0
+  );
+  const avgMood =
+    weeklySummaries.reduce((sum, w) => sum + (w.avg_mood_score || 0), 0) /
+    weeklySummaries.length;
 
   // Store monthly summary
   const summaryRecord = {
     user_id: req.userId,
-    summary_type: "monthly",
-    entry_ids: weeklySummaries.flatMap(w => w.entry_ids || []),
+    summary_type: 'monthly',
+    entry_ids: weeklySummaries.flatMap((w) => w.entry_ids || []),
     date_range_start: monthStart.toISOString(),
     date_range_end: monthEnd.toISOString(),
     summary: parsed.summary,
@@ -586,9 +619,9 @@ Generate a monthly summary. Respond in JSON:
     parent_summary_id: null, // Top level
   };
 
-  await req.supabase.from("context_summaries").insert(summaryRecord);
+  await req.supabase.from('context_summaries').insert(summaryRecord);
 
-  log.info("Generated monthly summary", {
+  log.info('Generated monthly summary', {
     userId: req.userId,
     month: monthStart.toISOString(),
     weeklySummaryCount: weeklySummaries.length,
@@ -636,16 +669,13 @@ ai.generateContextSummary('check_and_generate').catch(console.error);
 
 // In deleteEntry (if exists, or create it):
 export async function deleteEntry(entryId: string): Promise<boolean> {
-  const { error } = await supabase
-    .from('entries')
-    .delete()
-    .eq('id', entryId);
-  
+  const { error } = await supabase.from('entries').delete().eq('id', entryId);
+
   if (!error) {
     // Regenerate summary since entry set changed
     ai.generateContextSummary('check_and_generate').catch(console.error);
   }
-  
+
   return !error;
 }
 ```
@@ -858,11 +888,16 @@ export async function getPracticeStats(userId: string): Promise<PracticeStats> {
 
   // Calculate overall trends from recent weeks
   const recentWeeks = recentResult.data || [];
-  const avgMood = recentWeeks.length > 0
-    ? recentWeeks.reduce((sum, w) => sum + (w.avg_mood_score || 0), 0) / recentWeeks.length
-    : 0;
-  const totalSessions = recentWeeks.reduce((sum, w) => sum + (w.entry_count || 0), 0);
-  
+  const avgMood =
+    recentWeeks.length > 0
+      ? recentWeeks.reduce((sum, w) => sum + (w.avg_mood_score || 0), 0) /
+        recentWeeks.length
+      : 0;
+  const totalSessions = recentWeeks.reduce(
+    (sum, w) => sum + (w.entry_count || 0),
+    0
+  );
+
   // Aggregate themes
   const themeCounts: Record<string, number> = {};
   for (const week of recentWeeks) {
@@ -919,7 +954,8 @@ export function PreSitGuidance({ guidance }: Props) {
           For Your Next Sit
         </Text>
         <Text className="text-gray-500 text-center py-4">
-          Complete your first reflection to get personalized guidance for your sits.
+          Complete your first reflection to get personalized guidance for your
+          sits.
         </Text>
       </View>
     );
@@ -938,9 +974,13 @@ export function PreSitGuidance({ guidance }: Props) {
       {/* Patterns from recent entries */}
       {guidance.patterns.length > 0 && (
         <View className="mb-4">
-          <Text className="text-sm text-gray-500 mb-1">From your recent sits:</Text>
+          <Text className="text-sm text-gray-500 mb-1">
+            From your recent sits:
+          </Text>
           {guidance.patterns.map((pattern, i) => (
-            <Text key={i} className="text-gray-700">• {pattern}</Text>
+            <Text key={i} className="text-gray-700">
+              • {pattern}
+            </Text>
           ))}
         </View>
       )}
@@ -980,7 +1020,7 @@ if (profile) {
 }
 
 // In render, add above SkillMap:
-<PreSitGuidance guidance={preSitGuidance} />
+<PreSitGuidance guidance={preSitGuidance} />;
 ```
 
 ---
@@ -1004,25 +1044,28 @@ async function backfillAllUsers() {
     .select('user_id')
     .eq('type', 'reflect');
 
-  const uniqueUsers = [...new Set(users?.map(e => e.user_id))];
+  const uniqueUsers = [...new Set(users?.map((e) => e.user_id))];
   console.log(`Found ${uniqueUsers.length} users to backfill`);
 
   for (const userId of uniqueUsers) {
     console.log(`Processing user ${userId}...`);
-    
+
     // Call the backfill endpoint
-    const response = await fetch(`${process.env.SUPABASE_URL}/functions/v1/ai`, {
-      method: 'POST',
-      headers: {
-        'Authorization': `Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY}`,
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        action: 'context-summary',
-        payload: { action: 'backfill' },
-        userId,
-      }),
-    });
+    const response = await fetch(
+      `${process.env.SUPABASE_URL}/functions/v1/ai`,
+      {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${process.env.SUPABASE_SERVICE_ROLE_KEY}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          action: 'context-summary',
+          payload: { action: 'backfill' },
+          userId,
+        }),
+      }
+    );
 
     const result = await response.json();
     console.log(`  Result:`, result);
@@ -1038,27 +1081,28 @@ backfillAllUsers().catch(console.error);
 
 ## Files to Create/Modify
 
-| File | Action | Purpose |
-|------|--------|---------|
-| `supabase/migrations/006_add_context_summary_columns.sql` | Create | New columns + indexes + users.pre_sit_guidance |
-| `supabase/functions/ai/handlers/context-summary.ts` | Create | Weekly summary + pre-sit guidance generation |
-| `supabase/functions/ai/handlers/monthly-summary.ts` | Create | Monthly summary generation |
-| `supabase/functions/ai/index.ts` | Modify | Add new routes |
-| `supabase/functions/ai/tools/definitions.ts` | Modify | Add get_practice_summary tool |
-| `supabase/functions/ai/tools/handlers.ts` | Modify | Implement get_practice_summary |
-| `lib/ai.ts` | Modify | Add generateContextSummary method |
-| `lib/entries.ts` | Modify | Trigger summary on create/delete |
-| `lib/practice-stats.ts` | Create | User-facing stats API |
-| `lib/progression.ts` | Modify | Trigger pre-sit guidance regeneration on skill advance |
-| `components/PreSitGuidance.tsx` | Create | Home screen guidance widget |
-| `app/(main)/tracker.tsx` | Modify | Add PreSitGuidance component |
-| `scripts/backfill-summaries.ts` | Create | One-time backfill |
+| File                                                      | Action | Purpose                                                |
+| --------------------------------------------------------- | ------ | ------------------------------------------------------ |
+| `supabase/migrations/006_add_context_summary_columns.sql` | Create | New columns + indexes + users.pre_sit_guidance         |
+| `supabase/functions/ai/handlers/context-summary.ts`       | Create | Weekly summary + pre-sit guidance generation           |
+| `supabase/functions/ai/handlers/monthly-summary.ts`       | Create | Monthly summary generation                             |
+| `supabase/functions/ai/index.ts`                          | Modify | Add new routes                                         |
+| `supabase/functions/ai/tools/definitions.ts`              | Modify | Add get_practice_summary tool                          |
+| `supabase/functions/ai/tools/handlers.ts`                 | Modify | Implement get_practice_summary                         |
+| `lib/ai.ts`                                               | Modify | Add generateContextSummary method                      |
+| `lib/entries.ts`                                          | Modify | Trigger summary on create/delete                       |
+| `lib/practice-stats.ts`                                   | Create | User-facing stats API                                  |
+| `lib/progression.ts`                                      | Modify | Trigger pre-sit guidance regeneration on skill advance |
+| `components/PreSitGuidance.tsx`                           | Create | Home screen guidance widget                            |
+| `app/(main)/tracker.tsx`                                  | Modify | Add PreSitGuidance component                           |
+| `scripts/backfill-summaries.ts`                           | Create | One-time backfill                                      |
 
 ---
 
 ## Testing Checklist
 
 ### Weekly Summaries
+
 1. [ ] Run migration (includes users.pre_sit_guidance column)
 2. [ ] Deploy edge function
 3. [ ] Create 3+ entries manually
@@ -1070,6 +1114,7 @@ backfillAllUsers().catch(console.error);
 9. [ ] Verify cron setup (manual trigger first)
 
 ### Pre-Sit Guidance
+
 10. [ ] Create 1 entry, verify pre_sit_guidance populated on users table
 11. [ ] Verify PreSitGuidance component shows on tracker
 12. [ ] Test empty state (new user, no entries)

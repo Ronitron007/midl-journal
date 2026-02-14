@@ -30,6 +30,7 @@ Withdraw peripheral awareness from your six sense fields to increase mental secl
 Your meditation remains the same as in Meditation Skills 01-06, except you now move directly to Skill 10 once tranquillity is developed and add Steps 2-3 as new additions to your meditation. You will know when enough tranquillity has developed because your mind will become tranquil as mind wandering calms, and awareness will become clear as dullness is removed from your mind.
 
 Your Meditation So Far:
+
 - Sit in meditation.
 - Reflect gratefully.
 - Enjoy relaxing your body and mind.

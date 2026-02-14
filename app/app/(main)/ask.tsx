@@ -23,7 +23,9 @@ export default function AskScreen() {
   const [messages, setMessages] = useState<Message[]>(askDraft?.messages ?? []);
   const [input, setInput] = useState(askDraft?.input ?? '');
   const [isLoading, setIsLoading] = useState(false);
-  const [trackProgress, setTrackProgress] = useState(askDraft?.trackProgress ?? true);
+  const [trackProgress, setTrackProgress] = useState(
+    askDraft?.trackProgress ?? true
+  );
   const scrollViewRef = useRef<ScrollView>(null);
 
   useEffect(() => {
@@ -106,7 +108,10 @@ export default function AskScreen() {
             <Text style={{ color: '#de8649', fontSize: 16 }}>Done</Text>
           </Pressable>
           <Text style={{ color: '#3a5222', fontWeight: '500' }}>Ask</Text>
-          <Pressable onPress={handleNewChat} style={{ width: 50, alignItems: 'flex-end' }}>
+          <Pressable
+            onPress={handleNewChat}
+            style={{ width: 50, alignItems: 'flex-end' }}
+          >
             <Text style={{ color: '#de8649', fontSize: 16 }}>New</Text>
           </Pressable>
         </View>
@@ -123,8 +128,8 @@ export default function AskScreen() {
           {messages.length === 0 && (
             <View style={{ alignItems: 'center', marginTop: 32 }}>
               <Text style={{ color: '#707927', textAlign: 'center' }}>
-                Ask me anything about MIDL meditation, your practice, or how
-                to work with specific challenges.
+                Ask me anything about MIDL meditation, your practice, or how to
+                work with specific challenges.
               </Text>
             </View>
           )}

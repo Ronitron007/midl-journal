@@ -68,21 +68,56 @@ interface Cultivation {
 }
 
 // Cultivation mapping
-const CULTIVATION_MAP: Record<string, { name: string; suitability: string; membership: boolean }> = {
-  '01': { name: 'Mindfulness of Body', suitability: 'Everyone', membership: false },
-  '02': { name: 'Mindfulness of Breathing', suitability: 'Intermediate meditator', membership: true },
-  '03': { name: 'Calm & Tranquillity', suitability: 'Skilled meditator', membership: true },
-  '04': { name: 'Joyfulness & Unification', suitability: 'Accomplished meditator', membership: true },
-  '05': { name: 'Pleasure Jhana & Equanimity', suitability: 'Proficient meditator', membership: true },
+const CULTIVATION_MAP: Record<
+  string,
+  { name: string; suitability: string; membership: boolean }
+> = {
+  '01': {
+    name: 'Mindfulness of Body',
+    suitability: 'Everyone',
+    membership: false,
+  },
+  '02': {
+    name: 'Mindfulness of Breathing',
+    suitability: 'Intermediate meditator',
+    membership: true,
+  },
+  '03': {
+    name: 'Calm & Tranquillity',
+    suitability: 'Skilled meditator',
+    membership: true,
+  },
+  '04': {
+    name: 'Joyfulness & Unification',
+    suitability: 'Accomplished meditator',
+    membership: true,
+  },
+  '05': {
+    name: 'Pleasure Jhana & Equanimity',
+    suitability: 'Proficient meditator',
+    membership: true,
+  },
 };
 
 // Skill to cultivation mapping
 const SKILL_CULTIVATION: Record<string, string> = {
-  '00': '01', '01': '01', '02': '01', '03': '01',
-  '04': '02', '05': '02', '06': '02',
-  '07': '03', '08': '03', '09': '03',
-  '10': '04', '11': '04', '12': '04',
-  '13': '05', '14': '05', '15': '05', '16': '05',
+  '00': '01',
+  '01': '01',
+  '02': '01',
+  '03': '01',
+  '04': '02',
+  '05': '02',
+  '06': '02',
+  '07': '03',
+  '08': '03',
+  '09': '03',
+  '10': '04',
+  '11': '04',
+  '12': '04',
+  '13': '05',
+  '14': '05',
+  '15': '05',
+  '16': '05',
 };
 
 function parseSkillFile(content: string, skillId: string): Skill {
@@ -93,14 +128,16 @@ function parseSkillFile(content: string, skillId: string): Skill {
   const name = headerMatch ? headerMatch[2].trim() : '';
 
   // Extract metadata
-  const cultivationLine = lines.find(l => l.startsWith('Cultivation:')) || '';
+  const cultivationLine = lines.find((l) => l.startsWith('Cultivation:')) || '';
   const cultivationMatch = cultivationLine.match(/Cultivation:\s*(\d+)/);
-  const cultivation_id = cultivationMatch ? cultivationMatch[1] : SKILL_CULTIVATION[skillId];
+  const cultivation_id = cultivationMatch
+    ? cultivationMatch[1]
+    : SKILL_CULTIVATION[skillId];
 
-  const subtitleLine = lines.find(l => l.startsWith('Subtitle:')) || '';
+  const subtitleLine = lines.find((l) => l.startsWith('Subtitle:')) || '';
   const subtitle = subtitleLine.replace('Subtitle:', '').trim();
 
-  const durationLine = lines.find(l => l.startsWith('Duration:')) || '';
+  const durationLine = lines.find((l) => l.startsWith('Duration:')) || '';
   const duration = durationLine.replace('Duration:', '').trim();
 
   // Parse sections
@@ -117,18 +154,24 @@ function parseSkillFile(content: string, skillId: string): Skill {
   const resources: Skill['resources'] = {};
   const resourceSection = sections['Resources'] || '';
   const youtubeMatch = resourceSection.match(/YouTube:\s*(https?:\/\/[^\s]+)/);
-  const soundcloudMatch = resourceSection.match(/SoundCloud:\s*(https?:\/\/[^\s]+)/);
+  const soundcloudMatch = resourceSection.match(
+    /SoundCloud:\s*(https?:\/\/[^\s]+)/
+  );
   if (youtubeMatch) resources.youtube = youtubeMatch[1];
   if (soundcloudMatch) resources.soundcloud = soundcloudMatch[1];
 
   // Extract instructions
   const instructionSection = sections['Instructions'] || '';
-  const stepMatches = [...instructionSection.matchAll(/### Step (\d+):\s*(.+?)\n\n([\s\S]*?)(?=### Step|\n## |$)/g)];
+  const stepMatches = [
+    ...instructionSection.matchAll(
+      /### Step (\d+):\s*(.+?)\n\n([\s\S]*?)(?=### Step|\n## |$)/g
+    ),
+  ];
   const introMatch = instructionSection.match(/^([\s\S]*?)(?=### Step)/);
 
   const instructions: Skill['instructions'] = {
     intro: introMatch ? introMatch[1].trim() : undefined,
-    steps: stepMatches.map(m => ({
+    steps: stepMatches.map((m) => ({
       step: parseInt(m[1]),
       title: m[2].trim(),
       content: m[3].trim(),
@@ -139,13 +182,15 @@ function parseSkillFile(content: string, skillId: string): Skill {
   const tipsSection = sections['Tips'] || '';
   const tips = tipsSection
     .split('\n')
-    .filter(l => l.startsWith('- '))
-    .map(l => l.replace(/^- /, '').trim());
+    .filter((l) => l.startsWith('- '))
+    .map((l) => l.replace(/^- /, '').trim());
 
   // Extract obstacles
   const obstaclesSection = sections['Obstacles'] || '';
-  const obstacleMatches = [...obstaclesSection.matchAll(/### (.+?)\n\n([\s\S]*?)(?=### |$)/g)];
-  const obstacles = obstacleMatches.map(m => ({
+  const obstacleMatches = [
+    ...obstaclesSection.matchAll(/### (.+?)\n\n([\s\S]*?)(?=### |$)/g),
+  ];
+  const obstacles = obstacleMatches.map((m) => ({
     title: m[1].trim(),
     content: m[2].trim(),
   }));
@@ -154,7 +199,9 @@ function parseSkillFile(content: string, skillId: string): Skill {
   const insightSection = sections['Insight'] || '';
   const markerMatch = insightSection.match(/Marker:\s*(.+)/);
   const hindranceMatch = insightSection.match(/Hindrance:\s*(.+)/);
-  const antidoteMatch = insightSection.match(/Antidote:\s*([\s\S]*?)(?=\n\n|\n-|$)/);
+  const antidoteMatch = insightSection.match(
+    /Antidote:\s*([\s\S]*?)(?=\n\n|\n-|$)/
+  );
 
   const insight: Skill['insight'] = {
     marker: markerMatch ? markerMatch[1].trim() : '',
@@ -165,18 +212,25 @@ function parseSkillFile(content: string, skillId: string): Skill {
   // Extract daily application
   const dailySection = sections['Daily Application'] || '';
   const checkInMatch = dailySection.match(/Check-in:\s*"?(.+?)"?\n/);
-  const learningsMatch = dailySection.match(/### Learnings\n([\s\S]*?)(?=###|$)/);
+  const learningsMatch = dailySection.match(
+    /### Learnings\n([\s\S]*?)(?=###|$)/
+  );
 
   const daily_application: Skill['daily_application'] = {
     check_in: checkInMatch ? checkInMatch[1].trim() : undefined,
     learnings: learningsMatch
-      ? learningsMatch[1].split('\n').filter(l => l.startsWith('- ')).map(l => l.replace(/^- /, '').trim())
+      ? learningsMatch[1]
+          .split('\n')
+          .filter((l) => l.startsWith('- '))
+          .map((l) => l.replace(/^- /, '').trim())
       : undefined,
   };
 
   // Extract progression
   const progressionSection = sections['Progression'] || '';
-  const criteriaMatch = progressionSection.match(/Criteria:\s*([\s\S]*?)(?=\nNext:|$)/);
+  const criteriaMatch = progressionSection.match(
+    /Criteria:\s*([\s\S]*?)(?=\nNext:|$)/
+  );
   const nextMatch = progressionSection.match(/Next:\s*(.+)/);
   const prevMatch = progressionSection.match(/Previous:\s*(.+)/);
 
@@ -190,8 +244,8 @@ function parseSkillFile(content: string, skillId: string): Skill {
   const benefitsSection = sections['Benefits'] || '';
   const benefits = benefitsSection
     .split('\n')
-    .filter(l => l.startsWith('- '))
-    .map(l => l.replace(/^- /, '').trim());
+    .filter((l) => l.startsWith('- '))
+    .map((l) => l.replace(/^- /, '').trim());
 
   const purpose = (sections['Purpose'] || '').trim();
   const overview = (sections['Overview'] || '').trim();
@@ -211,14 +265,19 @@ function parseSkillFile(content: string, skillId: string): Skill {
     tips: tips.length > 0 ? tips : undefined,
     obstacles: obstacles.length > 0 ? obstacles : undefined,
     insight,
-    daily_application: daily_application.check_in || daily_application.learnings ? daily_application : undefined,
+    daily_application:
+      daily_application.check_in || daily_application.learnings
+        ? daily_application
+        : undefined,
     progression,
   };
 }
 
 function parseSections(content: string): Record<string, string> {
   const sections: Record<string, string> = {};
-  const sectionMatches = [...content.matchAll(/^## (.+?)\n\n([\s\S]*?)(?=\n## |$)/gm)];
+  const sectionMatches = [
+    ...content.matchAll(/^## (.+?)\n\n([\s\S]*?)(?=\n## |$)/gm),
+  ];
 
   for (const match of sectionMatches) {
     sections[match[1].trim()] = match[2].trim();
@@ -278,13 +337,17 @@ function main() {
     path.join(SHARED_DIR, 'skills.json'),
     JSON.stringify(skills, null, 2)
   );
-  console.log(`\nWrote shared/skills.json (${Object.keys(skills).length} skills)`);
+  console.log(
+    `\nWrote shared/skills.json (${Object.keys(skills).length} skills)`
+  );
 
   fs.writeFileSync(
     path.join(SHARED_DIR, 'cultivations.json'),
     JSON.stringify(cultivations, null, 2)
   );
-  console.log(`Wrote shared/cultivations.json (${Object.keys(cultivations).length} cultivations)`);
+  console.log(
+    `Wrote shared/cultivations.json (${Object.keys(cultivations).length} cultivations)`
+  );
 
   // Write output files to supabase/functions/ai/data/
   fs.writeFileSync(
@@ -304,7 +367,9 @@ function main() {
   const typesDest = path.join(AI_DATA_DIR, 'types.ts');
   if (fs.existsSync(typesSource)) {
     fs.copyFileSync(typesSource, typesDest);
-    console.log(`Copied shared/types.ts to app/supabase/functions/ai/data/types.ts`);
+    console.log(
+      `Copied shared/types.ts to app/supabase/functions/ai/data/types.ts`
+    );
   }
 
   // Generate TypeScript file with embedded markdown content (for edge function bundling)
@@ -317,7 +382,10 @@ function main() {
     if (fs.existsSync(srcPath)) {
       const content = fs.readFileSync(srcPath, 'utf-8');
       // Escape backticks and ${} for template literal
-      const escaped = content.replace(/\\/g, '\\\\').replace(/`/g, '\\`').replace(/\$\{/g, '\\${');
+      const escaped = content
+        .replace(/\\/g, '\\\\')
+        .replace(/`/g, '\\`')
+        .replace(/\$\{/g, '\\${');
       markdownEntries.push(`  "${skillId}": \`${escaped}\``);
     }
   }
@@ -340,7 +408,9 @@ export function getSkillMarkdown(skillId: string): string | null {
 `;
 
   fs.writeFileSync(path.join(AI_DATA_DIR, 'skill-markdown.ts'), markdownTs);
-  console.log(`Generated app/supabase/functions/ai/data/skill-markdown.ts (${markdownEntries.length} skills)`);
+  console.log(
+    `Generated app/supabase/functions/ai/data/skill-markdown.ts (${markdownEntries.length} skills)`
+  );
 }
 
 main();

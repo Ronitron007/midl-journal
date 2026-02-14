@@ -1,6 +1,9 @@
-import OpenAI from "npm:openai@4";
-import type { ChatCompletionMessageParam, ChatCompletionTool } from "npm:openai@4/resources/chat/completions";
-import { log } from "../utils/logger.ts";
+import OpenAI from 'npm:openai@4';
+import type {
+  ChatCompletionMessageParam,
+  ChatCompletionTool,
+} from 'npm:openai@4/resources/chat/completions';
+import { log } from '../utils/logger.ts';
 
 export type CompletionOptions = {
   messages: ChatCompletionMessageParam[];
@@ -27,9 +30,9 @@ export class OpenAIProvider {
   private client: OpenAI;
 
   constructor() {
-    const apiKey = Deno.env.get("OPENAI_API_KEY");
+    const apiKey = Deno.env.get('OPENAI_API_KEY');
     if (!apiKey) {
-      throw new Error("OPENAI_API_KEY not set");
+      throw new Error('OPENAI_API_KEY not set');
     }
     this.client = new OpenAI({ apiKey });
   }
@@ -40,21 +43,25 @@ export class OpenAIProvider {
   async complete(options: CompletionOptions): Promise<string> {
     const { messages, maxTokens = 500, jsonMode = false } = options;
 
-    log.debug("OpenAI request", { messageCount: messages.length, maxTokens, jsonMode });
+    log.debug('OpenAI request', {
+      messageCount: messages.length,
+      maxTokens,
+      jsonMode,
+    });
     const start = Date.now();
 
     try {
       const response = await this.client.chat.completions.create({
-        model: "gpt-5-mini",
+        model: 'gpt-5-mini',
         messages,
-        response_format: jsonMode ? { type: "json_object" } : undefined,
+        response_format: jsonMode ? { type: 'json_object' } : undefined,
       });
 
       const duration = Date.now() - start;
-      const content = response.choices[0]?.message?.content ?? "";
+      const content = response.choices[0]?.message?.content ?? '';
       const usage = response.usage;
 
-      log.debug("OpenAI response", {
+      log.debug('OpenAI response', {
         durationMs: duration,
         promptTokens: usage?.prompt_tokens,
         completionTokens: usage?.completion_tokens,
@@ -63,7 +70,7 @@ export class OpenAIProvider {
       return content;
     } catch (error) {
       const duration = Date.now() - start;
-      log.error("OpenAI error", { durationMs: duration, error: String(error) });
+      log.error('OpenAI error', { durationMs: duration, error: String(error) });
       throw error;
     }
   }
@@ -71,10 +78,12 @@ export class OpenAIProvider {
   /**
    * Completion with tool calling support
    */
-  async completeWithTools(options: ToolCompletionOptions): Promise<ToolCompletionResult> {
+  async completeWithTools(
+    options: ToolCompletionOptions
+  ): Promise<ToolCompletionResult> {
     const { messages, maxTokens = 500, tools } = options;
 
-    log.debug("OpenAI tool request", {
+    log.debug('OpenAI tool request', {
       messageCount: messages.length,
       toolCount: tools?.length ?? 0,
     });
@@ -82,17 +91,17 @@ export class OpenAIProvider {
 
     try {
       const response = await this.client.chat.completions.create({
-        model: "gpt-5-mini",
+        model: 'gpt-5-mini',
         messages,
         tools: tools?.length ? tools : undefined,
-        tool_choice: tools?.length ? "auto" : undefined,
+        tool_choice: tools?.length ? 'auto' : undefined,
       });
 
       const duration = Date.now() - start;
       const message = response.choices[0]?.message;
       const usage = response.usage;
 
-      log.debug("OpenAI tool response", {
+      log.debug('OpenAI tool response', {
         durationMs: duration,
         hasToolCalls: !!message?.tool_calls?.length,
         toolCallCount: message?.tool_calls?.length ?? 0,
@@ -112,7 +121,10 @@ export class OpenAIProvider {
       };
     } catch (error) {
       const duration = Date.now() - start;
-      log.error("OpenAI tool error", { durationMs: duration, error: String(error) });
+      log.error('OpenAI tool error', {
+        durationMs: duration,
+        error: String(error),
+      });
       throw error;
     }
   }
@@ -123,17 +135,20 @@ export class OpenAIProvider {
   async *stream(options: CompletionOptions): AsyncGenerator<string> {
     const { messages, maxTokens = 500 } = options;
 
-    log.debug("OpenAI stream request", { messageCount: messages.length, maxTokens });
+    log.debug('OpenAI stream request', {
+      messageCount: messages.length,
+      maxTokens,
+    });
     const start = Date.now();
 
     try {
       const stream = await this.client.chat.completions.create({
-        model: "gpt-5-mini",
+        model: 'gpt-5-mini',
         messages,
         stream: true,
       });
 
-      let totalContent = "";
+      let totalContent = '';
       for await (const chunk of stream) {
         const content = chunk.choices[0]?.delta?.content;
         if (content) {
@@ -143,13 +158,16 @@ export class OpenAIProvider {
       }
 
       const duration = Date.now() - start;
-      log.debug("OpenAI stream complete", {
+      log.debug('OpenAI stream complete', {
         durationMs: duration,
         contentLength: totalContent.length,
       });
     } catch (error) {
       const duration = Date.now() - start;
-      log.error("OpenAI stream error", { durationMs: duration, error: String(error) });
+      log.error('OpenAI stream error', {
+        durationMs: duration,
+        error: String(error),
+      });
       throw error;
     }
   }
@@ -158,7 +176,7 @@ export class OpenAIProvider {
    * Generate embedding for text
    */
   async embed(text: string): Promise<number[]> {
-    log.debug("OpenAI embed request", { textLength: text.length });
+    log.debug('OpenAI embed request', { textLength: text.length });
     const start = Date.now();
 
     try {
@@ -166,12 +184,12 @@ export class OpenAIProvider {
       const truncated = text.slice(0, 30000);
 
       const response = await this.client.embeddings.create({
-        model: "text-embedding-3-small",
+        model: 'text-embedding-3-small',
         input: truncated,
       });
 
       const duration = Date.now() - start;
-      log.debug("OpenAI embed response", {
+      log.debug('OpenAI embed response', {
         durationMs: duration,
         dimensions: response.data[0]?.embedding?.length,
       });
@@ -179,7 +197,10 @@ export class OpenAIProvider {
       return response.data[0].embedding;
     } catch (error) {
       const duration = Date.now() - start;
-      log.error("OpenAI embed error", { durationMs: duration, error: String(error) });
+      log.error('OpenAI embed error', {
+        durationMs: duration,
+        error: String(error),
+      });
       throw error;
     }
   }

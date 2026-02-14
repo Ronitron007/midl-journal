@@ -1,19 +1,19 @@
-import { OpenAIProvider } from "../providers/openai.ts";
-import { SKILLS_FULL, getSkill } from "../data/skills.ts";
-import type { AIRequest, AIResponse } from "../types.ts";
-import { log } from "../utils/logger.ts";
-import { getSkillMarkdown } from "../data/skill-markdown.ts";
+import { OpenAIProvider } from '../providers/openai.ts';
+import { SKILLS_FULL, getSkill } from '../data/skills.ts';
+import type { AIRequest, AIResponse } from '../types.ts';
+import { log } from '../utils/logger.ts';
+import { getSkillMarkdown } from '../data/skill-markdown.ts';
 
 type ContextSummaryPayload = {
-  action: "check_and_generate" | "regenerate_week" | "backfill";
+  action: 'check_and_generate' | 'regenerate_week' | 'backfill';
   weekStart?: string; // ISO date for specific week
 };
 
 type SummaryData = {
   summary: string;
   key_themes: string[];
-  mood_trend: "improving" | "stable" | "challenging" | "variable";
-  samatha_trend: "strengthening" | "stable" | "struggling" | "variable";
+  mood_trend: 'improving' | 'stable' | 'challenging' | 'variable';
+  samatha_trend: 'strengthening' | 'stable' | 'struggling' | 'variable';
   notable_events: string[];
   hindrance_frequency: Record<string, number>;
   techniques_used: string[];
@@ -32,18 +32,20 @@ type PreSitGuidance = {
 
 const MIN_ENTRIES_FOR_WEEKLY = 3;
 
-export async function handleContextSummary(req: AIRequest): Promise<AIResponse> {
+export async function handleContextSummary(
+  req: AIRequest
+): Promise<AIResponse> {
   const { action, weekStart } = req.payload as ContextSummaryPayload;
 
   switch (action) {
-    case "check_and_generate":
+    case 'check_and_generate':
       return checkAndGenerateWeekly(req);
-    case "regenerate_week":
+    case 'regenerate_week':
       return regenerateWeek(req, weekStart!);
-    case "backfill":
+    case 'backfill':
       return backfillSummaries(req);
     default:
-      return { error: "Unknown action" };
+      return { error: 'Unknown action' };
   }
 }
 
@@ -56,44 +58,46 @@ async function checkAndGenerateWeekly(req: AIRequest): Promise<AIResponse> {
 
   // Check if summary already exists for this week
   const { data: existingSummary } = await req.supabase
-    .from("context_summaries")
-    .select("id, entry_ids")
-    .eq("user_id", req.userId)
-    .eq("summary_type", "weekly")
-    .gte("date_range_start", weekStart.toISOString())
-    .lt("date_range_end", weekEnd.toISOString())
+    .from('context_summaries')
+    .select('id, entry_ids')
+    .eq('user_id', req.userId)
+    .eq('summary_type', 'weekly')
+    .gte('date_range_start', weekStart.toISOString())
+    .lt('date_range_end', weekEnd.toISOString())
     .single();
 
   // Get entries for this week
   const { data: entries, error } = await req.supabase
-    .from("entries")
-    .select(`
+    .from('entries')
+    .select(
+      `
       id, created_at, summary, mood_score, mood_tags,
       samatha_tendency, marker_present, marker_notes,
       hindrance_present, hindrance_notes, hindrance_conditions,
       balance_approach, key_understanding, techniques_mentioned,
       has_breakthrough, has_struggle, skill_practiced
-    `)
-    .eq("user_id", req.userId)
-    .eq("type", "reflect")
-    .eq("track_progress", true)
-    .gte("created_at", weekStart.toISOString())
-    .lt("created_at", weekEnd.toISOString())
-    .not("processed_at", "is", null)
-    .order("created_at", { ascending: true });
+    `
+    )
+    .eq('user_id', req.userId)
+    .eq('type', 'reflect')
+    .eq('track_progress', true)
+    .gte('created_at', weekStart.toISOString())
+    .lt('created_at', weekEnd.toISOString())
+    .not('processed_at', 'is', null)
+    .order('created_at', { ascending: true });
 
   if (error) {
-    log.error("Failed to fetch entries for summary", { error: error.message });
-    return { error: "Failed to fetch entries" };
+    log.error('Failed to fetch entries for summary', { error: error.message });
+    return { error: 'Failed to fetch entries' };
   }
 
   // Always regenerate pre-sit guidance if user has at least 1 entry
   const { count: totalEntries } = await req.supabase
-    .from("entries")
-    .select("id", { count: "exact", head: true })
-    .eq("user_id", req.userId)
-    .eq("track_progress", true)
-    .not("processed_at", "is", null);
+    .from('entries')
+    .select('id', { count: 'exact', head: true })
+    .eq('user_id', req.userId)
+    .eq('track_progress', true)
+    .not('processed_at', 'is', null);
 
   if (totalEntries && totalEntries >= 1) {
     await generatePreSitGuidance(req);
@@ -115,7 +119,7 @@ async function checkAndGenerateWeekly(req: AIRequest): Promise<AIResponse> {
   if (existingSummary) {
     const existingIds = (existingSummary.entry_ids || []).sort();
     if (JSON.stringify(currentEntryIds) === JSON.stringify(existingIds)) {
-      return { skipped: true, reason: "Summary already up to date" };
+      return { skipped: true, reason: 'Summary already up to date' };
     }
   }
 
@@ -125,7 +129,7 @@ async function checkAndGenerateWeekly(req: AIRequest): Promise<AIResponse> {
   // Upsert summary
   const summaryRecord = {
     user_id: req.userId,
-    summary_type: "weekly",
+    summary_type: 'weekly',
     entry_ids: currentEntryIds,
     date_range_start: weekStart.toISOString(),
     date_range_end: weekEnd.toISOString(),
@@ -142,14 +146,14 @@ async function checkAndGenerateWeekly(req: AIRequest): Promise<AIResponse> {
 
   if (existingSummary) {
     await req.supabase
-      .from("context_summaries")
+      .from('context_summaries')
       .update(summaryRecord)
-      .eq("id", existingSummary.id);
+      .eq('id', existingSummary.id);
   } else {
-    await req.supabase.from("context_summaries").insert(summaryRecord);
+    await req.supabase.from('context_summaries').insert(summaryRecord);
   }
 
-  log.info("Generated weekly summary", {
+  log.info('Generated weekly summary', {
     userId: req.userId,
     weekStart: weekStart.toISOString(),
     entryCount: entries.length,
@@ -178,7 +182,9 @@ type EntryRow = {
   skill_practiced: string | null;
 };
 
-async function generateWeeklySummary(entries: EntryRow[]): Promise<SummaryData> {
+async function generateWeeklySummary(
+  entries: EntryRow[]
+): Promise<SummaryData> {
   const provider = new OpenAIProvider();
 
   // Prepare entry data for prompt
@@ -238,12 +244,12 @@ Generate a rolling summary that captures their practice patterns. Respond in JSO
 Focus on patterns, not individual sessions. Be concise but capture the essence of their week.`;
 
   const result = await provider.complete({
-    messages: [{ role: "user", content: prompt }],
+    messages: [{ role: 'user', content: prompt }],
     maxTokens: 500,
     jsonMode: true,
   });
 
-  const parsed = JSON.parse(result || "{}");
+  const parsed = JSON.parse(result || '{}');
 
   // Calculate avg mood from entries
   const moodScores = entries
@@ -271,21 +277,23 @@ async function regenerateWeek(
 
   // Get entries for this specific week
   const { data: entries, error } = await req.supabase
-    .from("entries")
-    .select(`
+    .from('entries')
+    .select(
+      `
       id, created_at, summary, mood_score, mood_tags,
       samatha_tendency, marker_present, marker_notes,
       hindrance_present, hindrance_notes, hindrance_conditions,
       balance_approach, key_understanding, techniques_mentioned,
       has_breakthrough, has_struggle, skill_practiced
-    `)
-    .eq("user_id", req.userId)
-    .eq("type", "reflect")
-    .eq("track_progress", true)
-    .gte("created_at", weekStart.toISOString())
-    .lt("created_at", weekEnd.toISOString())
-    .not("processed_at", "is", null)
-    .order("created_at", { ascending: true });
+    `
+    )
+    .eq('user_id', req.userId)
+    .eq('type', 'reflect')
+    .eq('track_progress', true)
+    .gte('created_at', weekStart.toISOString())
+    .lt('created_at', weekEnd.toISOString())
+    .not('processed_at', 'is', null)
+    .order('created_at', { ascending: true });
 
   const typedEntries = entries as EntryRow[] | null;
 
@@ -301,17 +309,17 @@ async function regenerateWeek(
 
   // Upsert summary
   const { data: existing } = await req.supabase
-    .from("context_summaries")
-    .select("id")
-    .eq("user_id", req.userId)
-    .eq("summary_type", "weekly")
-    .gte("date_range_start", weekStart.toISOString())
-    .lt("date_range_end", weekEnd.toISOString())
+    .from('context_summaries')
+    .select('id')
+    .eq('user_id', req.userId)
+    .eq('summary_type', 'weekly')
+    .gte('date_range_start', weekStart.toISOString())
+    .lt('date_range_end', weekEnd.toISOString())
     .single();
 
   const summaryRecord = {
     user_id: req.userId,
-    summary_type: "weekly",
+    summary_type: 'weekly',
     entry_ids: currentEntryIds,
     date_range_start: weekStart.toISOString(),
     date_range_end: weekEnd.toISOString(),
@@ -328,11 +336,11 @@ async function regenerateWeek(
 
   if (existing) {
     await req.supabase
-      .from("context_summaries")
+      .from('context_summaries')
       .update(summaryRecord)
-      .eq("id", existing.id);
+      .eq('id', existing.id);
   } else {
-    await req.supabase.from("context_summaries").insert(summaryRecord);
+    await req.supabase.from('context_summaries').insert(summaryRecord);
   }
 
   return { success: true, summaryData };
@@ -341,16 +349,16 @@ async function regenerateWeek(
 async function backfillSummaries(req: AIRequest): Promise<AIResponse> {
   // Get all entries grouped by week
   const { data: entries } = await req.supabase
-    .from("entries")
-    .select("created_at")
-    .eq("user_id", req.userId)
-    .eq("type", "reflect")
-    .eq("track_progress", true)
-    .not("processed_at", "is", null)
-    .order("created_at", { ascending: true });
+    .from('entries')
+    .select('created_at')
+    .eq('user_id', req.userId)
+    .eq('type', 'reflect')
+    .eq('track_progress', true)
+    .not('processed_at', 'is', null)
+    .order('created_at', { ascending: true });
 
   if (!entries || entries.length === 0) {
-    return { skipped: true, reason: "No entries to backfill" };
+    return { skipped: true, reason: 'No entries to backfill' };
   }
 
   // Group entries by week
@@ -385,73 +393,82 @@ async function generatePreSitGuidance(req: AIRequest): Promise<void> {
 
   // 1. Get user's current skill
   const { data: user } = await req.supabase
-    .from("users")
-    .select("current_skill")
-    .eq("id", req.userId)
+    .from('users')
+    .select('current_skill')
+    .eq('id', req.userId)
     .single();
 
   if (!user) return;
 
   // 2. Get recent entries (last 10, track_progress=true)
   const { data: entries } = await req.supabase
-    .from("entries")
-    .select(`
+    .from('entries')
+    .select(
+      `
       summary, hindrance_notes, hindrance_conditions,
       balance_approach, samatha_tendency, marker_notes,
       key_understanding, skill_practiced
-    `)
-    .eq("user_id", req.userId)
-    .eq("track_progress", true)
-    .not("processed_at", "is", null)
-    .order("created_at", { ascending: false })
+    `
+    )
+    .eq('user_id', req.userId)
+    .eq('track_progress', true)
+    .not('processed_at', 'is', null)
+    .order('created_at', { ascending: false })
     .limit(10);
 
   if (!entries || entries.length === 0) {
     // Clear guidance if no entries
     await req.supabase
-      .from("users")
+      .from('users')
       .update({ pre_sit_guidance: null })
-      .eq("id", req.userId);
+      .eq('id', req.userId);
     return;
   }
 
   // 2b. Get most recent weekly summary for aggregated context
   const { data: weeklySummary } = await req.supabase
-    .from("context_summaries")
-    .select(`
+    .from('context_summaries')
+    .select(
+      `
       summary, key_themes, samatha_trend, mood_trend,
       notable_events, hindrance_frequency, techniques_used
-    `)
-    .eq("user_id", req.userId)
-    .eq("summary_type", "weekly")
-    .order("date_range_end", { ascending: false })
+    `
+    )
+    .eq('user_id', req.userId)
+    .eq('summary_type', 'weekly')
+    .order('date_range_end', { ascending: false })
     .limit(1)
     .single();
 
   // 3. Load skill content
   const skillContent = getSkill(user.current_skill)!;
-  const skillMarkdown = skillContent ? await getSkillMarkdown(user.current_skill) : "";
-
-
-
+  const skillMarkdown = skillContent
+    ? await getSkillMarkdown(user.current_skill)
+    : '';
 
   // 4. Build weekly summary context if available
   const weeklySummaryContext = weeklySummary
     ? `
 WEEKLY PRACTICE SUMMARY:
 ${weeklySummary.summary}
-- Samatha trend: ${weeklySummary.samatha_trend || "unknown"}
-- Mood trend: ${weeklySummary.mood_trend || "unknown"}
-- Key themes: ${(weeklySummary.key_themes as string[] | null)?.join(", ") || "none"}
-- Common hindrances: ${Object.entries((weeklySummary.hindrance_frequency as Record<string, number>) || {}).map(([k, v]) => `${k} (${v}x)`).join(", ") || "none"}
-- Techniques used: ${(weeklySummary.techniques_used as string[] | null)?.join(", ") || "none"}
-${(weeklySummary.notable_events as string[] | null)?.length ? `- Notable: ${(weeklySummary.notable_events as string[]).join("; ")}` : ""}`
-    : "";
+- Samatha trend: ${weeklySummary.samatha_trend || 'unknown'}
+- Mood trend: ${weeklySummary.mood_trend || 'unknown'}
+- Key themes: ${(weeklySummary.key_themes as string[] | null)?.join(', ') || 'none'}
+- Common hindrances: ${
+        Object.entries(
+          (weeklySummary.hindrance_frequency as Record<string, number>) || {}
+        )
+          .map(([k, v]) => `${k} (${v}x)`)
+          .join(', ') || 'none'
+      }
+- Techniques used: ${(weeklySummary.techniques_used as string[] | null)?.join(', ') || 'none'}
+${(weeklySummary.notable_events as string[] | null)?.length ? `- Notable: ${(weeklySummary.notable_events as string[]).join('; ')}` : ''}`
+    : '';
 
   // 5. Generate guidance
   const prompt = `You are preparing a MIDL meditator for their next meditation sit.
 
-CURRENT SKILL: ${user.current_skill} - ${skillContent?.name || "Unknown skill"}
+CURRENT SKILL: ${user.current_skill} - ${skillContent?.name || 'Unknown skill'}
 
 SKILL LITERATURE:
 ${skillMarkdown}
@@ -459,14 +476,21 @@ Weekly summary:
 ${weeklySummaryContext}
 
 RECENT ENTRIES (last few sits):
-${(entries as { summary: string | null; samatha_tendency: string | null; hindrance_notes: string | null; balance_approach: string | null }[])
+${(
+  entries as {
+    summary: string | null;
+    samatha_tendency: string | null;
+    hindrance_notes: string | null;
+    balance_approach: string | null;
+  }[]
+)
   .map(
-    (e) => `- ${e.summary || "No summary"}
-  Samatha: ${e.samatha_tendency || "unknown"}
-  Hindrance: ${e.hindrance_notes || "none noted"}
-  What helped: ${e.balance_approach || "not specified"}`
+    (e) => `- ${e.summary || 'No summary'}
+  Samatha: ${e.samatha_tendency || 'unknown'}
+  Hindrance: ${e.hindrance_notes || 'none noted'}
+  What helped: ${e.balance_approach || 'not specified'}`
   )
-  .join("\n")}
+  .join('\n')}
 
 Generate pre-sit guidance based on their patterns. Be suggestive, not prescriptive ("You might try..." not "You should..."). Use the weekly summary for overall trends and recent entries for specifics. Respond in JSON:
 {
@@ -476,12 +500,12 @@ Generate pre-sit guidance based on their patterns. Be suggestive, not prescripti
 }`;
 
   const result = await provider.complete({
-    messages: [{ role: "user", content: prompt }],
+    messages: [{ role: 'user', content: prompt }],
     maxTokens: 1000,
     jsonMode: true,
   });
 
-  const guidance = JSON.parse(result || "{}");
+  const guidance = JSON.parse(result || '{}');
 
   // 6. Store on user profile
   const preSitGuidance: PreSitGuidance = {
@@ -492,11 +516,11 @@ Generate pre-sit guidance based on their patterns. Be suggestive, not prescripti
   };
 
   await req.supabase
-    .from("users")
+    .from('users')
     .update({ pre_sit_guidance: preSitGuidance })
-    .eq("id", req.userId);
+    .eq('id', req.userId);
 
-  log.info("Generated pre-sit guidance", {
+  log.info('Generated pre-sit guidance', {
     userId: req.userId,
     skillId: user.current_skill,
     entryCount: entries.length,
@@ -520,27 +544,27 @@ function loadSkillContent(skillId: string): {
   if (!skill) {
     return {
       name: `Skill ${skillId}`,
-      overview: "",
-      marker: "",
+      overview: '',
+      marker: '',
       benefits: [],
-      purpose: "",
-      hindrance: "",
-      antidote: "",
-      tips: "",
-      checkIn: "How was your practice?",
+      purpose: '',
+      hindrance: '',
+      antidote: '',
+      tips: '',
+      checkIn: 'How was your practice?',
     };
   }
 
   return {
     name: skill.name,
-    overview: skill.overview || "",
+    overview: skill.overview || '',
     benefits: skill.benefits || [],
-    purpose: skill.purpose || "",
-    marker: skill.insight?.marker || "",
-    hindrance: skill.insight?.hindrance || "",
-    antidote: skill.insight?.antidote || "",
-    tips: skill.tips?.join("\n") || "",
-    checkIn: skill.daily_application?.check_in || "How was your practice?",
+    purpose: skill.purpose || '',
+    marker: skill.insight?.marker || '',
+    hindrance: skill.insight?.hindrance || '',
+    antidote: skill.insight?.antidote || '',
+    tips: skill.tips?.join('\n') || '',
+    checkIn: skill.daily_application?.check_in || 'How was your practice?',
   };
 }
 

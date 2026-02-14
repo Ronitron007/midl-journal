@@ -12,6 +12,7 @@ Benefits: This Skill will teach you how to relax mental restlessness caused by i
 Purpose: Create space around thoughts and mind narratives by learning to relax your mind's interest in the past and future, thereby increasing awareness of your body.
 
 Resources:
+
 - YouTube: https://youtu.be/SWwnLj9UbpY
 - SoundCloud: https://soundcloud.com/user-677685629/midl-insight-meditation-skill-02-transform-mental-restlessness-into-mind-relaxation
 - PDF: MIDL Meditation Skill 02 Detailed Instructions
@@ -22,6 +23,7 @@ Step 1: Meditation Skill 01
 Sit for meditation and develop relaxation of your body in Meditation Skill 01.
 
 Your Meditation So Far:
+
 - Sit in meditation.
 - Reflect gratefully.
 - Enjoy relaxing your body.
@@ -50,6 +52,7 @@ DAILY APPLICATION:
 Check in: How am I feeling now? Is my mind restless and inclining toward negativity?
 
 In Meditation Skill 02, you will learn four things for daily life:
+
 1. To recognise mental restlessness.
 2. To relax mental restlessness.
 3. To appreciate how nice it feels to relax your mind & body.
@@ -66,6 +69,7 @@ PROGRESSION CRITERIA:
 You are ready to progress to Meditation Skill 03: Mindful Presence when you can relax thoughts about the past and future when you notice them and feel physically and mentally comfortable, with no desire to get up from your meditation.
 
 CROSS-REFERENCES:
+
 - Previous: Skill 01 (Body Relaxation)
 - Next: Skill 03 (Mindful Presence)
 - Related: Meditation Markers, Meditative Hindrances

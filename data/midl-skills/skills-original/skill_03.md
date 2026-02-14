@@ -12,6 +12,7 @@ Benefits: This Skill will teach you how to stay present in your body throughout 
 Purpose: Develop a natural mindfulness and clear comprehension of your body in preparation for mindfulness of breathing and insight during your daily activities.
 
 Resources:
+
 - YouTube: https://youtu.be/AYXvIVDAqi8
 - SoundCloud: https://soundcloud.com/user-677685629/midl-insight-meditation-skill-03-transform-sleepiness-drifting-into-mindful-presence
 
@@ -23,6 +24,7 @@ Step 1: Meditation Skills 01-02
 Sit for meditation and develop Meditation Skills 01 and 02 as you have in previous meditations, except you now add the below Steps 2-4 as new additions to your meditation.
 
 Your Meditation So Far:
+
 - Sit in meditation.
 - Reflect gratefully.
 - Enjoy relaxing your body and mind.
@@ -37,6 +39,7 @@ As mindfulness and presence in your body grow, notice and begin to gently soften
 
 Step 4: Introduce the GOSS Formula
 How to develop insight and let go.
+
 - Ground.
 - Observe.
 - Soften.
@@ -102,6 +105,7 @@ GOSS: Ground > Observe > Soften > Smile.
 Meditation always begins by developing a grounding or reference point from which you can create both calm & insight.
 
 GOSS Formula: How to Let Go.
+
 - Ground.
 - Observe.
 - Soften.
@@ -137,6 +141,7 @@ How to begin GOSS in your daily life:
 The GOSS Formula is a circle, with each part of the formula feeding into the next. Whichever part of the formula you begin in, whether it is observing, softening or smiling, your aim is always to return to the samatha (calm) state of mindfulness of your body to ground awareness.
 
 Understanding this, we can see that GOSS initially begins with:
+
 - Soften
 - Smile
 
@@ -161,9 +166,11 @@ PROGRESSION CRITERIA:
 Congratulations, you have finished Cultivation 01.
 
 You are ready to progress to Meditation Skill 04: Content Presence in Cultivation 02 when:
+
 - You feel contented sitting in meditation, mindful of your body, and have developed the skill of balancing energy while relaxing both your body and mind, thereby removing sleepiness and dullness. An increased sense of aware presence in your body will accompany this, reflected in a heightened sense of contentment.
 
 CROSS-REFERENCES:
+
 - Previous: Skill 02 (Mind Relaxation)
 - Next: Skill 04 (Content Presence)
 - Related: GOSS Formula, Meditation Markers, Meditative Hindrances

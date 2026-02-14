@@ -97,11 +97,27 @@
     "url": "/meditation-skill-01"
   },
   "cross_references": [
-    {"type": "skill", "id": "01", "name": "Body Relaxation"},
-    {"type": "skill", "id": "05", "name": "Natural Breathing"},
-    {"type": "article", "name": "Meditation Markers", "url": "/meditation-markers"},
-    {"type": "article", "name": "Meditative Hindrances", "url": "/meditative-hindrances"},
-    {"type": "course", "name": "14-Day Introduction Course", "url": "/how-to-meditate-for-calm"},
-    {"type": "article", "name": "Meditation for OCD", "url": "/meditation-for-ocd"}
+    { "type": "skill", "id": "01", "name": "Body Relaxation" },
+    { "type": "skill", "id": "05", "name": "Natural Breathing" },
+    {
+      "type": "article",
+      "name": "Meditation Markers",
+      "url": "/meditation-markers"
+    },
+    {
+      "type": "article",
+      "name": "Meditative Hindrances",
+      "url": "/meditative-hindrances"
+    },
+    {
+      "type": "course",
+      "name": "14-Day Introduction Course",
+      "url": "/how-to-meditate-for-calm"
+    },
+    {
+      "type": "article",
+      "name": "Meditation for OCD",
+      "url": "/meditation-for-ocd"
+    }
   ]
 }

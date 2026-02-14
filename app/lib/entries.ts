@@ -26,11 +26,11 @@ export type Entry = {
   // Hindrance assessment
   hindrance_present: boolean | null;
   hindrance_notes: string | null;
-  hindrance_conditions: string[] | null;  // what triggered the hindrance
+  hindrance_conditions: string[] | null; // what triggered the hindrance
 
   // Working with experience
-  balance_approach: string | null;        // how they worked with hindrance
-  key_understanding: string | null;       // insight gained
+  balance_approach: string | null; // how they worked with hindrance
+  key_understanding: string | null; // insight gained
 
   // Techniques and progression
   techniques_mentioned: string[] | null;

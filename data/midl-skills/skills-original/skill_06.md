@@ -27,6 +27,7 @@ Step 1: Meditation Skills 01-05.
 Your meditation remains the same as in Meditation Skills 01-05, except you now add Steps 2-3 as new additions to your meditation.
 
 Your Meditation So Far:
+
 - Sit in meditation.
 - Reflect gratefully.
 - Enjoy relaxing your body and mind.
@@ -69,8 +70,8 @@ Insight: Insight is developed at this stage of mindfulness of breathing by being
 
 Progression Map for Mindfulness of Breathing:
 
-Meditative Hindrances                          Meditation Markers
-(Hindrances to calm)                           (Signs of deepening calm)
+Meditative Hindrances Meditation Markers
+(Hindrances to calm) (Signs of deepening calm)
 
                                                00: Diaphragm Breathing.
                                                01: Body Relaxation.
@@ -78,13 +79,14 @@ Meditative Hindrances                          Meditation Markers
                                                03: Mindful Presence.
                                                04: Content Presence.
                                                05: Natural Breathing.
-06: Mind Wandering.              →             06: Whole of Each Breath.
-07: Gross Dullness.                           07: Breath Sensations.
-08: Subtle Dullness.                          08: One Point of Sensation.
-09: Subtle Wandering.                         09: Sustained Attention.
-10: Sensory Stimulation.                      10: Whole-Body Breathing.
-11: Anticipation of Pleasure.                 11: Sustained Awareness.
-12: Fear of Letting Go.                       12: Access Concentration.
+
+06: Mind Wandering. → 06: Whole of Each Breath.
+07: Gross Dullness. 07: Breath Sensations.
+08: Subtle Dullness. 08: One Point of Sensation.
+09: Subtle Wandering. 09: Sustained Attention.
+10: Sensory Stimulation. 10: Whole-Body Breathing.
+11: Anticipation of Pleasure. 11: Sustained Awareness.
+12: Fear of Letting Go. 12: Access Concentration.
 
 Meditative Hindrance: Mind Wandering (06).
 Your mind finds distraction more enjoyable than your meditation object.
@@ -108,6 +110,7 @@ Tip: It is important to note that although your focus is on settling the Hindran
 Daily Application:
 
 Meditation Skill 06 in Daily Life:
+
 - Gently soften awareness into your body until it feels grounded, present, now.
 - Relax and allow your awareness of your body to shift to the background.
 - During quiet time, learn to tune into the flow of breathing within your body.
@@ -119,6 +122,7 @@ Tip: To avoid altering your breathing patterns or producing strain, I recommend 
 Progression Criteria:
 
 You are ready to progress to Meditation Skill 07: Breath Sensations when:
+
 - You find enjoyment in being aware of the whole length of each breath in & out-breath, without effort and without habitually forgetting your meditation object (the breath) and feel confident in your ability to settle any mind wandering by applying the GOSS Formula when it occurs.
 
 Tip: Mind wandering does not completely stop at this stage of meditation and will continue in more subtle forms until Skill 09 when your attention sustains. As your mind and body relax and mindfulness develops, the time your mind wanders will shorten. It is how quickly you notice that your mind has wandered from your breath and body, and mindfulness returns that is most important here. For more information on this process, see the write-up in the Hindrances section: "Insight into Mind Wandering," above.
@@ -129,6 +133,7 @@ Progress of Insight in MIDL:
 During this stage of Insight Meditation, the question usually arises about how to track the progress of insight in your meditation practice.
 
 Relationship is important: The first thing to understand is that MIDL does not track experiences that occur during meditation or in daily life; it tracks the meditator's mind's relationship toward those experiences. These are known as the Five Relationships:
+
 - Desire.
 - Aversion.
 - Indifference.
@@ -138,14 +143,17 @@ Relationship is important: The first thing to understand is that MIDL does not t
 These relationships directly correlate to the strengthening and weakening of the akusala (unwholesome/unskilful) and the kusala (wholesome/skilful).
 
 Progress of insight develops by:
+
 - Weakening the akusala (unwholesome/unskilful) in seated meditation and daily life.
 - Developing the kusala (wholesome/skilful) in seated meditation and daily life.
 
 Progress can be seen in seated meditation and daily life as:
+
 - Hindrances to calm (akusala) becoming weaker.
 - Relaxation, calm, presence, wholesome qualities (kusala) are becoming stronger.
 
 This 4-step model tracks the progress of Insight in MIDL:
+
 - Calming: When a hindrance arises in seated meditation and daily life, you understand how to change the conditions that support that particular hindrance, so that it weakens and you access samatha, or relaxation and calm.
 - Fading: When a particular hindrance arises, it is not as strong as it used to be in seated meditation and daily life because your mind changes the conditions that support it and returns to samatha, by itself. This is akin to the fading of dye in a shirt after multiple washes.
 - Non-arising: When the external conditions in seated meditation or daily life are right for a particular hindrance to arise, and it no longer arises. This is experienced as a feeling of absence and occurs because the mind and body naturally rest in a samatha state, and the internal conditions for the hindrance can no longer arise. At this level of insight, we have to be careful not to delude ourselves and rest in apathy or indifference.
@@ -166,6 +174,7 @@ With the arising of this comes the arising of that.
 With the ceasing of this comes the ceasing of that."
 
 If your samadhi is not developing and your mind will not let go of the meditative hindrances, then it is this way because the conditions are right for it to be that way. There are Six Awakening Factors present in the mind at access concentration; look at the conditions they need to arise and establish:
+
 - Mindfulness.
 - Curiosity.
 - Balanced Effort.

@@ -1,11 +1,20 @@
 import { supabase, getValidSession } from './supabase';
 import { htmlToPlainText, wordCount } from './rich-text-utils';
 
-type AIType = 'chat' | 'chat-stream' | 'reflect' | 'onboarding' | 'entry-process' | 'context-summary';
+type AIType =
+  | 'chat'
+  | 'chat-stream'
+  | 'reflect'
+  | 'onboarding'
+  | 'entry-process'
+  | 'context-summary';
 
 const SUPABASE_URL = process.env.EXPO_PUBLIC_SUPABASE_URL!;
 
-async function callAI<T>(type: AIType, payload: Record<string, unknown>): Promise<T> {
+async function callAI<T>(
+  type: AIType,
+  payload: Record<string, unknown>
+): Promise<T> {
   const session = await getValidSession();
 
   const { data, error } = await supabase.functions.invoke('ai', {
@@ -126,18 +135,18 @@ export type ProcessedSignals = {
   skill_analyzed: string;
 
   // Samatha (relaxation/calm) assessment
-  samatha_tendency: SamathaTendency;  // tendency toward relaxation and calm
+  samatha_tendency: SamathaTendency; // tendency toward relaxation and calm
   marker_present: boolean;
   marker_notes: string | null;
 
   // Hindrance assessment
   hindrance_present: boolean;
   hindrance_notes: string | null;
-  hindrance_conditions: string[];     // what triggered/led to the hindrance
+  hindrance_conditions: string[]; // what triggered/led to the hindrance
 
   // Working with experience
-  balance_approach: string | null;    // how they worked with the hindrance
-  key_understanding: string | null;   // insight or understanding gained
+  balance_approach: string | null; // how they worked with the hindrance
+  key_understanding: string | null; // insight or understanding gained
 
   // Techniques and progression
   techniques_mentioned: string[];
@@ -196,17 +205,25 @@ export const ai = {
       console.error('Onboarding eval error:', error);
       return {
         recommended_skill: '00',
-        reasoning: "We'll begin with Skill 00: Diaphragmatic Breathing. It's the foundation for everything else — simple but powerful.",
+        reasoning:
+          "We'll begin with Skill 00: Diaphragmatic Breathing. It's the foundation for everything else — simple but powerful.",
       };
     }
   },
 
-  async processEntry(entryId: string, rawContent: string, skillPracticed: string): Promise<ProcessedSignals | null> {
+  async processEntry(
+    entryId: string,
+    rawContent: string,
+    skillPracticed: string
+  ): Promise<ProcessedSignals | null> {
     // Convert HTML to plain text for processing
     const content = htmlToPlainText(rawContent);
     if (wordCount(rawContent) < 10) return null;
     try {
-      const result = await callAI<{ signals?: ProcessedSignals; skipped?: boolean }>('entry-process', { entryId, content, skillPracticed });
+      const result = await callAI<{
+        signals?: ProcessedSignals;
+        skipped?: boolean;
+      }>('entry-process', { entryId, content, skillPracticed });
       if (result.skipped) return null;
       return result.signals || null;
     } catch (error) {
@@ -223,10 +240,11 @@ export const ai = {
     action: 'check_and_generate' | 'backfill' = 'check_and_generate'
   ): Promise<{ success?: boolean; skipped?: boolean; reason?: string }> {
     try {
-      return await callAI<{ success?: boolean; skipped?: boolean; reason?: string }>(
-        'context-summary',
-        { action }
-      );
+      return await callAI<{
+        success?: boolean;
+        skipped?: boolean;
+        reason?: string;
+      }>('context-summary', { action });
     } catch (error) {
       console.error('Context summary error:', error);
       return { skipped: true, reason: 'Generation failed' };
@@ -239,5 +257,8 @@ export const chat = ai.chat;
 export const chatStream = ai.chatStream;
 export const getReflectionFeedback = ai.reflect;
 export const evaluateOnboarding = ai.onboarding;
-export const processEntry = (entryId: string, rawContent: string, skillPracticed: string) =>
-  ai.processEntry(entryId, rawContent, skillPracticed);
+export const processEntry = (
+  entryId: string,
+  rawContent: string,
+  skillPracticed: string
+) => ai.processEntry(entryId, rawContent, skillPracticed);

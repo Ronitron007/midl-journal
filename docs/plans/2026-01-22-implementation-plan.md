@@ -15,6 +15,7 @@
 ### Task 1: Initialize Expo Project
 
 **Files:**
+
 - Create: `/Users/rohanmalik/Projects/midl-journal/app/` (Expo project root)
 
 **Step 1: Create Expo project with TypeScript**
@@ -46,6 +47,7 @@ git commit -m "init: expo project with typescript"
 ### Task 2: Install Core Dependencies
 
 **Files:**
+
 - Modify: `app/package.json`
 
 **Step 1: Install navigation + UI dependencies**
@@ -90,6 +92,7 @@ git commit -m "deps: navigation, supabase, nativewind"
 ### Task 3: Configure Expo Router
 
 **Files:**
+
 - Modify: `app/app.json`
 - Create: `app/app/_layout.tsx`
 - Create: `app/app/index.tsx`
@@ -204,6 +207,7 @@ git commit -m "feat: expo-router setup with file-based routing"
 ### Task 4: Configure NativeWind (Tailwind for RN)
 
 **Files:**
+
 - Create: `app/tailwind.config.js`
 - Create: `app/global.css`
 - Modify: `app/app/_layout.tsx`
@@ -216,8 +220,8 @@ Create `app/tailwind.config.js`:
 ```js
 /** @type {import('tailwindcss').Config} */
 module.exports = {
-  content: ["./app/**/*.{js,jsx,ts,tsx}"],
-  presets: [require("nativewind/preset")],
+  content: ['./app/**/*.{js,jsx,ts,tsx}'],
+  presets: [require('nativewind/preset')],
   theme: {
     extend: {
       colors: {
@@ -260,8 +264,8 @@ module.exports = function (api) {
   api.cache(true);
   return {
     presets: [
-      ["babel-preset-expo", { jsxImportSource: "nativewind" }],
-      "nativewind/babel",
+      ['babel-preset-expo', { jsxImportSource: 'nativewind' }],
+      'nativewind/babel',
     ],
   };
 };
@@ -303,6 +307,7 @@ git commit -m "feat: nativewind/tailwind configuration"
 ### Task 5: Create Supabase Project & Config
 
 **Files:**
+
 - Create: `app/lib/supabase.ts`
 - Create: `app/.env.local`
 - Add to: `app/.gitignore`
@@ -368,6 +373,7 @@ git commit -m "feat: supabase client configuration"
 ### Task 6: Database Schema Setup
 
 **Files:**
+
 - Create: `app/supabase/migrations/001_initial_schema.sql`
 
 **Step 1: Create migrations directory**
@@ -480,6 +486,7 @@ git commit -m "feat: database schema with RLS policies"
 ### Task 7: Auth Context & Provider
 
 **Files:**
+
 - Create: `app/lib/auth-context.tsx`
 - Modify: `app/app/_layout.tsx`
 
@@ -518,11 +525,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     });
 
     // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        setSession(session);
-      }
-    );
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
 
     return () => subscription.unsubscribe();
   }, []);
@@ -585,6 +592,7 @@ git commit -m "feat: auth context with session management"
 ### Task 8: Social Auth (Google/Apple)
 
 **Files:**
+
 - Modify: `app/app.json`
 - Create: `app/app/onboarding/index.tsx`
 - Create: `app/app/onboarding/_layout.tsx`
@@ -734,6 +742,7 @@ git commit -m "feat: social auth screens (Apple/Google)"
 ### Task 9: Auth-Based Routing
 
 **Files:**
+
 - Modify: `app/app/index.tsx`
 
 **Step 1: Update index with auth routing**
@@ -802,6 +811,7 @@ git commit -m "feat: auth-based routing with onboarding check"
 ### Task 10: Onboarding Questions Screen
 
 **Files:**
+
 - Create: `app/app/onboarding/questions.tsx`
 - Create: `app/lib/onboarding-types.ts`
 
@@ -882,7 +892,13 @@ import { supabase } from '../../lib/supabase';
 import { useAuth } from '../../lib/auth-context';
 import { OnboardingData, ONBOARDING_OPTIONS } from '../../lib/onboarding-types';
 
-type Step = 'experience' | 'struggles' | 'context' | 'neuro' | 'goals' | 'summary';
+type Step =
+  | 'experience'
+  | 'struggles'
+  | 'context'
+  | 'neuro'
+  | 'goals'
+  | 'summary';
 
 export default function OnboardingQuestions() {
   const { user } = useAuth();
@@ -986,7 +1002,9 @@ export default function OnboardingQuestions() {
               onPress={() => setStep('context')}
               className="bg-muted-blue py-4 rounded-xl mt-4"
             >
-              <Text className="text-white text-center font-medium">Continue</Text>
+              <Text className="text-white text-center font-medium">
+                Continue
+              </Text>
             </Pressable>
           </View>
         );
@@ -1026,13 +1044,17 @@ export default function OnboardingQuestions() {
               multiline
               className="bg-white/80 p-4 rounded-xl border border-gray-200 min-h-[100px] text-gray-800"
               value={data.what_brings_you}
-              onChangeText={(text) => setData({ ...data, what_brings_you: text })}
+              onChangeText={(text) =>
+                setData({ ...data, what_brings_you: text })
+              }
             />
             <Pressable
               onPress={() => setStep('neuro')}
               className="bg-muted-blue py-4 rounded-xl"
             >
-              <Text className="text-white text-center font-medium">Continue</Text>
+              <Text className="text-white text-center font-medium">
+                Continue
+              </Text>
             </Pressable>
           </View>
         );
@@ -1070,7 +1092,9 @@ export default function OnboardingQuestions() {
               onPress={() => setStep('goals')}
               className="bg-muted-blue py-4 rounded-xl mt-4"
             >
-              <Text className="text-white text-center font-medium">Continue</Text>
+              <Text className="text-white text-center font-medium">
+                Continue
+              </Text>
             </Pressable>
           </View>
         );
@@ -1094,7 +1118,9 @@ export default function OnboardingQuestions() {
                 >
                   <Text
                     className={
-                      data.goals?.includes(item) ? 'text-white' : 'text-gray-800'
+                      data.goals?.includes(item)
+                        ? 'text-white'
+                        : 'text-gray-800'
                     }
                   >
                     {item}
@@ -1106,7 +1132,9 @@ export default function OnboardingQuestions() {
               onPress={() => setStep('summary')}
               className="bg-muted-blue py-4 rounded-xl mt-4"
             >
-              <Text className="text-white text-center font-medium">Continue</Text>
+              <Text className="text-white text-center font-medium">
+                Continue
+              </Text>
             </Pressable>
           </View>
         );
@@ -1117,7 +1145,9 @@ export default function OnboardingQuestions() {
             <View className="bg-white/90 p-6 rounded-2xl">
               <Text className="text-lg text-gray-800 leading-relaxed">
                 Based on what you shared, I'd suggest starting with{' '}
-                <Text className="font-bold">Skill 00: Diaphragmatic Breathing</Text>
+                <Text className="font-bold">
+                  Skill 00: Diaphragmatic Breathing
+                </Text>
                 . It's the foundation for everything else — simple but powerful.
               </Text>
             </View>
@@ -1172,6 +1202,7 @@ git commit -m "feat: onboarding questions flow"
 ### Task 11: Main Layout with Floating Buttons
 
 **Files:**
+
 - Create: `app/app/(main)/_layout.tsx`
 - Create: `app/app/(main)/tracker.tsx`
 - Create: `app/components/FloatingButtons.tsx`
@@ -1309,6 +1340,7 @@ git commit -m "feat: main layout with tracker and floating buttons"
 ### Task 12: Reflect Screen (Journal Entry)
 
 **Files:**
+
 - Create: `app/app/(main)/reflect.tsx`
 - Create: `app/lib/entries.ts`
 
@@ -1615,6 +1647,7 @@ git commit -m "feat: reflect screen with journal entry flow"
 ### Task 13: Ask Screen (Chat)
 
 **Files:**
+
 - Create: `app/app/(main)/ask.tsx`
 - Create: `app/lib/openai.ts`
 
@@ -1650,7 +1683,9 @@ export async function chat(messages: Message[]): Promise<string> {
   });
 
   const data = await response.json();
-  return data.choices?.[0]?.message?.content || 'Sorry, I had trouble responding.';
+  return (
+    data.choices?.[0]?.message?.content || 'Sorry, I had trouble responding.'
+  );
 }
 ```
 
@@ -1695,7 +1730,10 @@ export default function AskScreen() {
 
     try {
       const response = await chat(newMessages);
-      const assistantMessage: Message = { role: 'assistant', content: response };
+      const assistantMessage: Message = {
+        role: 'assistant',
+        content: response,
+      };
       setMessages([...newMessages, assistantMessage]);
     } catch (error) {
       console.error('Chat error:', error);
@@ -1802,9 +1840,7 @@ export default function AskScreen() {
                     : 'border-gray-300'
                 }`}
               >
-                {trackProgress && (
-                  <Text className="text-white text-xs">✓</Text>
-                )}
+                {trackProgress && <Text className="text-white text-xs">✓</Text>}
               </View>
               <Text className="text-gray-600 text-sm">Track my progress</Text>
             </Pressable>
@@ -1859,6 +1895,7 @@ git commit -m "feat: ask screen with AI chat"
 ### Task 14: Skill Map Component (Horizontal Timeline)
 
 **Files:**
+
 - Create: `app/components/SkillMap.tsx`
 - Create: `app/lib/midl-skills.ts`
 - Modify: `app/app/(main)/tracker.tsx`
@@ -1881,7 +1918,11 @@ export const CULTIVATIONS = [
   { id: 2, name: 'Mindfulness of Breathing', skills: ['04', '05', '06'] },
   { id: 3, name: 'Calm & Tranquillity', skills: ['07', '08', '09'] },
   { id: 4, name: 'Joyfulness & Unification', skills: ['10', '11', '12'] },
-  { id: 5, name: 'Pleasure Jhana & Equanimity', skills: ['13', '14', '15', '16'] },
+  {
+    id: 5,
+    name: 'Pleasure Jhana & Equanimity',
+    skills: ['13', '14', '15', '16'],
+  },
 ];
 
 export const SKILLS: Record<string, Skill> = {
@@ -2028,7 +2069,12 @@ Create `app/components/SkillMap.tsx`:
 
 ```tsx
 import { View, Text, ScrollView, Pressable } from 'react-native';
-import { SKILLS, CULTIVATIONS, isSkillCompleted, isCurrentSkill } from '../lib/midl-skills';
+import {
+  SKILLS,
+  CULTIVATIONS,
+  isSkillCompleted,
+  isCurrentSkill,
+} from '../lib/midl-skills';
 import { useState } from 'react';
 
 type SkillMapProps = {
@@ -2036,7 +2082,10 @@ type SkillMapProps = {
   onSkillPress?: (skillId: string) => void;
 };
 
-export default function SkillMap({ currentSkill, onSkillPress }: SkillMapProps) {
+export default function SkillMap({
+  currentSkill,
+  onSkillPress,
+}: SkillMapProps) {
   const [selectedSkill, setSelectedSkill] = useState<string | null>(null);
 
   const handleSkillPress = (skillId: string) => {
@@ -2059,7 +2108,8 @@ export default function SkillMap({ currentSkill, onSkillPress }: SkillMapProps) 
 
             // Check if this is the start of a new cultivation
             const prevSkill = index > 0 ? SKILLS[allSkills[index - 1]] : null;
-            const isNewCultivation = !prevSkill || prevSkill.cultivation !== skill.cultivation;
+            const isNewCultivation =
+              !prevSkill || prevSkill.cultivation !== skill.cultivation;
 
             return (
               <View key={skillId} className="flex-row items-center">
@@ -2078,13 +2128,15 @@ export default function SkillMap({ currentSkill, onSkillPress }: SkillMapProps) 
                       isCurrent
                         ? 'bg-muted-blue border-muted-blue'
                         : isCompleted
-                        ? 'bg-sage border-sage'
-                        : 'bg-white border-gray-200'
+                          ? 'bg-sage border-sage'
+                          : 'bg-white border-gray-200'
                     }`}
                   >
                     <Text
                       className={`font-medium text-sm ${
-                        isCurrent || isCompleted ? 'text-white' : 'text-gray-400'
+                        isCurrent || isCompleted
+                          ? 'text-white'
+                          : 'text-gray-400'
                       }`}
                     >
                       {skillId}
@@ -2226,10 +2278,7 @@ export default function TrackerScreen() {
             ) : (
               <View className="gap-3">
                 {entries.map((entry) => (
-                  <View
-                    key={entry.id}
-                    className="bg-white/80 rounded-2xl p-4"
-                  >
+                  <View key={entry.id} className="bg-white/80 rounded-2xl p-4">
                     <View className="flex-row justify-between items-start">
                       <View className="flex-1">
                         <View className="flex-row items-center gap-2">
@@ -2253,10 +2302,7 @@ export default function TrackerScreen() {
                             </Text>
                           )}
                         </View>
-                        <Text
-                          className="text-gray-800 mt-1"
-                          numberOfLines={2}
-                        >
+                        <Text className="text-gray-800 mt-1" numberOfLines={2}>
                           {entry.raw_content.substring(0, 100)}
                           {entry.raw_content.length > 100 ? '...' : ''}
                         </Text>
@@ -2289,6 +2335,7 @@ git commit -m "feat: skill map horizontal timeline component"
 ### Task 15: AI Feedback for Reflect Mode
 
 **Files:**
+
 - Create: `app/lib/ai-feedback.ts`
 - Modify: `app/app/(main)/reflect.tsx`
 
@@ -2402,6 +2449,7 @@ git commit -m "feat: AI feedback for reflection entries"
 ### Task 16: Entry Processing (Summaries & Signals)
 
 **Files:**
+
 - Create: `app/lib/entry-processor.ts`
 
 **Step 1: Create entry processor**
@@ -2512,6 +2560,7 @@ git commit -m "feat: entry processing for summaries and signals"
 ### Task 17: Safe Area & Platform Adjustments
 
 **Files:**
+
 - Modify: `app/app/_layout.tsx`
 
 **Step 1: Add SafeAreaProvider**
@@ -2554,6 +2603,7 @@ git commit -m "feat: add SafeAreaProvider"
 ### Task 18: Environment Setup Documentation
 
 **Files:**
+
 - Create: `app/SETUP.md`
 
 **Step 1: Create setup documentation**
@@ -2574,12 +2624,13 @@ Create `app/SETUP.md`:
 ## Environment Variables
 
 Create `app/.env.local`:
-
 ```
+
 EXPO_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
 EXPO_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
 EXPO_PUBLIC_OPENAI_API_KEY=sk-your-openai-key
-```
+
+````
 
 ## Supabase Setup
 
@@ -2594,7 +2645,7 @@ EXPO_PUBLIC_OPENAI_API_KEY=sk-your-openai-key
 cd app
 npm install
 npx expo start
-```
+````
 
 Press `i` for iOS simulator or `a` for Android emulator.
 
@@ -2618,7 +2669,8 @@ app/
 ├── supabase/           # Database migrations
 └── assets/             # Images, fonts
 ```
-```
+
+````
 
 **Step 2: Commit**
 
@@ -2626,13 +2678,14 @@ app/
 cd /Users/rohanmalik/Projects/midl-journal
 git add app/SETUP.md
 git commit -m "docs: development setup guide"
-```
+````
 
 ---
 
 ## Summary
 
 **Phases completed:**
+
 1. Project Foundation (Tasks 1-6)
 2. Authentication (Tasks 7-9)
 3. Onboarding Flow (Task 10)
@@ -2643,6 +2696,7 @@ git commit -m "docs: development setup guide"
 **Total tasks:** 18
 
 **What's built:**
+
 - Expo + React Native app with TypeScript
 - Supabase auth (Google/Apple)
 - Onboarding questionnaire
@@ -2652,6 +2706,7 @@ git commit -m "docs: development setup guide"
 - Entry processing for summaries/signals
 
 **Not included (future):**
+
 - Push notifications
 - Rolling summaries
 - Semantic search (pgvector)

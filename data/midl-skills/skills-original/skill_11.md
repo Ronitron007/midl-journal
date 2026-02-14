@@ -27,6 +27,7 @@ Step 1: Meditation Skills 01-10.
 Your meditation remains the same as in Meditation Skills 01-10, except you now add Steps 2-3 as new additions to your meditation.
 
 Your Meditation So Far:
+
 - Sit in meditation.
 - Reflect gratefully.
 - Enjoy relaxing your body and mind.
@@ -57,8 +58,8 @@ Insight: Insight is developed at this stage of mindfulness of breathing by being
 
 NEW Progression Map for Mindfulness of Breathing:
 
-Meditative Hindrances                          Meditation Markers
-(Hindrances to calm)                           (Signs of deepening calm)
+Meditative Hindrances Meditation Markers
+(Hindrances to calm) (Signs of deepening calm)
 
                                                01: Body Relaxation.
                                                02: Mind Relaxation.
@@ -67,12 +68,13 @@ Meditative Hindrances                          Meditation Markers
                                                05: Natural Breathing.
                                                06: Whole of Each Breath.
                                                10: Whole-Body Breathing.
-11: Anticipation of Pleasure.    →             11: Sustained Awareness.
-12: Fear of Letting Go.                        12: Access Concentration.
-13: Unstable Unification.                      13: First Pleasure Jhana.
-14: Enchantment with Piti.                     14: Second Pleasure Jhana.
-15: Enchantment with Sukha.                    15: Third Pleasure Jhana.
-16: Enchantment with Happiness.                16: Fourth Pleasure Jhana.
+
+11: Anticipation of Pleasure. → 11: Sustained Awareness.
+12: Fear of Letting Go. 12: Access Concentration.
+13: Unstable Unification. 13: First Pleasure Jhana.
+14: Enchantment with Piti. 14: Second Pleasure Jhana.
+15: Enchantment with Sukha. 15: Third Pleasure Jhana.
+16: Enchantment with Happiness. 16: Fourth Pleasure Jhana.
 
 Note: Markers 00 and 07-09 are no longer needed.
 
@@ -89,4 +91,5 @@ Tip: It is important to note that although your focus is on settling the Hindran
 Progression Criteria:
 
 You are ready to progress to Meditation Skill 12: Access Concentration when:
+
 - When you become aware of an increased feeling of steadiness of awareness accompanied by fading of the sense fields and the sensations in your body fade, leaving an increasingly pleasurable, blissful feeling (piti) and joyful happiness (sukha) that fills the experience of your awareness.

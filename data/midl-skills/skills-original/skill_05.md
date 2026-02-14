@@ -12,6 +12,7 @@ Benefits: This Meditation Skill will teach you how to be present with different 
 Purpose: Train your mind to let go of breathing by finding the spiritual pleasantness of letting go, available in the natural flow of in- and out-breaths in your body to weaken any tendency of your mind to control your breathing.
 
 Resources:
+
 - YouTube: https://youtu.be/e4aW0kwplH0
 - SoundCloud: https://soundcloud.com/user-677685629/midl-insight-meditation-skill-05-transform-habitual-control-into-natural-breathing-1
 
@@ -23,6 +24,7 @@ Step 1: Meditation Skills 01-04
 Your meditation remains the same as in Meditation Skills 01-04, except you now add Steps 2-3 as new additions to your meditation.
 
 Your Meditation So Far:
+
 - Sit in meditation.
 - Reflect gratefully.
 - Enjoy relaxing your body and mind.
@@ -31,10 +33,12 @@ Your Meditation So Far:
 Additions for developing Natural Breathing in Skill 05:
 
 Step 2: Natural Breathing
+
 - As the feeling of relaxation deepens, you will start to become aware of the subtle movement of your body as it breathes, as a gentle stretch and a natural relaxation.
 - Wherever breathing is clearest to you is ok. Your task is to learn to find enjoyment in the stretch and relaxation of your body as it naturally breathes. Relax back into the peripheral awareness of your body and notice how your body senses the gentle movement of breathing on its own.
 
 Step 3: Enjoy Your Breathing
+
 - Increase your awareness of how nice the stretch and relaxation of your body feels as your body breaths. Smile into your breathing with your eyes, finding enjoyment in the simplicity of each breath.
 - Smiling with your eyes, really enjoying it, will increase the pleasant feeling found within each in and out-breath. Finding enjoyment in your breathing will help to settle the hindrances of forgetting, control and mind wandering.
 
@@ -42,6 +46,7 @@ Developing Insight into Control:
 Develop insight by observing and softening any tendency of your mind to control your breathing. Breath control appears as tightness, tension, and breathing that does not settle or calm down as the meditation progresses. If you suspect breath control, allow a slow breath out through your nose, then relax and wait for the breath to draw back in by itself.
 
 GOSS: Ground --> Observe --> Soften --> Smile.
+
 - Ground: Be aware of the experience of your body's natural breathing.
 - Observe: Notice whenever your mind begins to control your breathing.
 - Soften: Allow a gentle softening breath out through your nose and relax and wait for it to come back in to reset your breathing.
@@ -88,6 +93,7 @@ These MIDL techniques you are learning naturally integrate into daily life. Duri
 Emotions and feelings of pleasantness and unpleasantness are also reflections of your state of mind in your body. It is helpful to observe these experiences in your body to understand how you relate to things in your life.
 
 Meditation Skill 05 in Daily Life:
+
 1. Gently soften awareness into your body until it feels grounded, present, now.
 2. Relax and allow your awareness of your body to shift to the background.
 3. During quiet time, learn to tune into the flow of breathing within your body.
@@ -103,6 +109,7 @@ When referring to the experience of delusion in MIDL, we are talking about the o
 While we are in habitual delusion, we cannot know it; this is because one of the primary conditions for it to arise is awareness of awareness ceasing. We can observe that this has happened when mindfulness returns, as awareness of awareness rearises again. It is at this point when you realise that you have been lost in thought or fantasy for a while and didn't realise it until now. On reflection, we can see that we were completely immersed in thought, fantasy, or memory, acting and reacting habitually and that we had no idea what was going on at that time.
 
 There is an answer to this problem, and that is the development of samadhi (unification of mind/collectedness) built out of the Seven Awakening Factors:
+
 1. Mindfulness.
 2. Curiosity.
 3. Balanced Effort.
@@ -125,11 +132,13 @@ By observing the anatta nature of conditioned relationships within the gaps in h
 
 PROGRESSION CRITERIA:
 You are ready to progress to Meditation Skill 06: Whole of Each Breath when:
+
 - As a natural progression of relaxing & letting go, you move from being aware of each in and out-breath to being aware of the whole length of each in and out-breath without controlling it.
 
 Control: It is important to note that it is only necessary to weaken habitual control at this stage, not to be completely free from it. If your mind, for example, causes your breathing to tighten so that it is difficult to breathe, then habitual control needs to be weakened before moving on. However, if while being aware of the breath, your mind calms down, a sign of this is being aware of the whole length of each breath, then it is perfectly ok to move on to the next stage in your meditation.
 
 CROSS-REFERENCES:
+
 - Previous: Skill 04 (Content Presence)
 - Next: Skill 06 (Whole of Each Breath)
 - Related: GOSS Formula, Meditation Markers, Meditative Hindrances, Seven Awakening Factors

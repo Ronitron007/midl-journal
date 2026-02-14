@@ -1,27 +1,28 @@
-import "jsr:@supabase/functions-js/edge-runtime.d.ts";
-import { createClient } from "jsr:@supabase/supabase-js@2";
+import 'jsr:@supabase/functions-js/edge-runtime.d.ts';
+import { createClient } from 'jsr:@supabase/supabase-js@2';
 
 const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers':
+    'authorization, x-client-info, apikey, content-type',
 };
 
-const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY")!;
-const SUPABASE_URL = Deno.env.get("SUPABASE_URL")!;
-const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!;
+const OPENAI_API_KEY = Deno.env.get('OPENAI_API_KEY')!;
+const SUPABASE_URL = Deno.env.get('SUPABASE_URL')!;
+const SUPABASE_SERVICE_ROLE_KEY = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
 
 const BATCH_SIZE = 10;
 const MIN_WORDS = 50;
 
 async function generateEmbedding(text: string): Promise<number[]> {
-  const response = await fetch("https://api.openai.com/v1/embeddings", {
-    method: "POST",
+  const response = await fetch('https://api.openai.com/v1/embeddings', {
+    method: 'POST',
     headers: {
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
       Authorization: `Bearer ${OPENAI_API_KEY}`,
     },
     body: JSON.stringify({
-      model: "text-embedding-3-small",
+      model: 'text-embedding-3-small',
       input: text.slice(0, 8000), // truncate to avoid token limits
     }),
   });
@@ -41,43 +42,43 @@ function countWords(text: string): number {
 
 function stripHtml(html: string): string {
   return html
-    .replace(/<[^>]*>/g, " ")
-    .replace(/&nbsp;/g, " ")
-    .replace(/&amp;/g, "&")
-    .replace(/&lt;/g, "<")
-    .replace(/&gt;/g, ">")
-    .replace(/\s+/g, " ")
+    .replace(/<[^>]*>/g, ' ')
+    .replace(/&nbsp;/g, ' ')
+    .replace(/&amp;/g, '&')
+    .replace(/&lt;/g, '<')
+    .replace(/&gt;/g, '>')
+    .replace(/\s+/g, ' ')
     .trim();
 }
 
 Deno.serve(async (req) => {
-  if (req.method === "OPTIONS") {
-    return new Response("ok", { headers: corsHeaders });
+  if (req.method === 'OPTIONS') {
+    return new Response('ok', { headers: corsHeaders });
   }
 
   const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
   // Parse optional query params
   const url = new URL(req.url);
-  const dryRun = url.searchParams.get("dry_run") === "true";
-  const limit = parseInt(url.searchParams.get("limit") || "100", 10);
+  const dryRun = url.searchParams.get('dry_run') === 'true';
+  const limit = parseInt(url.searchParams.get('limit') || '100', 10);
 
   console.log(`[Backfill] Starting... dry_run=${dryRun}, limit=${limit}`);
 
   // Fetch reflect entries without embeddings
   const { data: entries, error } = await supabase
-    .from("entries")
-    .select("id, raw_content")
-    .eq("type", "reflect")
-    .is("embedding", null)
-    .order("created_at", { ascending: false })
+    .from('entries')
+    .select('id, raw_content')
+    .eq('type', 'reflect')
+    .is('embedding', null)
+    .order('created_at', { ascending: false })
     .limit(limit);
 
   if (error) {
-    console.error("[Backfill] Fetch error:", error);
+    console.error('[Backfill] Fetch error:', error);
     return new Response(JSON.stringify({ error: error.message }), {
       status: 500,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   }
 
@@ -87,7 +88,9 @@ Deno.serve(async (req) => {
     return countWords(plainText) >= MIN_WORDS;
   });
 
-  console.log(`[Backfill] Found ${entries.length} entries without embeddings, ${eligibleEntries.length} with 50+ words`);
+  console.log(
+    `[Backfill] Found ${entries.length} entries without embeddings, ${eligibleEntries.length} with 50+ words`
+  );
 
   if (dryRun) {
     return new Response(
@@ -97,7 +100,7 @@ Deno.serve(async (req) => {
         eligible_entries: eligibleEntries.length,
         sample_ids: eligibleEntries.slice(0, 5).map((e) => e.id),
       }),
-      { headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      { headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
   }
 
@@ -116,16 +119,18 @@ Deno.serve(async (req) => {
           const embedding = await generateEmbedding(plainText);
 
           const { error: updateError } = await supabase
-            .from("entries")
+            .from('entries')
             .update({ embedding })
-            .eq("id", entry.id);
+            .eq('id', entry.id);
 
           if (updateError) {
             throw updateError;
           }
 
           processed++;
-          console.log(`[Backfill] Embedded entry ${entry.id} (${processed}/${eligibleEntries.length})`);
+          console.log(
+            `[Backfill] Embedded entry ${entry.id} (${processed}/${eligibleEntries.length})`
+          );
         } catch (err) {
           failed++;
           errors.push({ id: entry.id, error: String(err) });
@@ -147,9 +152,9 @@ Deno.serve(async (req) => {
     errors: errors.slice(0, 10), // first 10 errors
   };
 
-  console.log("[Backfill] Complete:", result);
+  console.log('[Backfill] Complete:', result);
 
   return new Response(JSON.stringify(result), {
-    headers: { ...corsHeaders, "Content-Type": "application/json" },
+    headers: { ...corsHeaders, 'Content-Type': 'application/json' },
   });
 });

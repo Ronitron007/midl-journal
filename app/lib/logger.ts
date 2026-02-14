@@ -1,6 +1,11 @@
 type LogLevel = 'debug' | 'info' | 'warn' | 'error';
 
-const LEVELS: Record<LogLevel, number> = { debug: 0, info: 1, warn: 2, error: 3 };
+const LEVELS: Record<LogLevel, number> = {
+  debug: 0,
+  info: 1,
+  warn: 2,
+  error: 3,
+};
 
 const AXIOM_TOKEN = process.env.EXPO_PUBLIC_AXIOM_TOKEN;
 const AXIOM_DATASET = process.env.EXPO_PUBLIC_AXIOM_DATASET || 'midl-logs';

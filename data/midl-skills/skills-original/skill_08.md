@@ -27,6 +27,7 @@ Step 1: Meditation Skills 01-07.
 Your meditation remains the same as in Meditation Skills 01-07, except you now add Steps 2-3 as new additions to your meditation.
 
 Your Meditation So Far:
+
 - Sit in meditation.
 - Reflect gratefully.
 - Enjoy relaxing your body and mind.
@@ -54,8 +55,8 @@ Insight: Insight is developed at this stage of mindfulness of breathing by being
 
 Progression Map for Mindfulness of Breathing:
 
-Meditative Hindrances                          Meditation Markers
-(Hindrances to calm)                           (Signs of deepening calm)
+Meditative Hindrances Meditation Markers
+(Hindrances to calm) (Signs of deepening calm)
 
                                                00: Diaphragm Breathing.
                                                01: Body Relaxation.
@@ -65,11 +66,12 @@ Meditative Hindrances                          Meditation Markers
                                                05: Natural Breathing.
                                                06: Whole of Each Breath.
                                                07: Breath Sensations.
-08: Subtle Dullness.             →             08: One Point of Sensation.
-09: Subtle Wandering.                          09: Sustained Attention.
-10: Sensory Stimulation.                       10: Whole-Body Breathing.
-11: Anticipation of Pleasure.                  11: Sustained Awareness.
-12: Fear of Letting Go.                        12: Access Concentration.
+
+08: Subtle Dullness. → 08: One Point of Sensation.
+09: Subtle Wandering. 09: Sustained Attention.
+10: Sensory Stimulation. 10: Whole-Body Breathing.
+11: Anticipation of Pleasure. 11: Sustained Awareness.
+12: Fear of Letting Go. 12: Access Concentration.
 
 Meditative Hindrance: Subtle Dullness (08).
 Loss of clarity of sensation in your meditation object.
@@ -82,6 +84,7 @@ Developing your skill in cultivating increased clarity of breath sensations plus
 Daily Application:
 
 Meditation 08 in Daily Life:
+
 - Gently soften awareness into your body until it feels grounded, present, now.
 - Relax and allow your awareness of your body to shift to the background.
 - During quiet time, learn to tune into the flow of breathing at the tip of your nose.
@@ -93,6 +96,7 @@ Tip: To avoid altering your breathing patterns or producing strain, I recommend 
 Progression Criteria:
 
 You are ready to progress to Meditation Skill 09: Sustained Attention when:
+
 - As a natural progression of letting go, you become aware of your attention resting on one point of breath sensation. Awareness of those sensations is clear to you, and there is a distinct experience of unmoving tranquillity in peripheral awareness.
 
 Tip: Due to the immaturity of meditative joy and tranquillity, there will still be some subtle wandering and restlessness within your attention. These two hindrances will calm in Meditation Skill 09: Sustained Attention by increasing enjoyment & tranquillity.

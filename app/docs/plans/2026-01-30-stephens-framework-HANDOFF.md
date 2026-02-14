@@ -28,6 +28,7 @@ Updated AI prompt to extract Stephen's framework signals:
 ### 2. Types Updated
 
 **`supabase/functions/ai/types.ts`**:
+
 ```typescript
 export type SamathaTendency = 'strong' | 'moderate' | 'weak' | 'none';
 
@@ -52,6 +53,7 @@ export type ProcessedSignals = {
 ### 3. Database Migration (`supabase/migrations/005_add_midl_signal_columns.sql`)
 
 Added columns:
+
 - `samatha_tendency TEXT`
 - `hindrance_conditions TEXT[]`
 - `balance_approach TEXT`
@@ -62,21 +64,22 @@ Added columns:
 
 Rewrote nudges around Stephen's framework categories:
 
-| Type | Purpose | Color |
-|------|---------|-------|
-| samatha | Samatha tendency question | Green |
-| understanding | What did you understand? | Indigo |
-| hindrance | What was the hindrance? | Amber |
-| conditions | What conditions led to it? | Red |
-| balance | How to bring to balance? | Blue |
-| curiosity | Open investigation prompt | Purple |
-| pattern | Based on past entry analysis | Amber |
+| Type          | Purpose                      | Color  |
+| ------------- | ---------------------------- | ------ |
+| samatha       | Samatha tendency question    | Green  |
+| understanding | What did you understand?     | Indigo |
+| hindrance     | What was the hindrance?      | Amber  |
+| conditions    | What conditions led to it?   | Red    |
+| balance       | How to bring to balance?     | Blue   |
+| curiosity     | Open investigation prompt    | Purple |
+| pattern       | Based on past entry analysis | Amber  |
 
 Nudges analyze history for patterns (recurring conditions, helpful approaches).
 
 ### 5. Entry Detail Screen (`app/(main)/entry/[id].tsx`)
 
 Displays new fields in "Practice Insights" section:
+
 - Samatha tendency with color-coded badge
 - Hindrance conditions as chips
 - Balance approach ("How you worked with it")
@@ -90,6 +93,7 @@ Displays new fields in "Practice Insights" section:
 ### 7. Skills Data (`supabase/functions/ai/data/skills.ts`)
 
 Created minimal skill data for edge function prompts containing:
+
 - id, name, marker, hindrance, techniques, progressionCriteria
 
 ## Files Modified
@@ -110,6 +114,7 @@ Created minimal skill data for edge function prompts containing:
 ### Part 4: Skill Progression
 
 User's original request included clarifying skill progression for confused meditators:
+
 - How does user advance from one skill to the next?
 - What UI shows progress toward next skill?
 - How are progression_signals used to suggest advancement?

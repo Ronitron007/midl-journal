@@ -4,24 +4,24 @@ import { ai } from './ai';
 
 export type ProgressionStats = {
   skillId: string;
-  markerCount: number;           // sessions where marker_present = true
-  strongSamathaCount: number;    // sessions with samatha_tendency = 'strong'
+  markerCount: number; // sessions where marker_present = true
+  strongSamathaCount: number; // sessions with samatha_tendency = 'strong'
   hasProgressionSignals: boolean; // any progression_signals detected
-  totalSessions: number;         // total sessions for this skill
-  readyToAdvance: boolean;       // meets all criteria
-  nextSkillId: string | null;    // null if at final skill
+  totalSessions: number; // total sessions for this skill
+  readyToAdvance: boolean; // meets all criteria
+  nextSkillId: string | null; // null if at final skill
 };
 
 // Minimum requirements for advancement
 const ADVANCEMENT_CRITERIA = {
-  minMarkerSessions: 3,          // at least 3 sessions with marker present
-  minStrongSamatha: 2,           // at least 2 sessions with strong samatha
-  requireProgressionSignals: true // need at least one progression signal
+  minMarkerSessions: 3, // at least 3 sessions with marker present
+  minStrongSamatha: 2, // at least 2 sessions with strong samatha
+  requireProgressionSignals: true, // need at least one progression signal
 };
 
 // Get the next skill in sequence
 export function getNextSkill(currentSkillId: string): string | null {
-  const allSkills = CULTIVATIONS.flatMap(c => c.skills);
+  const allSkills = CULTIVATIONS.flatMap((c) => c.skills);
   const currentIndex = allSkills.indexOf(currentSkillId);
   if (currentIndex === -1 || currentIndex >= allSkills.length - 1) {
     return null;
@@ -57,10 +57,12 @@ export async function getProgressionStats(
     };
   }
 
-  const markerCount = entries.filter(e => e.marker_present === true).length;
-  const strongSamathaCount = entries.filter(e => e.samatha_tendency === 'strong').length;
+  const markerCount = entries.filter((e) => e.marker_present === true).length;
+  const strongSamathaCount = entries.filter(
+    (e) => e.samatha_tendency === 'strong'
+  ).length;
   const hasProgressionSignals = entries.some(
-    e => e.progression_signals && e.progression_signals.length > 0
+    (e) => e.progression_signals && e.progression_signals.length > 0
   );
 
   const readyToAdvance =
@@ -84,8 +86,10 @@ export function getProgressPercentage(stats: ProgressionStats): number {
   const { minMarkerSessions, minStrongSamatha } = ADVANCEMENT_CRITERIA;
 
   // Weight: 50% marker, 30% samatha, 20% progression signals
-  const markerProgress = Math.min(stats.markerCount / minMarkerSessions, 1) * 50;
-  const samathaProgress = Math.min(stats.strongSamathaCount / minStrongSamatha, 1) * 30;
+  const markerProgress =
+    Math.min(stats.markerCount / minMarkerSessions, 1) * 50;
+  const samathaProgress =
+    Math.min(stats.strongSamathaCount / minStrongSamatha, 1) * 30;
   const signalProgress = stats.hasProgressionSignals ? 20 : 0;
 
   return Math.round(markerProgress + samathaProgress + signalProgress);
@@ -146,7 +150,10 @@ export function getProgressDescription(stats: ProgressionStats): string {
     parts.push(`${needed} more strong samatha session${needed > 1 ? 's' : ''}`);
   }
 
-  if (!stats.hasProgressionSignals && ADVANCEMENT_CRITERIA.requireProgressionSignals) {
+  if (
+    !stats.hasProgressionSignals &&
+    ADVANCEMENT_CRITERIA.requireProgressionSignals
+  ) {
     parts.push('progression signals to appear');
   }
 

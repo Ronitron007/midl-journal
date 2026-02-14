@@ -51,6 +51,7 @@ In `package.json`, add:
 ### Step 3: Document in README
 
 Add note to README that new developers should run:
+
 ```bash
 npm run install:legacy
 ```
@@ -64,14 +65,15 @@ npm run install:legacy
 ## Long-term Fix
 
 When upgrading to Expo SDK 55 (March 2026), check if:
+
 - `@10play/tentap-editor` has released a version with proper React 19 support
 - Alternative: Replace with a different rich text editor that supports React 19
 
 ## Packages Requiring Legacy Peer Deps
 
-| Package | Version | Issue |
-|---------|---------|-------|
-| `@10play/tentap-editor` | 1.0.1 | Bundles `react-dom@^18.2.0` as direct dep |
+| Package                 | Version | Issue                                     |
+| ----------------------- | ------- | ----------------------------------------- |
+| `@10play/tentap-editor` | 1.0.1   | Bundles `react-dom@^18.2.0` as direct dep |
 
 ## Related Files
 

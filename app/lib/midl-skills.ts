@@ -5,7 +5,12 @@
 
 import skillsData from '../../shared/skills.json';
 import cultivationsData from '../../shared/cultivations.json';
-import type { Skill as FullSkill, Cultivation as FullCultivation, SkillId, CultivationId } from '../../shared/types';
+import type {
+  Skill as FullSkill,
+  Cultivation as FullCultivation,
+  SkillId,
+  CultivationId,
+} from '../../shared/types';
 
 // Re-export full types for advanced usage
 export type { FullSkill, FullCultivation, SkillId, CultivationId };
@@ -27,7 +32,9 @@ export type CultivationType = {
 };
 
 // Build CULTIVATIONS array from JSON
-export const CULTIVATIONS: CultivationType[] = Object.values(cultivationsData).map((c: FullCultivation) => ({
+export const CULTIVATIONS: CultivationType[] = Object.values(
+  cultivationsData
+).map((c: FullCultivation) => ({
   id: parseInt(c.id, 10),
   name: c.name,
   skills: c.skill_ids,
@@ -48,15 +55,22 @@ export const SKILLS: Record<string, Skill> = Object.fromEntries(
 );
 
 // Full skills data for advanced usage
-export const SKILLS_FULL: Record<SkillId, FullSkill> = skillsData as Record<SkillId, FullSkill>;
-export const CULTIVATIONS_FULL: Record<CultivationId, FullCultivation> = cultivationsData as Record<CultivationId, FullCultivation>;
+export const SKILLS_FULL: Record<SkillId, FullSkill> = skillsData as Record<
+  SkillId,
+  FullSkill
+>;
+export const CULTIVATIONS_FULL: Record<CultivationId, FullCultivation> =
+  cultivationsData as Record<CultivationId, FullCultivation>;
 
 // Utility functions
 export function getSkillNumber(skillId: string): number {
   return parseInt(skillId, 10);
 }
 
-export function isSkillCompleted(skillId: string, currentSkill: string): boolean {
+export function isSkillCompleted(
+  skillId: string,
+  currentSkill: string
+): boolean {
   return getSkillNumber(skillId) < getSkillNumber(currentSkill);
 }
 
@@ -72,12 +86,14 @@ export function getFullSkill(skillId: SkillId): FullSkill | undefined {
   return SKILLS_FULL[skillId];
 }
 
-export function getCultivation(cultivationId: number): CultivationType | undefined {
-  return CULTIVATIONS.find(c => c.id === cultivationId);
+export function getCultivation(
+  cultivationId: number
+): CultivationType | undefined {
+  return CULTIVATIONS.find((c) => c.id === cultivationId);
 }
 
 export function getSkillsForCultivation(cultivationId: number): Skill[] {
   const cultivation = getCultivation(cultivationId);
   if (!cultivation) return [];
-  return cultivation.skills.map(id => SKILLS[id]).filter(Boolean);
+  return cultivation.skills.map((id) => SKILLS[id]).filter(Boolean);
 }

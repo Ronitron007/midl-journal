@@ -34,6 +34,7 @@ I recommend practising this meditation to retrain your stress-breathing patterns
 Start by lying on the floor. If needed, use a pillow under your head and a rolled blanket under your knees. Place both palms below your belly button, pressing slightly inwards so that you can feel the movement of your belly as you breathe.
 
 Slowly raising and lowering your abdomen will cause your diaphragm muscle to engage and get stronger. Lie down as described above and try these steps:
+
 - Gently raise your palms away from your body by slowly extending the lower part of your abdomen upwards. Then, lower your palms by slowly lowering your abdomen.
 - Next, notice that air is drawn in through your nose when your abdomen rises and expelled out again as your lower abdomen falls.
 - Take five slow, relaxing breaths by slowly raising and lowering your abdomen. Do this a few times until you are comfortable with the movement.
@@ -41,12 +42,14 @@ Slowly raising and lowering your abdomen will cause your diaphragm muscle to eng
 ### Step 2: Gently slow down your breathing rate
 
 Slowing down the movement of your abdominal breaths will slow down your breathing rate, increasing carbon dioxide reabsorption and increasing the calming effect.
+
 - Take ten more relaxing breaths by slowing down the movement of raising and lowering your abdomen. Keep this movement relaxed so that it feels comfortable.
 - Important: You are simply reminding your body how to breathe in this step. After 10 slow belly breaths allow your body to breathe naturally by itself without your help for a while before moving onto the next step.
 
 ### Step 3: Breathe from your abdomen into your chest
 
 Once you have done ten repetitions of breathing with your abdomen, the next stage is to learn to breathe from your abdomen up into your chest.
+
 - Bring one palm to the top of your chest, leave the other below your belly button.
 - Slowly breathe in from your belly button, extending your ribs out slightly and allow the breath to fill your chest like a balloon.
 - At the end of each in-breath, allow your whole body to relax with a slow out-breath.
@@ -55,6 +58,7 @@ Once you have done ten repetitions of breathing with your abdomen, the next stag
 ### Step 4: Lie still and allow your breathing to happen naturally
 
 This final stage of lying still and doing nothing is essential in lowering anxiety as it reinforces diaphragmatic breathing; it will teach your body and mind how to relax deeply.
+
 - Stop controlling your breathing, allowing it to find its own rhythm and pace.
 - If your mind wants to control your breathing, distract yourself by being aware of different parts of your body touching the floor.
 - Lie still and allow your breathing to happen by itself while being aware of its calming effect.

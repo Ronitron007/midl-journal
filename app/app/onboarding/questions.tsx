@@ -1,4 +1,12 @@
-import { View, Text, Pressable, ScrollView, TextInput, ActivityIndicator, Alert } from 'react-native';
+import {
+  View,
+  Text,
+  Pressable,
+  ScrollView,
+  TextInput,
+  ActivityIndicator,
+  Alert,
+} from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useState } from 'react';
 import { router } from 'expo-router';
@@ -9,9 +17,22 @@ import { OnboardingData, ONBOARDING_OPTIONS } from '../../lib/onboarding-types';
 import { evaluateOnboarding, EvalResult } from '../../lib/onboarding-eval';
 import { SKILLS } from '../../lib/midl-skills';
 
-type Step = 'experience' | 'struggles' | 'context' | 'neuro' | 'goals' | 'summary';
+type Step =
+  | 'experience'
+  | 'struggles'
+  | 'context'
+  | 'neuro'
+  | 'goals'
+  | 'summary';
 
-const STEPS: Step[] = ['experience', 'struggles', 'context', 'neuro', 'goals', 'summary'];
+const STEPS: Step[] = [
+  'experience',
+  'struggles',
+  'context',
+  'neuro',
+  'goals',
+  'summary',
+];
 
 export default function OnboardingQuestions() {
   const { user } = useAuth();
@@ -60,10 +81,10 @@ export default function OnboardingQuestions() {
       onboarding_data: data,
       current_skill: skillId,
     });
-    
+
     if (!error) {
       router.replace('/(main)/tracker');
-    }else{
+    } else {
       Alert.alert('Error', error.message);
     }
   };
@@ -109,7 +130,9 @@ export default function OnboardingQuestions() {
             <Text className="text-xl font-medium text-gray-800 text-center mb-2">
               What do you struggle with?
             </Text>
-            <Text className="text-gray-600 text-center mb-2">Select all that apply</Text>
+            <Text className="text-gray-600 text-center mb-2">
+              Select all that apply
+            </Text>
             <View className="flex-row flex-wrap justify-center gap-2">
               {ONBOARDING_OPTIONS.struggles.map((item) => (
                 <Pressable
@@ -137,7 +160,9 @@ export default function OnboardingQuestions() {
               onPress={() => setStep('context')}
               className="bg-muted-blue py-4 rounded-xl mt-4"
             >
-              <Text className="text-white text-center font-medium">Continue</Text>
+              <Text className="text-white text-center font-medium">
+                Continue
+              </Text>
             </Pressable>
           </View>
         );
@@ -177,13 +202,17 @@ export default function OnboardingQuestions() {
               multiline
               className="bg-white/80 p-4 rounded-xl border border-gray-200 min-h-[100px] text-gray-800"
               value={data.what_brings_you}
-              onChangeText={(text) => setData({ ...data, what_brings_you: text })}
+              onChangeText={(text) =>
+                setData({ ...data, what_brings_you: text })
+              }
             />
             <Pressable
               onPress={() => setStep('neuro')}
               className="bg-muted-blue py-4 rounded-xl"
             >
-              <Text className="text-white text-center font-medium">Continue</Text>
+              <Text className="text-white text-center font-medium">
+                Continue
+              </Text>
             </Pressable>
           </View>
         );
@@ -221,7 +250,9 @@ export default function OnboardingQuestions() {
               onPress={() => setStep('goals')}
               className="bg-muted-blue py-4 rounded-xl mt-4"
             >
-              <Text className="text-white text-center font-medium">Continue</Text>
+              <Text className="text-white text-center font-medium">
+                Continue
+              </Text>
             </Pressable>
           </View>
         );
@@ -245,7 +276,9 @@ export default function OnboardingQuestions() {
                 >
                   <Text
                     className={
-                      data.goals?.includes(item) ? 'text-white' : 'text-gray-800'
+                      data.goals?.includes(item)
+                        ? 'text-white'
+                        : 'text-gray-800'
                     }
                   >
                     {item}
@@ -257,7 +290,9 @@ export default function OnboardingQuestions() {
               onPress={goToSummary}
               className="bg-muted-blue py-4 rounded-xl mt-4"
             >
-              <Text className="text-white text-center font-medium">Continue</Text>
+              <Text className="text-white text-center font-medium">
+                Continue
+              </Text>
             </Pressable>
           </View>
         );
@@ -279,7 +314,8 @@ export default function OnboardingQuestions() {
                     Based on what you shared, I'd suggest starting with{' '}
                     <Text className="font-bold">
                       Skill {evalResult?.recommended_skill || '00'}:{' '}
-                      {SKILLS[evalResult?.recommended_skill || '00']?.name || 'Diaphragmatic Breathing'}
+                      {SKILLS[evalResult?.recommended_skill || '00']?.name ||
+                        'Diaphragmatic Breathing'}
                     </Text>
                   </Text>
                   <Text className="text-gray-600 mt-4 text-center leading-relaxed">

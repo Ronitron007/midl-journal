@@ -36,7 +36,7 @@ export function NudgeOverlay({ visible, nudges, onClose, onComplete }: Props) {
       const nextIndex = currentIndex + 1;
       flatListRef.current?.scrollToOffset({
         offset: nextIndex * SCREEN_WIDTH,
-        animated: true
+        animated: true,
       });
       setCurrentIndex(nextIndex);
     } else {
@@ -56,14 +56,21 @@ export function NudgeOverlay({ visible, nudges, onClose, onComplete }: Props) {
     onClose();
   }, [onClose]);
 
-  const onScroll = useCallback((event: NativeSyntheticEvent<NativeScrollEvent>) => {
-    const offsetX = event.nativeEvent.contentOffset.x;
-    const newIndex = Math.round(offsetX / SCREEN_WIDTH);
-    if (newIndex !== currentIndex && newIndex >= 0 && newIndex < nudges.length) {
-      setCurrentIndex(newIndex);
-      Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-    }
-  }, [currentIndex, nudges.length]);
+  const onScroll = useCallback(
+    (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+      const offsetX = event.nativeEvent.contentOffset.x;
+      const newIndex = Math.round(offsetX / SCREEN_WIDTH);
+      if (
+        newIndex !== currentIndex &&
+        newIndex >= 0 &&
+        newIndex < nudges.length
+      ) {
+        setCurrentIndex(newIndex);
+        Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+      }
+    },
+    [currentIndex, nudges.length]
+  );
 
   if (!visible || nudges.length === 0) return null;
 

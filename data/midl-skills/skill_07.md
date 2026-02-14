@@ -30,6 +30,7 @@ Increase mindfulness and clear comprehension of the elemental qualities of breat
 Your meditation remains the same as in Meditation Skills 01-06, except you now add Steps 2-4 as new additions to your meditation.
 
 Your Meditation So Far:
+
 - Sit in meditation.
 - Reflect gratefully.
 - Enjoy relaxing your body and mind.

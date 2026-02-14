@@ -37,6 +37,7 @@ To develop your skill in reaching and resting in access concentration in prepara
 Your meditation remains the same as in Meditation Skills 01-11, except you now add Step 2 as a new addition to your meditation.
 
 Your Meditation So Far:
+
 - Sit in meditation.
 - Reflect gratefully.
 - Enjoy relaxing your body and mind.

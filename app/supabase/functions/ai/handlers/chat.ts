@@ -1,9 +1,12 @@
-import { OpenAIProvider } from "../providers/openai.ts";
-import { CHAT_TOOLS } from "../tools/definitions.ts";
-import { executeTool } from "../tools/handlers.ts";
-import { buildSystemPrompt, trimConversationHistory } from "../prompts/system.ts";
-import { log } from "../utils/logger.ts";
-import type { AIRequest, AIResponse, ChatPayload } from "../types.ts";
+import { OpenAIProvider } from '../providers/openai.ts';
+import { CHAT_TOOLS } from '../tools/definitions.ts';
+import { executeTool } from '../tools/handlers.ts';
+import {
+  buildSystemPrompt,
+  trimConversationHistory,
+} from '../prompts/system.ts';
+import { log } from '../utils/logger.ts';
+import type { AIRequest, AIResponse, ChatPayload } from '../types.ts';
 
 const MAX_HISTORY_CHARS = 32000; // ~8k tokens
 const MAX_TOOL_ITERATIONS = 10;
@@ -18,16 +21,16 @@ export async function handleChat(req: AIRequest): Promise<AIResponse> {
 
   // Fetch user profile for context
   const { data: profile } = await req.supabase
-    .from("users")
-    .select("current_skill, stats, onboarding_data")
-    .eq("id", req.userId)
+    .from('users')
+    .select('current_skill, stats, onboarding_data')
+    .eq('id', req.userId)
     .single();
 
   // Build dynamic system prompt
   const systemPrompt = buildSystemPrompt(
     profile
       ? {
-          current_skill: profile.current_skill || "00",
+          current_skill: profile.current_skill || '00',
           stats: profile.stats || {},
           onboarding: profile.onboarding_data,
         }
@@ -39,14 +42,17 @@ export async function handleChat(req: AIRequest): Promise<AIResponse> {
 
   // Build message array
   const allMessages: Array<{
-    role: "system" | "user" | "assistant" | "tool";
+    role: 'system' | 'user' | 'assistant' | 'tool';
     content: string;
     tool_call_id?: string;
-    tool_calls?: Array<{ id: string; function: { name: string; arguments: string } }>;
+    tool_calls?: Array<{
+      id: string;
+      function: { name: string; arguments: string };
+    }>;
   }> = [
-    { role: "system", content: systemPrompt },
+    { role: 'system', content: systemPrompt },
     ...trimmedMessages.map((m) => ({
-      role: m.role as "user" | "assistant",
+      role: m.role as 'user' | 'assistant',
       content: m.content,
     })),
   ];
@@ -65,7 +71,7 @@ export async function handleChat(req: AIRequest): Promise<AIResponse> {
 
     // No tool calls - return the content
     if (!response.tool_calls?.length) {
-      log.info("Chat completed", {
+      log.info('Chat completed', {
         userId: req.userId,
         toolCallCount,
         toolsUsed,
@@ -79,11 +85,11 @@ export async function handleChat(req: AIRequest): Promise<AIResponse> {
 
     // Add assistant message with all tool calls first
     allMessages.push({
-      role: "assistant",
-      content: response.content || "",
+      role: 'assistant',
+      content: response.content || '',
       tool_calls: response.tool_calls.map((call) => ({
         id: call.id,
-        type: "function" as const,
+        type: 'function' as const,
         function: {
           name: call.function.name,
           arguments: call.function.arguments,
@@ -104,16 +110,16 @@ export async function handleChat(req: AIRequest): Promise<AIResponse> {
           supabase: req.supabase,
         });
       } catch (error) {
-        log.error("Tool execution error", {
+        log.error('Tool execution error', {
           tool: call.function.name,
           error: String(error),
         });
-        result = { error: "Tool execution failed, Error:" + String(error) };
+        result = { error: 'Tool execution failed, Error:' + String(error) };
       }
 
       // Add tool result
       allMessages.push({
-        role: "tool",
+        role: 'tool',
         tool_call_id: call.id,
         content: JSON.stringify(result),
       });
@@ -121,13 +127,13 @@ export async function handleChat(req: AIRequest): Promise<AIResponse> {
   }
 
   // Hit iteration limit
-  log.warn("Chat hit tool loop limit", {
+  log.warn('Chat hit tool loop limit', {
     userId: req.userId,
     toolCallCount,
     toolsUsed,
   });
 
   return {
-    content: "I had trouble processing that request. Could you try rephrasing?",
+    content: 'I had trouble processing that request. Could you try rephrasing?',
   };
 }

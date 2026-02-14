@@ -32,6 +32,7 @@ Calm the intellectual functions of your mind and remove subtle dullness by relax
 Your meditation remains the same as in Meditation Skills 01-07, except you now add Steps 2-3 as new additions to your meditation.
 
 Your Meditation So Far:
+
 - Sit in meditation.
 - Reflect gratefully.
 - Enjoy relaxing your body and mind.

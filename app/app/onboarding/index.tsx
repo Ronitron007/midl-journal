@@ -16,7 +16,9 @@ console.log('Redirect URL:', redirectUrl); // Debug: see what URL is being used
 export default function AuthScreen() {
   // Check if user completed onboarding and route accordingly
   const routeAfterAuth = async () => {
-    const { data: { user } } = await supabase.auth.getUser();
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
     if (!user) return;
 
     const { data } = await supabase
@@ -34,7 +36,6 @@ export default function AuthScreen() {
 
   const handleGoogleSignIn = async () => {
     try {
-
       const { data, error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
@@ -114,11 +115,8 @@ export default function AuthScreen() {
     }
   };
 
-
   return (
-    <View
-      className="flex-1 justify-center items-center px-8 bg-cream"
-    >
+    <View className="flex-1 justify-center items-center px-8 bg-cream">
       <View className="items-center mb-16">
         <Text className="text-4xl font-serif text-forest mb-2">
           MIDL Journal

@@ -27,6 +27,7 @@ Step 1: Meditation Skills 01-06.
 Your meditation remains the same as in Meditation Skills 01-06, except you now add Steps 2-4 as new additions to your meditation.
 
 Your Meditation So Far:
+
 - Sit in meditation.
 - Reflect gratefully.
 - Enjoy relaxing your body and mind.
@@ -62,8 +63,8 @@ Insight: Insight is developed at this stage of mindfulness of breathing by being
 
 Progression Map for Mindfulness of Breathing:
 
-Meditative Hindrances                          Meditation Markers
-(Hindrances to calm)                           (Signs of deepening calm)
+Meditative Hindrances Meditation Markers
+(Hindrances to calm) (Signs of deepening calm)
 
                                                00: Diaphragm Breathing.
                                                01: Body Relaxation.
@@ -72,12 +73,13 @@ Meditative Hindrances                          Meditation Markers
                                                04: Content Presence.
                                                05: Natural Breathing.
                                                06: Whole of Each Breath.
-07: Gross Dullness.              →             07: Breath Sensations.
-08: Subtle Dullness.                          08: One Point of Sensation.
-09: Subtle Wandering.                         09: Sustained Attention.
-10: Sensory Stimulation.                      10: Whole-Body Breathing.
-11: Anticipation of Pleasure.                 11: Sustained Awareness.
-12: Fear of Letting Go.                       12: Access Concentration.
+
+07: Gross Dullness. → 07: Breath Sensations.
+08: Subtle Dullness. 08: One Point of Sensation.
+09: Subtle Wandering. 09: Sustained Attention.
+10: Sensory Stimulation. 10: Whole-Body Breathing.
+11: Anticipation of Pleasure. 11: Sustained Awareness.
+12: Fear of Letting Go. 12: Access Concentration.
 
 Meditative Hindrance: Gross Dullness (07).
 Loss of clarity in both your mind and your meditation object.
@@ -94,6 +96,7 @@ Tip: It is important to note that although your focus is on settling the Hindran
 Daily Application:
 
 Meditation Skill 07 in Daily Life:
+
 - Gently soften awareness into your body until it feels grounded, present, now.
 - Relax and allow your awareness of your body to shift to the background.
 - During quiet time, learn to tune into the flow of breathing at the tip of your nose.
@@ -105,4 +108,5 @@ Tip: To avoid altering your breathing patterns or producing strain, I recommend 
 Progression Criteria:
 
 You are ready to progress to Meditation Skill 08: One Point of Sensation when:
+
 - You feel confident in your ability to remove the conditions supporting Gross Dullness before it arises, and you clearly perceive the changing elemental qualities of your breathing at the tip of your nose without effort or strain and without forgetting them.

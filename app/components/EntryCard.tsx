@@ -26,7 +26,9 @@ const formatDate = (dateString: string) => {
 };
 
 export default function EntryCard({ entry, onDelete }: EntryCardProps) {
-  const skillName = entry.skill_practiced ? SKILLS[entry.skill_practiced]?.name : null;
+  const skillName = entry.skill_practiced
+    ? SKILLS[entry.skill_practiced]?.name
+    : null;
   const moodEmoji = entry.mood_score ? MOOD_EMOJI[entry.mood_score] : null;
 
   // Get first 2 techniques or mood tags for display
@@ -57,8 +59,21 @@ export default function EntryCard({ entry, onDelete }: EntryCardProps) {
           style={{ backgroundColor: '#ffffff', padding: 16 }}
         >
           {/* Top row: date, type, skill, indicators, mood */}
-          <View style={{ flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between' }}>
-            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8, flex: 1 }}>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+            }}
+          >
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                gap: 8,
+                flex: 1,
+              }}
+            >
               <Text style={{ color: '#707927', fontSize: 13 }}>
                 {formatDate(entry.created_at)}
               </Text>
@@ -67,62 +82,103 @@ export default function EntryCard({ entry, onDelete }: EntryCardProps) {
                   paddingHorizontal: 8,
                   paddingVertical: 2,
                   borderRadius: 4,
-                  backgroundColor: entry.type === 'reflect' ? '#f8f4e9' : '#f8f4e9',
+                  backgroundColor:
+                    entry.type === 'reflect' ? '#f8f4e9' : '#f8f4e9',
                 }}
               >
-                <Text style={{ fontSize: 11, color: '#3a5222', textTransform: 'capitalize' }}>
+                <Text
+                  style={{
+                    fontSize: 11,
+                    color: '#3a5222',
+                    textTransform: 'capitalize',
+                  }}
+                >
                   {entry.type}
                 </Text>
               </View>
               {skillName && (
-                <Text style={{ color: '#707927', fontSize: 11 }} numberOfLines={1}>
+                <Text
+                  style={{ color: '#707927', fontSize: 11 }}
+                  numberOfLines={1}
+                >
                   {entry.skill_practiced}
                 </Text>
               )}
             </View>
 
             {/* Signal indicators + mood */}
-            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}>
+            <View
+              style={{ flexDirection: 'row', alignItems: 'center', gap: 6 }}
+            >
               {entry.marker_present && (
-                <View style={{ backgroundColor: '#dcfce7', borderRadius: 10, width: 20, height: 20, alignItems: 'center', justifyContent: 'center' }}>
+                <View
+                  style={{
+                    backgroundColor: '#dcfce7',
+                    borderRadius: 10,
+                    width: 20,
+                    height: 20,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
                   <Text style={{ fontSize: 10, color: '#166534' }}>✓</Text>
                 </View>
               )}
               {entry.hindrance_present && (
-                <View style={{ backgroundColor: '#fef3c7', borderRadius: 10, width: 20, height: 20, alignItems: 'center', justifyContent: 'center' }}>
+                <View
+                  style={{
+                    backgroundColor: '#fef3c7',
+                    borderRadius: 10,
+                    width: 20,
+                    height: 20,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
                   <Text style={{ fontSize: 10 }}>⚡</Text>
                 </View>
               )}
               {entry.has_breakthrough && (
-                <View style={{ backgroundColor: '#fef3c7', borderRadius: 10, width: 20, height: 20, alignItems: 'center', justifyContent: 'center' }}>
+                <View
+                  style={{
+                    backgroundColor: '#fef3c7',
+                    borderRadius: 10,
+                    width: 20,
+                    height: 20,
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
                   <Text style={{ fontSize: 10 }}>⭐</Text>
                 </View>
               )}
-              {moodEmoji && (
-                <Text style={{ fontSize: 16 }}>{moodEmoji}</Text>
-              )}
+              {moodEmoji && <Text style={{ fontSize: 16 }}>{moodEmoji}</Text>}
             </View>
           </View>
 
           {/* Summary/content */}
           <View style={{ marginTop: 8 }}>
-            {entry.summary ? (
-              <Text style={{ color: '#3a5222', fontSize: 14, lineHeight: 20 }} numberOfLines={2}>
-                {entry.summary}
-              </Text>
-            ) : (
-              <HtmlRenderer html={entry.raw_content} maxLength={100} />
-            )}
+            <HtmlRenderer html={entry.raw_content} maxLength={100} />
           </View>
 
           {/* Bottom chips: techniques + mood tags */}
           {chips.length > 0 && (
-            <View style={{ flexDirection: 'row', flexWrap: 'wrap', gap: 6, marginTop: 10 }}>
+            <View
+              style={{
+                flexDirection: 'row',
+                flexWrap: 'wrap',
+                gap: 6,
+                marginTop: 10,
+              }}
+            >
               {chips.map((chip, i) => (
                 <View
                   key={i}
                   style={{
-                    backgroundColor: i < (entry.techniques_mentioned?.length || 0) ? '#dbeafe' : '#fce7f3',
+                    backgroundColor:
+                      i < (entry.techniques_mentioned?.length || 0)
+                        ? '#dbeafe'
+                        : '#fce7f3',
                     paddingHorizontal: 8,
                     paddingVertical: 3,
                     borderRadius: 8,
@@ -131,31 +187,60 @@ export default function EntryCard({ entry, onDelete }: EntryCardProps) {
                   <Text
                     style={{
                       fontSize: 11,
-                      color: i < (entry.techniques_mentioned?.length || 0) ? '#1e40af' : '#9d174d',
+                      color:
+                        i < (entry.techniques_mentioned?.length || 0)
+                          ? '#1e40af'
+                          : '#9d174d',
                     }}
                   >
                     {chip}
                   </Text>
                 </View>
               ))}
-              {(entry.techniques_mentioned?.length || 0) + (entry.mood_tags?.length || 0) > 3 && (
-                <Text style={{ fontSize: 11, color: '#707927', alignSelf: 'center' }}>
-                  +{(entry.techniques_mentioned?.length || 0) + (entry.mood_tags?.length || 0) - 3}
+              {(entry.techniques_mentioned?.length || 0) +
+                (entry.mood_tags?.length || 0) >
+                3 && (
+                <Text
+                  style={{
+                    fontSize: 11,
+                    color: '#707927',
+                    alignSelf: 'center',
+                  }}
+                >
+                  +
+                  {(entry.techniques_mentioned?.length || 0) +
+                    (entry.mood_tags?.length || 0) -
+                    3}
                 </Text>
               )}
             </View>
           )}
 
           {/* Progression indicator */}
-          {entry.progression_signals && entry.progression_signals.length > 0 && (
-            <View style={{ marginTop: 8, flexDirection: 'row', alignItems: 'center', gap: 4 }}>
-              <View style={{ backgroundColor: '#f0fdf4', paddingHorizontal: 8, paddingVertical: 3, borderRadius: 8 }}>
-                <Text style={{ fontSize: 11, color: '#166534' }}>
-                  📈 Progression signs
-                </Text>
+          {entry.progression_signals &&
+            entry.progression_signals.length > 0 && (
+              <View
+                style={{
+                  marginTop: 8,
+                  flexDirection: 'row',
+                  alignItems: 'center',
+                  gap: 4,
+                }}
+              >
+                <View
+                  style={{
+                    backgroundColor: '#f0fdf4',
+                    paddingHorizontal: 8,
+                    paddingVertical: 3,
+                    borderRadius: 8,
+                  }}
+                >
+                  <Text style={{ fontSize: 11, color: '#166534' }}>
+                    📈 Progression signs
+                  </Text>
+                </View>
               </View>
-            </View>
-          )}
+            )}
         </Pressable>
       </Swipeable>
     </View>

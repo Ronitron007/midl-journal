@@ -34,6 +34,7 @@ You now introduce your ability to relax and soften, learned in Meditation Skills
 Sit for meditation and develop Meditation Skills 01 and 02 as you have in previous meditations, except you now add the below Steps 2-4 as new additions to your meditation.
 
 Your Meditation So Far:
+
 - Sit in meditation.
 - Reflect gratefully.
 - Enjoy relaxing your body and mind.
@@ -51,6 +52,7 @@ As mindfulness and presence in your body grow, notice and begin to gently soften
 ### Step 4: Introduce the GOSS Formula
 
 How to develop insight and let go.
+
 - Ground.
 - Observe.
 - Soften.
@@ -122,6 +124,7 @@ Check-in: "Have I lost awareness of my body?"
 The GOSS Formula is a circle, with each part of the formula feeding into the next. Whichever part of the formula you begin in, whether it is observing, softening or smiling, your aim is always to return to the samatha (calm) state of mindfulness of your body to ground awareness.
 
 Understanding this, we can see that GOSS initially begins with:
+
 - Soften
 - Smile
 

@@ -70,12 +70,22 @@ export default function ReflectScreen() {
   // Initialize from draft or defaults
   const [content, setContent] = useState(reflectDraft?.content ?? '');
   const [plainTextContent, setPlainTextContent] = useState('');
-  const [showDetails, setShowDetails] = useState(reflectDraft?.showDetails ?? false);
-  const [duration, setDuration] = useState<number | null>(reflectDraft?.duration ?? null);
+  const [showDetails, setShowDetails] = useState(
+    reflectDraft?.showDetails ?? false
+  );
+  const [duration, setDuration] = useState<number | null>(
+    reflectDraft?.duration ?? null
+  );
   const [isGuided, setIsGuided] = useState(reflectDraft?.isGuided ?? false);
-  const [trackProgress, setTrackProgress] = useState(reflectDraft?.trackProgress ?? true);
-  const [skillPracticed, setSkillPracticed] = useState(reflectDraft?.skillPracticed ?? '00');
-  const [entryDate, setEntryDate] = useState(reflectDraft?.entryDate ?? getTodayString());
+  const [trackProgress, setTrackProgress] = useState(
+    reflectDraft?.trackProgress ?? true
+  );
+  const [skillPracticed, setSkillPracticed] = useState(
+    reflectDraft?.skillPracticed ?? '00'
+  );
+  const [entryDate, setEntryDate] = useState(
+    reflectDraft?.entryDate ?? getTodayString()
+  );
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showSkillPicker, setShowSkillPicker] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
@@ -149,7 +159,7 @@ export default function ReflectScreen() {
 
     return () => {
       cancelled = true;
-     // clearTimeout(timeoutId);
+      // clearTimeout(timeoutId);
     };
   }, [user, userCurrentSkill]);
 
@@ -170,7 +180,15 @@ export default function ReflectScreen() {
       skillPracticed,
       entryDate,
     });
-  }, [content, showDetails, duration, isGuided, trackProgress, skillPracticed, entryDate]);
+  }, [
+    content,
+    showDetails,
+    duration,
+    isGuided,
+    trackProgress,
+    skillPracticed,
+    entryDate,
+  ]);
 
   const handleSubmit = async () => {
     if (isHtmlEmpty(content) || !user) return;
@@ -290,7 +308,10 @@ export default function ReflectScreen() {
                         className="bg-cream rounded-xl px-3 py-2 border border-olive/20"
                         style={{ maxWidth: 220 }}
                       >
-                        <Text className="text-forest text-sm leading-5" numberOfLines={3}>
+                        <Text
+                          className="text-forest text-sm leading-5"
+                          numberOfLines={3}
+                        >
                           {nudge.text}
                         </Text>
                       </View>
@@ -330,7 +351,9 @@ export default function ReflectScreen() {
                     onPress={() => setShowDatePicker(true)}
                     className="px-4 py-2 rounded-full bg-cream self-start mb-4"
                   >
-                    <Text className="text-forest">{formatDateDisplay(entryDate)}</Text>
+                    <Text className="text-forest">
+                      {formatDateDisplay(entryDate)}
+                    </Text>
                   </Pressable>
                   {showDatePicker && (
                     <DateTimePicker
@@ -341,7 +364,9 @@ export default function ReflectScreen() {
                       onChange={(event, selectedDate) => {
                         setShowDatePicker(Platform.OS === 'ios');
                         if (selectedDate) {
-                          setEntryDate(selectedDate.toISOString().split('T')[0]);
+                          setEntryDate(
+                            selectedDate.toISOString().split('T')[0]
+                          );
                         }
                       }}
                     />
@@ -363,9 +388,7 @@ export default function ReflectScreen() {
                         key={opt.value}
                         onPress={() => setDuration(opt.value)}
                         className={`px-4 py-2 rounded-full ${
-                          duration === opt.value
-                            ? 'bg-terracotta'
-                            : 'bg-cream'
+                          duration === opt.value ? 'bg-terracotta' : 'bg-cream'
                         }`}
                       >
                         <Text
@@ -410,11 +433,12 @@ export default function ReflectScreen() {
                     <Text className="text-forest">
                       {skillPracticed} - {SKILLS[skillPracticed]?.name}
                     </Text>
-                    {userCurrentSkill && skillPracticed !== userCurrentSkill && (
-                      <Text className="text-olive text-xs mt-1">
-                        Your current skill is {userCurrentSkill}
-                      </Text>
-                    )}
+                    {userCurrentSkill &&
+                      skillPracticed !== userCurrentSkill && (
+                        <Text className="text-olive text-xs mt-1">
+                          Your current skill is {userCurrentSkill}
+                        </Text>
+                      )}
                   </Pressable>
                 </View>
               )}
@@ -436,7 +460,9 @@ export default function ReflectScreen() {
                       : 'text-olive'
                   }`}
                 >
-                  {isSubmitting ? 'Saving your reflection...' : 'Save & Get Insights'}
+                  {isSubmitting
+                    ? 'Saving your reflection...'
+                    : 'Save & Get Insights'}
                 </Text>
               </Pressable>
             </View>

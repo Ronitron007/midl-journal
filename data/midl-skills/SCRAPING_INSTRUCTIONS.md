@@ -2,41 +2,45 @@
 
 ## Progress Status
 
-| Skill | Name | Status |
-|-------|------|--------|
-| 00 | Diaphragm Breathing | Done |
-| 01 | Body Relaxation | Done |
-| 02 | Mind Relaxation | Done |
-| 03 | Mindful Presence | Done |
-| 04 | Content Presence | Done |
-| 05 | Natural Breathing | Done |
-| 06 | Whole of Each Breath | Done |
-| 07 | Breath Sensations | Done |
-| 08 | One Point of Sensation | Done |
-| 09 | Sustained Attention | Done |
-| 10 | Whole-Body Breathing | Done |
-| 11 | Sustained Awareness | Done |
-| 12 | Access Concentration | Done |
-| 13 | First Pleasure Jhana | Done |
-| 14 | Second Pleasure Jhana | Done |
-| 15 | Third Pleasure Jhana | Done |
-| 16 | Fourth Pleasure Jhana | Done |
+| Skill | Name                   | Status |
+| ----- | ---------------------- | ------ |
+| 00    | Diaphragm Breathing    | Done   |
+| 01    | Body Relaxation        | Done   |
+| 02    | Mind Relaxation        | Done   |
+| 03    | Mindful Presence       | Done   |
+| 04    | Content Presence       | Done   |
+| 05    | Natural Breathing      | Done   |
+| 06    | Whole of Each Breath   | Done   |
+| 07    | Breath Sensations      | Done   |
+| 08    | One Point of Sensation | Done   |
+| 09    | Sustained Attention    | Done   |
+| 10    | Whole-Body Breathing   | Done   |
+| 11    | Sustained Awareness    | Done   |
+| 12    | Access Concentration   | Done   |
+| 13    | First Pleasure Jhana   | Done   |
+| 14    | Second Pleasure Jhana  | Done   |
+| 15    | Third Pleasure Jhana   | Done   |
+| 16    | Fourth Pleasure Jhana  | Done   |
 
 ## Scraping Method
 
 ### Prerequisites
+
 - Playwright browser automation
 - Login credentials for midlmeditation.com
 
 ### Login URL
+
 ```
 https://midlmeditation.com/m/login?r=%2Fm%2Faccount
 ```
 
 ### Skill URLs
+
 ```
 https://midlmeditation.com/meditation-skill-{NUMBER}
 ```
+
 Where NUMBER is 00-16 (zero-padded for 00-09).
 
 ### Scraping Steps
@@ -67,13 +71,13 @@ async (page) => {
   const content = await page.evaluate(() => {
     const sections = document.querySelectorAll('[data-ux="Section"]');
     let text = '';
-    sections.forEach(s => {
+    sections.forEach((s) => {
       text += s.innerText + '\n\n';
     });
     return text || document.body.innerText;
   });
   return content;
-}
+};
 ```
 
 ## Content Structure

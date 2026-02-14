@@ -12,6 +12,7 @@ Benefits: This Skill will teach you how to find enjoyment in contentment and enj
 Purpose: Train your mind to recognise the pleasant spiritual feeling available in letting go and to create the conditions for initial meditative joy by developing contentment to shorten the time your mind is lost in habitually forgetting your meditation.
 
 Resources:
+
 - YouTube: https://youtu.be/cwZu6-uKSJE
 - SoundCloud: https://soundcloud.com/user-677685629/midl-insight-meditation-skill04/s-tvVUFF6LYdv
 - PDF: Meditation Skill 04 Detailed Instructions
@@ -24,6 +25,7 @@ Step 1: Meditation Skills 01-03
 Develop Mindful Presence in your body as you did in Skills 01-03. Once you feel very present in your body, begin to find contentment and enjoyment in the simple act of resting mindfully in meditation by adding Steps 2-4.
 
 Your Meditation So Far:
+
 - Sit in meditation.
 - Reflect gratefully.
 - Enjoy relaxing your body and mind.
@@ -41,6 +43,7 @@ Step 4: Apply the GOSS Formula
 To develop insight, become interested in distraction and apply the GOSS Formula anytime you observe that you have forgotten your meditation. During this stage of meditation, the main hindrance you want to weaken is the length of time you forget that you are meditating when your mind wanders to thoughts, etc. Applying the GOSS Formula and enjoying returning to the presence of your body, finding contentment in it will reward your mind for returning to mindful presence, weakening habitual mind wandering and forgetting.
 
 GOSS Formula: How to Let Go.
+
 - Ground.
 - Observe.
 - Soften.
@@ -94,6 +97,7 @@ Criticism, judgment, and negativity regarding your tendency to forget or let you
 Smiling gently and embracing the pleasure of softening and letting go can connect your mind to this experience, enhancing the positive rewards for your mind. This, in turn, will help weaken the hindrance of habitual forgetting and foster a healthier pattern of increased presence within your body.
 
 To weaken the mental habit of habitual forgetting, once you are familiar with Skills 01-03, you can apply them to support this process:
+
 1. Sit in meditation with your palms resting in your lap, one thumb gently resting on the other. This creates a reference point from which you can observe your mind wandering away from this touch, helping you remember your meditation practice.
 2. Develop enjoyment of Mindful Presence of your body as in Skills 01-04. Gently soften your mental effort so that your awareness of the touch of your thumbs goes slightly out of focus. This will loosen your mind's grip on that sensation and allow your attention to habitually wander so that you can observe it.
 3. Mind Wandering: If you notice a thought, memory, or fantasy arise in your mind but don't become lost in it, there's no need to do anything with it. Simply acknowledge its presence as something that occurred on its own (anatta) and continue to enjoy the relaxation and presence of your body. If you feel a slight pull of interest toward a thought, memory, or fantasy, simply soften the effort of your mind to let go of this interest, as described in Skill 02.
@@ -128,6 +132,7 @@ Apply the simple GOSS Formula:
 From the foundation of mindfulness of your body developed in Meditation Skills 01-04, you can begin to train your mind to let go of habits and be more mindfully present in your body and daily life.
 
 Meditation Skill 04 in Daily Life:
+
 - Ground: Gently soften and relax your body and mind to bring awareness into your body until you feel grounded and mindfully present (as in Meditation Skill 03).
 - Observe: Check in during the day and notice if you have lost peripheral awareness of your body. If you have, you will find that your mind has become caught up in some thought, fantasy, reaction, etc.
 - Soften: Take a few softening breaths to relax your body. Be mindful of your awareness returning to your body when you relax, and notice how nice it feels to re-establish a background mindful presence.
@@ -143,6 +148,7 @@ Feeling stuck on finding enjoyment:
 Are you feeling stuck on this meditation? I will start by saying that what you are experiencing in your meditation, though difficult, is exactly what is meant to be happening. The ebb and flow of enjoyment in meditation is a normal part of developing an insight meditation practice.
 
 In MIDL, there are four rites of passage that meditators often feel stuck on:
+
 1. Skill 04 with enjoyment and pleasure.
 2. Skill 07 with gross dullness.
 3. Skill 09 with becoming too tranquil.
@@ -181,6 +187,7 @@ If I observe the experiences of my mind and body, I will clearly see that they a
 
 PROGRESSION CRITERIA:
 You are ready to progress to Meditation Skill 05: Natural Breathing when:
+
 - You become naturally aware of the experience of your body breathing and find enjoyment in the relaxation and presence of your body. You will also notice that at this stage, the length of time you forget what you are doing during meditation and become lost in thinking will start to shorten.
 
 Note: The appearance of the experience of your body breathing is the sign that your mind is ready for Skill 05. If the experience of your breathing is unclear at this stage, it is a sign that you need to spend more time learning to relax your body and mind. The quieter you become through relaxation, the more sensitive your body will become to your breathing.
@@ -190,6 +197,7 @@ Tip: It is important to note that mind wandering and forgetting you are meditati
 Feeling stuck: If you are feeling stuck and can't experience any pleasant feelings in your meditation in Skill 04, it is okay to move on to Skill 05. If your body feels present, and as you relax, you become aware of the movement of breathing in your body, it is okay to move on to Skill 05. Since all Skills are various stages of calm in meditation, you will still be practising Meditation Skill 04 each time you meditate and will gradually develop enjoyment in meditation anyway. Think of this approach as being stuck in the mud with a four-wheel drive. We could sit in the mud and dig away, or we could take a run-off and use that momentum to get to the other side. Removing the goal and finding enjoyment in meditation again will gradually bring back the pleasant feeling of meditation on its own.
 
 CROSS-REFERENCES:
+
 - Previous: Skill 03 (Mindful Presence)
 - Next: Skill 05 (Natural Breathing)
 - Related: GOSS Formula, Meditation Markers, Meditative Hindrances

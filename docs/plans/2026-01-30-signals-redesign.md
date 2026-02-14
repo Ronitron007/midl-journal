@@ -7,6 +7,7 @@
 ## Problem
 
 Current entry processing extracts **generic signals** (mood, themes) that aren't aligned with MIDL methodology. This makes it impossible to:
+
 - Show meaningful skill-specific labels on entries
 - Generate nudges based on past skill struggles
 - Determine skill progression automatically
@@ -14,6 +15,7 @@ Current entry processing extracts **generic signals** (mood, themes) that aren't
 ## Solution
 
 Redesign ProcessedSignals to be **skill-aware**:
+
 1. User selects which skill they practiced (defaults to current_skill)
 2. Entry-process handler loads that skill's marker/hindrance
 3. AI analyzes entry against skill-specific criteria
@@ -24,19 +26,19 @@ Redesign ProcessedSignals to be **skill-aware**:
 ```typescript
 type ProcessedSignals = {
   // === MIDL-SPECIFIC (primary) ===
-  skill_analyzed: string;         // skill ID this was evaluated against
-  marker_present: boolean;        // showed the skill's marker?
-  marker_notes: string | null;    // observation about marker
-  hindrance_present: boolean;     // struggled with skill's hindrance?
+  skill_analyzed: string; // skill ID this was evaluated against
+  marker_present: boolean; // showed the skill's marker?
+  marker_notes: string | null; // observation about marker
+  hindrance_present: boolean; // struggled with skill's hindrance?
   hindrance_notes: string | null; // observation about hindrance
   techniques_mentioned: string[]; // skill-specific techniques (e.g., "belly breathing", "GOSS")
-  progression_signals: string[];  // signs of readiness to advance
+  progression_signals: string[]; // signs of readiness to advance
 
   // === GENERIC (secondary) ===
   summary: string;
-  mood_score: number;             // 1-5
+  mood_score: number; // 1-5
   mood_tags: string[];
-  themes: string[];               // non-MIDL life topics
+  themes: string[]; // non-MIDL life topics
   has_breakthrough: boolean;
   has_struggle: boolean;
   has_crisis_flag: boolean;
@@ -62,6 +64,7 @@ ALTER TABLE entries ADD COLUMN IF NOT EXISTS progression_signals TEXT[];
 ### Reflect Screen (`reflect.tsx`)
 
 Add skill picker to details section:
+
 - Label: "Skill practiced"
 - Type: Dropdown/picker showing all 17 skills
 - Default: User's `current_skill` from profile
@@ -70,6 +73,7 @@ Add skill picker to details section:
 ### Entry Detail Screen (`entry/[id].tsx`)
 
 Display new signals:
+
 - Marker/hindrance badges with notes
 - Techniques as chips
 - Progression signals section (if any)
@@ -125,26 +129,28 @@ Respond in JSON format.
 ## Data Requirements
 
 Need to make `midl_skills_complete.json` accessible to the edge function. Options:
+
 1. **Embed in handler** - Copy relevant fields into handler code
 2. **Fetch from storage** - Store JSON in Supabase storage
 3. **Environment variable** - Too large, not practical
 
 **Recommendation:** Embed a minimal version with just the fields needed for prompts:
+
 - id, name, marker, hindrance
 - techniques (extract from instructions_summary)
 - progression criteria
 
 ## Files to Modify
 
-| File | Changes |
-|------|---------|
-| `app/lib/entries.ts` | Update Entry type with new fields |
-| `app/lib/ai.ts` | Update ProcessedSignals type |
-| `app/app/(main)/reflect.tsx` | Add skill picker UI, pass to createEntry |
-| `app/app/(main)/entry/[id].tsx` | Display new signal fields |
-| `supabase/functions/ai/handlers/entry-process.ts` | New skill-aware prompt |
-| `supabase/functions/ai/types.ts` | Update ProcessedSignals type |
-| `supabase/migrations/005_add_signal_columns.sql` | New DB columns |
+| File                                              | Changes                                  |
+| ------------------------------------------------- | ---------------------------------------- |
+| `app/lib/entries.ts`                              | Update Entry type with new fields        |
+| `app/lib/ai.ts`                                   | Update ProcessedSignals type             |
+| `app/app/(main)/reflect.tsx`                      | Add skill picker UI, pass to createEntry |
+| `app/app/(main)/entry/[id].tsx`                   | Display new signal fields                |
+| `supabase/functions/ai/handlers/entry-process.ts` | New skill-aware prompt                   |
+| `supabase/functions/ai/types.ts`                  | Update ProcessedSignals type             |
+| `supabase/migrations/005_add_signal_columns.sql`  | New DB columns                           |
 
 ## Testing Plan
 
@@ -160,6 +166,7 @@ Need to make `midl_skills_complete.json` accessible to the edge function. Option
 ## Downstream Impact
 
 This work enables:
+
 - **Entry Display (Part 2):** Can show skill-specific badges and notes
 - **Nudges (Part 3):** Can query past hindrance patterns for personalized prompts
 - **Progression (Part 4):** Can count marker_present sessions to determine advancement

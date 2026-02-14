@@ -1,6 +1,6 @@
-import { OpenAIProvider } from "../providers/openai.ts";
-import type { AIRequest, AIResponse } from "../types.ts";
-import { log } from "../utils/logger.ts";
+import { OpenAIProvider } from '../providers/openai.ts';
+import type { AIRequest, AIResponse } from '../types.ts';
+import { log } from '../utils/logger.ts';
 
 const MIN_WEEKS_FOR_MONTHLY = 3;
 
@@ -18,7 +18,9 @@ type WeeklySummaryRow = {
   entry_ids: string[] | null;
 };
 
-export async function handleMonthlySummary(req: AIRequest): Promise<AIResponse> {
+export async function handleMonthlySummary(
+  req: AIRequest
+): Promise<AIResponse> {
   // Get current month boundaries
   const now = new Date();
   const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
@@ -26,13 +28,13 @@ export async function handleMonthlySummary(req: AIRequest): Promise<AIResponse> 
 
   // Get weekly summaries for this month
   const { data: weeklySummaries, error } = await req.supabase
-    .from("context_summaries")
-    .select("*")
-    .eq("user_id", req.userId)
-    .eq("summary_type", "weekly")
-    .gte("date_range_start", monthStart.toISOString())
-    .lte("date_range_end", monthEnd.toISOString())
-    .order("date_range_start", { ascending: true });
+    .from('context_summaries')
+    .select('*')
+    .eq('user_id', req.userId)
+    .eq('summary_type', 'weekly')
+    .gte('date_range_start', monthStart.toISOString())
+    .lte('date_range_end', monthEnd.toISOString())
+    .order('date_range_start', { ascending: true });
 
   const typedSummaries = weeklySummaries as WeeklySummaryRow[] | null;
 
@@ -59,11 +61,11 @@ Week of ${new Date(w.date_range_start).toLocaleDateString()}:
 - Summary: ${w.summary}
 - Samatha trend: ${w.samatha_trend}
 - Mood trend: ${w.mood_trend}
-- Key themes: ${w.key_themes?.join(", ")}
-- Notable: ${w.notable_events?.join("; ")}
+- Key themes: ${w.key_themes?.join(', ')}
+- Notable: ${w.notable_events?.join('; ')}
 `
   )
-  .join("\n")}
+  .join('\n')}
 
 Generate a monthly summary. Respond in JSON:
 
@@ -77,12 +79,12 @@ Generate a monthly summary. Respond in JSON:
 }`;
 
   const result = await provider.complete({
-    messages: [{ role: "user", content: prompt }],
+    messages: [{ role: 'user', content: prompt }],
     maxTokens: 500,
     jsonMode: true,
   });
 
-  const parsed = JSON.parse(result || "{}");
+  const parsed = JSON.parse(result || '{}');
 
   // Calculate aggregates
   const totalEntries = typedSummaries.reduce(
@@ -90,23 +92,25 @@ Generate a monthly summary. Respond in JSON:
     0
   );
   const avgMood =
-    typedSummaries.reduce((sum: number, w) => sum + (w.avg_mood_score || 0), 0) /
-    typedSummaries.length;
+    typedSummaries.reduce(
+      (sum: number, w) => sum + (w.avg_mood_score || 0),
+      0
+    ) / typedSummaries.length;
 
   // Check for existing monthly summary
   const { data: existing } = await req.supabase
-    .from("context_summaries")
-    .select("id")
-    .eq("user_id", req.userId)
-    .eq("summary_type", "monthly")
-    .gte("date_range_start", monthStart.toISOString())
-    .lte("date_range_end", monthEnd.toISOString())
+    .from('context_summaries')
+    .select('id')
+    .eq('user_id', req.userId)
+    .eq('summary_type', 'monthly')
+    .gte('date_range_start', monthStart.toISOString())
+    .lte('date_range_end', monthEnd.toISOString())
     .single();
 
   // Store monthly summary
   const summaryRecord = {
     user_id: req.userId,
-    summary_type: "monthly",
+    summary_type: 'monthly',
     entry_ids: typedSummaries.flatMap((w) => w.entry_ids || []),
     date_range_start: monthStart.toISOString(),
     date_range_end: monthEnd.toISOString(),
@@ -121,14 +125,14 @@ Generate a monthly summary. Respond in JSON:
 
   if (existing) {
     await req.supabase
-      .from("context_summaries")
+      .from('context_summaries')
       .update(summaryRecord)
-      .eq("id", existing.id);
+      .eq('id', existing.id);
   } else {
-    await req.supabase.from("context_summaries").insert(summaryRecord);
+    await req.supabase.from('context_summaries').insert(summaryRecord);
   }
 
-  log.info("Generated monthly summary", {
+  log.info('Generated monthly summary', {
     userId: req.userId,
     month: monthStart.toISOString(),
     weeklySummaryCount: typedSummaries.length,
@@ -148,13 +152,13 @@ export async function handleMonthlySummaryBatch(
   const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
 
   const { data: userIds, error } = await req.supabase
-    .from("context_summaries")
-    .select("user_id")
-    .eq("summary_type", "weekly")
-    .gte("date_range_start", monthStart.toISOString());
+    .from('context_summaries')
+    .select('user_id')
+    .eq('summary_type', 'weekly')
+    .gte('date_range_start', monthStart.toISOString());
 
   if (error || !userIds) {
-    return { error: "Failed to fetch users" };
+    return { error: 'Failed to fetch users' };
   }
 
   // Count weekly summaries per user
@@ -184,7 +188,7 @@ export async function handleMonthlySummaryBatch(
     }
   }
 
-  log.info("Monthly summary batch complete", {
+  log.info('Monthly summary batch complete', {
     usersProcessed: processed,
     usersSkipped: skipped,
   });

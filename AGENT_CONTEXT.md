@@ -7,6 +7,7 @@
 **MIDL Journal** is an AI-powered meditation companion app built with React Native (Expo). It helps users progress through the MIDL (Mindfulness in Daily Life) meditation system - 17 skills across 5 cultivations.
 
 **Core Features:**
+
 - Social auth (Google/Apple) via Supabase
 - Onboarding questionnaire with AI-powered skill recommendation
 - Tracker screen with skill map timeline
@@ -16,14 +17,14 @@
 
 ## Tech Stack
 
-| Layer | Technology |
-|-------|------------|
-| Framework | Expo SDK 54 + React Native |
-| Routing | Expo Router v6 (file-based) |
-| Styling | NativeWind v4 (Tailwind for RN) |
-| Backend | Supabase (Auth + Postgres + pgvector) |
-| AI | OpenAI API (gpt-4o-mini) |
-| Language | TypeScript |
+| Layer     | Technology                            |
+| --------- | ------------------------------------- |
+| Framework | Expo SDK 54 + React Native            |
+| Routing   | Expo Router v6 (file-based)           |
+| Styling   | NativeWind v4 (Tailwind for RN)       |
+| Backend   | Supabase (Auth + Postgres + pgvector) |
+| AI        | OpenAI API (gpt-4o-mini)              |
+| Language  | TypeScript                            |
 
 ## Project Structure
 
@@ -117,6 +118,7 @@ midl-journal/
 ### Tables
 
 **users**
+
 ```sql
 - id: UUID (PK, matches auth.uid())
 - email: TEXT (unique)
@@ -128,6 +130,7 @@ midl-journal/
 ```
 
 **entries**
+
 ```sql
 - id: UUID (PK)
 - user_id: UUID (FK -> users)
@@ -161,6 +164,7 @@ midl-journal/
 ```
 
 **context_summaries** (rolling summaries for long-term context)
+
 ```sql
 - id: UUID (PK)
 - user_id: UUID (FK -> users)
@@ -177,6 +181,7 @@ midl-journal/
 ### Row Level Security (RLS)
 
 All tables have RLS enabled. Policies:
+
 - Users can only SELECT/UPDATE/INSERT their own data
 - `auth.uid() = id` for users table
 - `auth.uid() = user_id` for entries and context_summaries
@@ -198,6 +203,7 @@ All tables have RLS enabled. Policies:
 ### Google OAuth (Expo Go)
 
 Uses `expo-auth-session` with Supabase OAuth:
+
 ```typescript
 const redirectUrl = makeRedirectUri({ preferLocalhost: false });
 // Uses auth.expo.io proxy for Expo Go compatibility
@@ -214,6 +220,7 @@ const result = await WebBrowser.openAuthSessionAsync(data.url, redirectUrl);
 ### Apple OAuth
 
 Uses native `expo-apple-authentication`:
+
 ```typescript
 const credential = await AppleAuthentication.signInAsync({...});
 await supabase.auth.signInWithIdToken({
@@ -227,6 +234,7 @@ await supabase.auth.signInWithIdToken({
 ### SkillMap (`components/SkillMap.tsx`)
 
 Horizontal scrollable timeline showing skills 00-16:
+
 - Completed skills: green (sage color)
 - Current skill: blue (muted-blue) with dot indicator
 - Future skills: gray outline
@@ -235,6 +243,7 @@ Horizontal scrollable timeline showing skills 00-16:
 ### FloatingButtons (`components/FloatingButtons.tsx`)
 
 Two floating action buttons at bottom of tracker:
+
 - "Reflect" → opens journal entry modal
 - "Ask" → opens AI chat modal
 - Hidden when on modal screens
@@ -242,6 +251,7 @@ Two floating action buttons at bottom of tracker:
 ### Auth Context (`lib/auth-context.tsx`)
 
 React Context providing:
+
 - `user`: Current Supabase user object
 - `session`: Current session
 - `loading`: Auth state loading flag
@@ -265,18 +275,19 @@ Client (lib/ai.ts)  -->  Edge Function (supabase/functions/ai)
 
 ### AI Tools (Chat Mode)
 
-| Tool | Purpose |
-|------|---------|
-| `get_user_profile` | Current skill, stats, onboarding data |
-| `get_skill_details` | Full skill markdown (instructions, tips, obstacles, etc.) |
-| `get_recent_entries` | Entries with MIDL signals |
-| `get_progression_stats` | Advancement readiness |
-| `get_hindrance_patterns` | Recurring struggles analysis |
-| `get_practice_summary` | Rolling weekly/monthly summaries |
+| Tool                     | Purpose                                                   |
+| ------------------------ | --------------------------------------------------------- |
+| `get_user_profile`       | Current skill, stats, onboarding data                     |
+| `get_skill_details`      | Full skill markdown (instructions, tips, obstacles, etc.) |
+| `get_recent_entries`     | Entries with MIDL signals                                 |
+| `get_progression_stats`  | Advancement readiness                                     |
+| `get_hindrance_patterns` | Recurring struggles analysis                              |
+| `get_practice_summary`   | Rolling weekly/monthly summaries                          |
 
 ### System Prompts
 
 Located in `supabase/functions/ai/prompts/system.ts`:
+
 - Dynamic context injection (user profile, current skill)
 - 32k char conversation history window
 - Skill-specific guidance
@@ -309,25 +320,25 @@ EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID=<client-id>.apps.googleusercontent.com
 
 ## MIDL Skills Reference
 
-| ID | Name | Cultivation | Hindrance |
-|----|------|-------------|-----------|
-| 00 | Diaphragmatic Breathing | 1 - Mindfulness of Body | Stress Breathing |
-| 01 | Body Relaxation | 1 | Physical Restlessness |
-| 02 | Mind Relaxation | 1 | Mental Restlessness |
-| 03 | Mindful Presence | 1 | Sleepiness & Dullness |
-| 04 | Content Presence | 2 - Mindfulness of Breathing | Habitual Forgetting |
-| 05 | Natural Breathing | 2 | Habitual Control |
-| 06 | Whole of Each Breath | 2 | Mind Wandering |
-| 07 | Breath Sensations | 3 - Calm & Tranquillity | Gross Dullness |
-| 08 | One Point of Sensation | 3 | Subtle Dullness |
-| 09 | Sustained Attention | 3 | Subtle Wandering |
-| 10 | Whole-Body Breathing | 4 - Joyfulness & Unification | Sensory Stimulation |
-| 11 | Sustained Awareness | 4 | Anticipation of Pleasure |
-| 12 | Access Concentration | 4 | Fear of Letting Go |
-| 13 | Pleasure Jhana | 5 - Pleasure Jhana & Equanimity | Attachment to Pleasure |
-| 14 | Happy Jhana | 5 | Restless Energy |
-| 15 | Content Jhana | 5 | Subtle Discontent |
-| 16 | Equanimity Jhana | 5 | Subtle Preferences |
+| ID  | Name                    | Cultivation                     | Hindrance                |
+| --- | ----------------------- | ------------------------------- | ------------------------ |
+| 00  | Diaphragmatic Breathing | 1 - Mindfulness of Body         | Stress Breathing         |
+| 01  | Body Relaxation         | 1                               | Physical Restlessness    |
+| 02  | Mind Relaxation         | 1                               | Mental Restlessness      |
+| 03  | Mindful Presence        | 1                               | Sleepiness & Dullness    |
+| 04  | Content Presence        | 2 - Mindfulness of Breathing    | Habitual Forgetting      |
+| 05  | Natural Breathing       | 2                               | Habitual Control         |
+| 06  | Whole of Each Breath    | 2                               | Mind Wandering           |
+| 07  | Breath Sensations       | 3 - Calm & Tranquillity         | Gross Dullness           |
+| 08  | One Point of Sensation  | 3                               | Subtle Dullness          |
+| 09  | Sustained Attention     | 3                               | Subtle Wandering         |
+| 10  | Whole-Body Breathing    | 4 - Joyfulness & Unification    | Sensory Stimulation      |
+| 11  | Sustained Awareness     | 4                               | Anticipation of Pleasure |
+| 12  | Access Concentration    | 4                               | Fear of Letting Go       |
+| 13  | Pleasure Jhana          | 5 - Pleasure Jhana & Equanimity | Attachment to Pleasure   |
+| 14  | Happy Jhana             | 5                               | Restless Energy          |
+| 15  | Content Jhana           | 5                               | Subtle Discontent        |
+| 16  | Equanimity Jhana        | 5                               | Subtle Preferences       |
 
 ## NativeWind Configuration
 
@@ -335,10 +346,10 @@ NativeWind v4 requires `cssInterop` for third-party components:
 
 ```typescript
 // lib/nativewind-interop.ts
-import { cssInterop } from "nativewind";
-import { LinearGradient } from "expo-linear-gradient";
+import { cssInterop } from 'nativewind';
+import { LinearGradient } from 'expo-linear-gradient';
 
-cssInterop(LinearGradient, { className: "style" });
+cssInterop(LinearGradient, { className: 'style' });
 ```
 
 This file must be imported in `_layout.tsx` before any components using className on LinearGradient.
@@ -380,6 +391,7 @@ Source markdown files in `data/midl-skills/` are the single source of truth for 
 ### Generate Script
 
 `scripts/generate-shared-data.ts` parses markdown files and outputs:
+
 - `shared/skills.json` - Full skill objects (parsed)
 - `shared/cultivations.json` - Cultivation groupings
 - `app/supabase/functions/ai/data/skills.json` - Copy for edge functions
@@ -390,6 +402,7 @@ Source markdown files in `data/midl-skills/` are the single source of truth for 
 ### Pre-Deployment
 
 **Always run before deploying edge functions:**
+
 ```bash
 npm run generate
 # or
@@ -399,12 +412,13 @@ npm run predeploy:functions
 ### Loading Skill Markdown in Edge Functions
 
 ```typescript
-import { getSkillMarkdown } from "../data/skill-markdown.ts";
+import { getSkillMarkdown } from '../data/skill-markdown.ts';
 
-const markdown = getSkillMarkdown("00"); // Returns full markdown content (sync)
+const markdown = getSkillMarkdown('00'); // Returns full markdown content (sync)
 ```
 
 The `get_skill_details` tool returns full markdown instead of just JSON fields:
+
 ```typescript
 { id: "00", name: "Diaphragmatic Breathing", markdown: "# Skill 00: ..." }
 ```
@@ -412,6 +426,7 @@ The `get_skill_details` tool returns full markdown instead of just JSON fields:
 ## Current State
 
 **Completed:**
+
 - Full auth flow (Google + Apple)
 - Onboarding with AI skill recommendation
 - Tracker with SkillMap + recent entries display
@@ -428,10 +443,12 @@ The `get_skill_details` tool returns full markdown instead of just JSON fields:
 - Backfill-embeddings function (ready to deploy)
 
 **Partially Implemented:**
+
 - Chat streaming: backend ready, client uses non-streaming
 - Vector search RAG: embedding infrastructure exists, search not wired
 
 **Not Yet Implemented:**
+
 - Vector search in chat (`match_entries` RPC, `search_entries` tool)
 - Embedding generation on entry save (backfill exists, realtime missing)
 - Push notifications
@@ -439,6 +456,7 @@ The `get_skill_details` tool returns full markdown instead of just JSON fields:
 - Apple Health integration
 
 **Planned/Designed (see plans):**
+
 - Rolling context summaries (weekly/monthly) - `app/docs/plans/2026-02-03-rolling-context-summaries-HANDOFF.md`
 - Pre-sit guidance (home screen card with patterns + skill recommendations) - same plan file
 
@@ -476,6 +494,7 @@ The `get_skill_details` tool returns full markdown instead of just JSON fields:
 ## Code Patterns
 
 ### Supabase Queries
+
 ```typescript
 const { data, error } = await supabase
   .from('entries')
@@ -485,6 +504,7 @@ const { data, error } = await supabase
 ```
 
 ### OpenAI Calls
+
 ```typescript
 const response = await fetch('https://api.openai.com/v1/chat/completions', {
   method: 'POST',
@@ -501,29 +521,30 @@ const response = await fetch('https://api.openai.com/v1/chat/completions', {
 ```
 
 ### Navigation
+
 ```typescript
 import { router } from 'expo-router';
 
-router.push('/(main)/reflect');  // Push to stack
+router.push('/(main)/reflect'); // Push to stack
 router.replace('/(main)/tracker'); // Replace current
 router.back(); // Go back
 ```
 
 ## File Ownership
 
-| Area | Key Files |
-|------|-----------|
-| Auth | `lib/auth-context.tsx`, `onboarding/index.tsx` |
-| Onboarding | `onboarding/questions.tsx`, `lib/onboarding-types.ts` |
-| Main Screens | `(main)/tracker.tsx`, `(main)/reflect.tsx`, `(main)/ask.tsx`, `(main)/entry/[id].tsx` |
-| AI Client | `lib/ai.ts` (chat + streamChat) |
-| AI Edge Functions | `supabase/functions/ai/` (handlers, tools, prompts, providers) |
-| Progression | `lib/progression.ts` (readiness, advancement) |
-| Nudges | `lib/nudges.ts` (Stephen's framework prompts) |
-| Data | `lib/entries.ts`, `lib/midl-skills.ts` |
-| State | `lib/auth-context.tsx`, `lib/draft-context.tsx` |
-| DB | `supabase/migrations/*.sql` |
-| Config | `app.json`, `tailwind.config.js`, `babel.config.js` |
+| Area              | Key Files                                                                             |
+| ----------------- | ------------------------------------------------------------------------------------- |
+| Auth              | `lib/auth-context.tsx`, `onboarding/index.tsx`                                        |
+| Onboarding        | `onboarding/questions.tsx`, `lib/onboarding-types.ts`                                 |
+| Main Screens      | `(main)/tracker.tsx`, `(main)/reflect.tsx`, `(main)/ask.tsx`, `(main)/entry/[id].tsx` |
+| AI Client         | `lib/ai.ts` (chat + streamChat)                                                       |
+| AI Edge Functions | `supabase/functions/ai/` (handlers, tools, prompts, providers)                        |
+| Progression       | `lib/progression.ts` (readiness, advancement)                                         |
+| Nudges            | `lib/nudges.ts` (Stephen's framework prompts)                                         |
+| Data              | `lib/entries.ts`, `lib/midl-skills.ts`                                                |
+| State             | `lib/auth-context.tsx`, `lib/draft-context.tsx`                                       |
+| DB                | `supabase/migrations/*.sql`                                                           |
+| Config            | `app.json`, `tailwind.config.js`, `babel.config.js`                                   |
 
 ---
 
@@ -532,11 +553,13 @@ router.back(); // Go back
 ### 1. NativeWind Styling is Unreliable
 
 **Problem:** NativeWind `className` props often don't apply correctly to React Native components, especially:
+
 - `TextInput` (dimensions, padding)
 - `View` with specific sizes (w-10 h-10)
 - Conditional styling with template literals
 
 **Solution:** Use inline `style` props for anything that must render correctly:
+
 ```tsx
 // BAD - may not render
 <View className="w-10 h-10 rounded-full bg-blue-500">
@@ -552,19 +575,17 @@ router.back(); // Go back
 **Problem:** `KeyboardAvoidingView` inside `SafeAreaView` doesn't work in modals - input gets hidden behind keyboard.
 
 **Solution:** Put `KeyboardAvoidingView` OUTSIDE everything, use `useSafeAreaInsets()` for manual padding:
+
 ```tsx
 // GOOD structure for modal with keyboard
-<KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={{ flex: 1 }}>
+<KeyboardAvoidingView
+  behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+  style={{ flex: 1 }}
+>
   <LinearGradient style={{ flex: 1 }}>
-    <View style={{ paddingTop: insets.top + 8 }}>
-      {/* Header */}
-    </View>
-    <ScrollView style={{ flex: 1 }}>
-      {/* Content */}
-    </ScrollView>
-    <View style={{ paddingBottom: insets.bottom + 8 }}>
-      {/* Input bar */}
-    </View>
+    <View style={{ paddingTop: insets.top + 8 }}>{/* Header */}</View>
+    <ScrollView style={{ flex: 1 }}>{/* Content */}</ScrollView>
+    <View style={{ paddingBottom: insets.bottom + 8 }}>{/* Input bar */}</View>
   </LinearGradient>
 </KeyboardAvoidingView>
 ```
@@ -574,6 +595,7 @@ router.back(); // Go back
 **Problem:** `Object.keys(SKILLS)` returns `['10', '11', ..., '16', '00', '01', ...]` because JS sorts numeric string keys.
 
 **Solution:** Use explicit ordering from source of truth:
+
 ```tsx
 // BAD
 const allSkills = Object.keys(SKILLS); // Wrong order!
@@ -587,6 +609,7 @@ const allSkills = CULTIVATIONS.flatMap((c) => c.skills); // ['00', '01', ...]
 **Location:** `lib/draft-context.tsx`
 
 **Pattern:** Future-proof state management with stable public API:
+
 ```tsx
 // Public interface - consumers depend only on this
 export type DraftStore = {
@@ -601,6 +624,7 @@ export type DraftStore = {
 ```
 
 **Usage in screens:**
+
 ```tsx
 const { reflectDraft, setReflectDraft, clearReflectDraft } = useDraft();
 
@@ -621,6 +645,7 @@ clearReflectDraft();
 **Problem:** `absolute bottom-8` doesn't account for safe area on different devices.
 
 **Solution:** Use `useSafeAreaInsets()`:
+
 ```tsx
 const insets = useSafeAreaInsets();
 
@@ -639,6 +664,7 @@ const insets = useSafeAreaInsets();
 **Solution:** Persist state in React Context that lives in parent layout. See `lib/draft-context.tsx`.
 
 **UX pattern for Ask screen:**
+
 - "Done" = just dismiss, draft persists
 - "New" = save current chat to DB, clear draft, reset state
 
@@ -672,6 +698,7 @@ BEFORE SIT          SIT              AFTER SIT
 ```
 
 **Principles (from trend research):**
+
 - Guidance > gamification (streaks create anxiety, not growth)
 - Daily reminders = 3x retention (Calm's biggest finding)
 - "What to focus on" > "How many sessions"
@@ -679,6 +706,7 @@ BEFORE SIT          SIT              AFTER SIT
 - Grace over guilt (no streak shaming)
 
 **Home screen priorities:**
+
 1. **Pre-Sit Guidance Card** (primary) - patterns from entries + skill literature recommendation
 2. **SkillMap** - progression visualization
 3. **Recent entries** - quick access to reflect
@@ -690,39 +718,40 @@ BEFORE SIT          SIT              AFTER SIT
 
 **Entry Processing** extracts meditation-specific signals:
 
-| Signal | Type | Description |
-|--------|------|-------------|
-| `samatha_tendency` | `'strong'|'moderate'|'weak'|'none'` | Relaxation/calm quality |
-| `marker_present` | `boolean` | Skill marker observed |
-| `marker_notes` | `string` | Details of marker observation |
-| `hindrance_present` | `boolean` | Dominant hindrance appeared |
-| `hindrance_notes` | `string` | Details of hindrance |
-| `hindrance_conditions` | `string[]` | What led to hindrance |
-| `balance_approach` | `string` | How meditator worked with hindrance |
-| `key_understanding` | `string` | Insight gained |
-| `techniques_mentioned` | `string[]` | Techniques used |
-| `progression_signals` | `string[]` | Signs of readiness to advance |
+| Signal                 | Type       | Description                         |
+| ---------------------- | ---------- | ----------------------------------- | ------ | ------- | ----------------------- |
+| `samatha_tendency`     | `'strong'  | 'moderate'                          | 'weak' | 'none'` | Relaxation/calm quality |
+| `marker_present`       | `boolean`  | Skill marker observed               |
+| `marker_notes`         | `string`   | Details of marker observation       |
+| `hindrance_present`    | `boolean`  | Dominant hindrance appeared         |
+| `hindrance_notes`      | `string`   | Details of hindrance                |
+| `hindrance_conditions` | `string[]` | What led to hindrance               |
+| `balance_approach`     | `string`   | How meditator worked with hindrance |
+| `key_understanding`    | `string`   | Insight gained                      |
+| `techniques_mentioned` | `string[]` | Techniques used                     |
+| `progression_signals`  | `string[]` | Signs of readiness to advance       |
 
 **Progression Logic** (`lib/progression.ts`):
+
 ```typescript
 // Requirements for advancement
 const REQUIREMENTS = {
-  markerSessions: 3,      // 3+ sessions with marker observed
-  samathaSessions: 2,     // 2+ sessions with strong samatha
-  progressionSignals: 1,  // At least 1 progression signal
+  markerSessions: 3, // 3+ sessions with marker observed
+  samathaSessions: 2, // 2+ sessions with strong samatha
+  progressionSignals: 1, // At least 1 progression signal
 };
 
 // Progress calculation weights
-const progress = (
-  (markerProgress * 0.5) +   // 50% marker
-  (samathProgress * 0.3) +   // 30% samatha
-  (signalProgress * 0.2)     // 20% signals
-);
+const progress =
+  markerProgress * 0.5 + // 50% marker
+  samathProgress * 0.3 + // 30% samatha
+  signalProgress * 0.2; // 20% signals
 ```
 
 ### 9. Nudges System
 
 **Categories** (aligned with Stephen's framework):
+
 - `samatha` - relaxation/calm tendency
 - `understanding` - what was understood/experienced
 - `hindrance` - dominant hindrance

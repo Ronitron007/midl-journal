@@ -19,13 +19,13 @@ const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
 const CELEBRATION_EMOJIS = ['✨', '🌟', '💫', '🎉', '🌈', '🦋', '🌸', '💖'];
 
 const ENCOURAGING_MESSAGES = [
-  "Beautiful reflection",
-  "You showed up today",
-  "That took courage",
-  "Well done, friend",
-  "Progress, not perfection",
-  "Your future self thanks you",
-  "Small steps, big journey",
+  'Beautiful reflection',
+  'You showed up today',
+  'That took courage',
+  'Well done, friend',
+  'Progress, not perfection',
+  'Your future self thanks you',
+  'Small steps, big journey',
 ];
 
 type Props = {
@@ -60,17 +60,15 @@ export function Celebration({ visible, onComplete, message }: Props) {
   }, [visible]);
 
   const mainIconStyle = useAnimatedStyle(() => ({
-    transform: [
-      { scale: scale.value },
-      { rotate: `${rotation.value}deg` },
-    ],
+    transform: [{ scale: scale.value }, { rotate: `${rotation.value}deg` }],
   }));
 
   if (!visible) return null;
 
-  const randomMessage = ENCOURAGING_MESSAGES[
-    Math.floor(Math.random() * ENCOURAGING_MESSAGES.length)
-  ];
+  const randomMessage =
+    ENCOURAGING_MESSAGES[
+      Math.floor(Math.random() * ENCOURAGING_MESSAGES.length)
+    ];
 
   return (
     <Modal visible={visible} transparent animationType="fade">

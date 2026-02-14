@@ -13,17 +13,20 @@ Implemented a skill progression system that tracks meditator progress through th
 ### 1. Created Progression Module (`app/lib/progression.ts`)
 
 **Progression Stats:**
+
 - `markerCount` - sessions where skill's marker was present
 - `strongSamathaCount` - sessions with strong samatha tendency
 - `hasProgressionSignals` - any progression signals detected
 - `readyToAdvance` - meets all advancement criteria
 
 **Advancement Criteria:**
+
 - 3+ marker sessions
 - 2+ strong samatha sessions
 - Progression signals detected
 
 **Functions:**
+
 - `getProgressionStats(userId, skillId)` - calculates stats from entries
 - `getProgressPercentage(stats)` - 0-100 progress indicator
 - `advanceToNextSkill(userId, currentSkillId)` - advances user
@@ -32,6 +35,7 @@ Implemented a skill progression system that tracks meditator progress through th
 ### 2. Updated SkillMap (`app/components/SkillMap.tsx`)
 
 Added progression section showing:
+
 - Progress bar with percentage
 - Stats row (marker count, samatha count)
 - "Advance" button when ready
@@ -63,6 +67,7 @@ Added progression section showing:
 ```
 
 When ready:
+
 ```
 │ ┌───────────────────────────────────────────────────┐   │
 │ │        Advance to Skill 01: Body Relaxation       │   │
@@ -71,11 +76,11 @@ When ready:
 
 ## Files Changed
 
-| File | Change Type |
-|------|-------------|
-| `app/lib/progression.ts` | **NEW** - progression logic |
-| `app/components/SkillMap.tsx` | Modified - progression UI |
-| `app/app/(main)/tracker.tsx` | Modified - fetch stats, handle advance |
+| File                          | Change Type                            |
+| ----------------------------- | -------------------------------------- |
+| `app/lib/progression.ts`      | **NEW** - progression logic            |
+| `app/components/SkillMap.tsx` | Modified - progression UI              |
+| `app/app/(main)/tracker.tsx`  | Modified - fetch stats, handle advance |
 
 ## Advancement Flow
 
@@ -115,12 +120,12 @@ When ready:
 
 ## Complete Series Summary
 
-| Part | Status | Description |
-|------|--------|-------------|
-| 1. Signals Redesign | ✅ | MIDL-specific signals aligned with Stephen's framework |
-| 2. Entry Display | ✅ | EntryCard with signal indicators |
-| 3. Nudges System | ✅ | Personalized prompts using Stephen's categories |
-| 4. Skill Progression | ✅ | Track and advance through 17 skills |
+| Part                 | Status | Description                                            |
+| -------------------- | ------ | ------------------------------------------------------ |
+| 1. Signals Redesign  | ✅     | MIDL-specific signals aligned with Stephen's framework |
+| 2. Entry Display     | ✅     | EntryCard with signal indicators                       |
+| 3. Nudges System     | ✅     | Personalized prompts using Stephen's categories        |
+| 4. Skill Progression | ✅     | Track and advance through 17 skills                    |
 
 ## Deployment Steps
 
@@ -131,6 +136,7 @@ supabase db push                # Apply DB migration
 ```
 
 Then test the full flow:
+
 1. Open app, go to Reflect
 2. Select skill, write entry
 3. Check entry detail for signals

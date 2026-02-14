@@ -30,6 +30,7 @@ Increase your mind's intimacy with the enjoyment of your whole-body breathing so
 Your meditation remains the same as in Meditation Skills 01-10, except you now add Steps 2-3 as new additions to your meditation.
 
 Your Meditation So Far:
+
 - Sit in meditation.
 - Reflect gratefully.
 - Enjoy relaxing your body and mind.

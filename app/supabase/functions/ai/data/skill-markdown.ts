@@ -7,7 +7,7 @@
  */
 
 export const SKILLS_MARKDOWN: Record<string, string> = {
-  "00": `# Skill 00: Diaphragmatic Breathing
+  '00': `# Skill 00: Diaphragmatic Breathing
 
 Cultivation: 01 - Mindfulness of Body
 Subtitle: How to transform stress breathing into diaphragmatic breathing.
@@ -133,7 +133,7 @@ Apply this method a few times per day. Not obsessively, simply by just checking 
 Criteria: You experience a feeling of relaxation and ease after taking slow breaths in your belly, and diaphragmatic breathing in your belly happens naturally during your meditation and for a while after you have finished meditating.
 Next: Skill 01 - Body Relaxation
 `,
-  "01": `# Skill 01: Body Relaxation
+  '01': `# Skill 01: Body Relaxation
 
 Cultivation: 01 - Mindfulness of Body
 Subtitle: How to transform physical restlessness into body relaxation
@@ -228,7 +228,7 @@ Criteria: You are ready to progress when you experience periods of feeling relax
 Next: Skill 02 - Mind Relaxation
 Previous: Skill 00 - Diaphragm Breathing
 `,
-  "02": `# Skill 02: Mind Relaxation
+  '02': `# Skill 02: Mind Relaxation
 
 Cultivation: 01 - Mindfulness of Body
 Subtitle: How to transform mental restlessness into mind relaxation
@@ -310,7 +310,7 @@ Criteria: You are ready to progress to Meditation Skill 03: Mindful Presence whe
 Next: Skill 03 - Mindful Presence
 Previous: Skill 01 - Body Relaxation
 `,
-  "03": `# Skill 03: Mindful Presence
+  '03': `# Skill 03: Mindful Presence
 
 Cultivation: 01 - Mindfulness of Body
 Subtitle: How to transform sleepiness & dullness into mindful presence
@@ -459,7 +459,7 @@ Criteria: You feel contented sitting in meditation, mindful of your body, and ha
 Next: Skill 04 - Content Presence
 Previous: Skill 02 - Mind Relaxation
 `,
-  "04": `# Skill 04: Content Presence
+  '04': `# Skill 04: Content Presence
 
 Cultivation: 02 - Mindfulness of Breathing
 Subtitle: How to transform habitual forgetting into present contentment & happiness
@@ -657,7 +657,7 @@ Criteria: You are ready to progress to Meditation Skill 05: Natural Breathing wh
 Next: Skill 05 - Natural Breathing
 Previous: Skill 03 - Mindful Presence
 `,
-  "05": `# Skill 05: Natural Breathing
+  '05': `# Skill 05: Natural Breathing
 
 Cultivation: 02 - Mindfulness of Breathing
 Subtitle: How to transform breath control into mindfulness of natural breathing
@@ -789,7 +789,7 @@ Criteria: You are ready to progress when, as a natural progression of relaxing &
 Next: Skill 06 - Whole of Each Breath
 Previous: Skill 04 - Content Presence
 `,
-  "06": `# Skill 06: Whole Of Each Breath
+  '06': `# Skill 06: Whole Of Each Breath
 
 Cultivation: 01 - Mindfulness of Breathing
 Subtitle: How to transform mind wandering into present breath awareness.
@@ -908,7 +908,7 @@ Criteria: You find enjoyment in being aware of the whole length of each breath i
 Next: Skill 07 - Breath Sensations
 Previous: Skill 05 - Natural Breathing
 `,
-  "07": `# Skill 07: Breath Sensations
+  '07': `# Skill 07: Breath Sensations
 
 Cultivation: 02 - Calm & Tranquillity
 Subtitle: How to transform gross dullness into clear breath sensation.
@@ -1010,7 +1010,7 @@ Criteria: You are ready to progress when you feel confident in your ability to r
 Next: Skill 08 - One Point of Sensation
 Previous: Skill 06 - Whole of Each Breath
 `,
-  "08": `# Skill 08: One Point of Sensation
+  '08': `# Skill 08: One Point of Sensation
 
 Cultivation: 03 - Calm & Tranquillity
 Subtitle: How to transform subtle dullness into tranquil clarity of sensation.
@@ -1104,7 +1104,7 @@ Criteria: As a natural progression of letting go, you become aware of your atten
 Next: Skill 09 - Sustained Attention
 Previous: Skill 07 - Breath Sensations
 `,
-  "09": `# Skill 09: Sustained Attention
+  '09': `# Skill 09: Sustained Attention
 
 Cultivation: 03 - Calm & Tranquillity
 Subtitle: How to transform subtle wandering into sustained attention.
@@ -1242,7 +1242,7 @@ Criteria: When your attention no longer wanders from your meditation object and 
 Next: Skill 10 - Whole-Body Breathing
 Previous: Skill 08 - One Point of Sensation
 `,
-  "10": `# Skill 10: Whole-Body Breathing
+  '10': `# Skill 10: Whole-Body Breathing
 
 Cultivation: 03 - Joyfulness & Unification
 Subtitle: How to transform sensory stimulation into intimate body breathing.
@@ -1322,7 +1322,7 @@ Criteria: You are ready to progress to Meditation Skill 11: Sustained Awareness 
 Next: Skill 11 - Sustained Awareness
 Previous: Skill 09 - Sustained Attention
 `,
-  "11": `# Skill 11: Sustained Awareness
+  '11': `# Skill 11: Sustained Awareness
 
 Cultivation: 04 - Joyfulness & Unification
 Subtitle: How to transform anticipation of pleasure into sustained awareness.
@@ -1394,7 +1394,7 @@ Criteria: When you become aware of an increased feeling of steadiness of awarene
 Next: Skill 12 - Access Concentration
 Previous: Skill 10 - Whole-Body Breathing
 `,
-  "12": `# Skill 12: Access Concentration
+  '12': `# Skill 12: Access Concentration
 
 Cultivation: 04 - Joyfulness & Unification
 Subtitle: How to transform fear of letting go into letting go in access concentration
@@ -1505,7 +1505,7 @@ Criteria: You are ready to progress when you are comfortable developing access c
 Next: Skill 13 - First Pleasure Jhana
 Previous: Skill 11 - Sustained Awareness
 `,
-  "13": `# Skill 13: First Pleasure Jhana
+  '13': `# Skill 13: First Pleasure Jhana
 
 Cultivation: 04 - Pleasure Jhana & Equanimity
 Subtitle: How to enter the first pleasure jhana through intimacy with piti (blissful pleasure)
@@ -1582,7 +1582,7 @@ Criteria: You are comfortable developing and abiding in the first pleasure jhana
 Next: Skill 14 - Second Pleasure Jhana
 Previous: Skill 12 - Access Concentration
 `,
-  "14": `# Skill 14: Second Pleasure Jhana
+  '14': `# Skill 14: Second Pleasure Jhana
 
 Cultivation: 04 - Pleasure Jhana & Equanimity
 Subtitle: How to transform blissful pleasure into joyful happiness through refined sukha
@@ -1655,7 +1655,7 @@ Criteria: You are comfortable developing and abiding in the second pleasure jhan
 Next: Skill 15 - Third Pleasure Jhana
 Previous: Skill 13 - First Pleasure Jhana
 `,
-  "15": `# Skill 15: Third Pleasure Jhana
+  '15': `# Skill 15: Third Pleasure Jhana
 
 Cultivation: 04 - Pleasure Jhana & Equanimity
 Subtitle: How to transform joyful happiness into equanimous contentment
@@ -1790,7 +1790,7 @@ Criteria: The experience of happiness and pleasantness in the third pleasure jha
 Next: Skill 16 - Fourth Pleasure Jhana
 Previous: Skill 14 - Second Pleasure Jhana
 `,
-  "16": `# Skill 16: Fourth Pleasure Jhana
+  '16': `# Skill 16: Fourth Pleasure Jhana
 
 Cultivation: 04 - Pleasure Jhana & Equanimity
 Subtitle: How to transform contentment into equanimous stillness
@@ -1896,7 +1896,7 @@ To develop insight after your meditation and during the day, you need to reestab
 
 Criteria: You are ready to progress to training for Sotapanna: Stream Entry. Your skill in the samatha (calm) part of the Noble Eightfold Path is now mature, and mindfulness of breathing and accessing the jhanas becomes your daily meditation practice, integrated with periods of insight practice after emerging from jhana, and then carried into walking meditation and mindfulness in daily activities.
 Previous: Skill 15 - Third Pleasure Jhana
-`
+`,
 };
 
 export function getSkillMarkdown(skillId: string): string | null {

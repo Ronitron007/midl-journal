@@ -1,5 +1,13 @@
 import React, { useEffect } from 'react';
-import { View, StyleSheet, Platform, KeyboardAvoidingView, Pressable, Text, Keyboard } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  Platform,
+  KeyboardAvoidingView,
+  Pressable,
+  Text,
+  Keyboard,
+} from 'react-native';
 import {
   RichText,
   Toolbar,
@@ -73,11 +81,11 @@ export default function RichTextEditor({
   // Use first 5 default items: bold, italic, link, tasklist, heading
   // Indices based on actions.ts: 0=bold, 1=italic, 10=bulletList, 11=orderedList, 4=heading
   const toolbarItems = [
-    DEFAULT_TOOLBAR_ITEMS[0],  // bold
-    DEFAULT_TOOLBAR_ITEMS[1],  // italic
+    DEFAULT_TOOLBAR_ITEMS[0], // bold
+    DEFAULT_TOOLBAR_ITEMS[1], // italic
     DEFAULT_TOOLBAR_ITEMS[10], // bulletList
     DEFAULT_TOOLBAR_ITEMS[11], // orderedList
-    DEFAULT_TOOLBAR_ITEMS[4],  // heading
+    DEFAULT_TOOLBAR_ITEMS[4], // heading
   ];
 
   return (
@@ -94,7 +102,10 @@ export default function RichTextEditor({
             <View style={styles.toolbarItems}>
               <Toolbar editor={editor} items={toolbarItems} />
             </View>
-            <Pressable onPress={() => Keyboard.dismiss()} style={styles.doneButton}>
+            <Pressable
+              onPress={() => Keyboard.dismiss()}
+              style={styles.doneButton}
+            >
               <Text style={styles.doneButtonText}>Done</Text>
             </Pressable>
           </View>

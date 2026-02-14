@@ -16,15 +16,15 @@
 
 ### Why 10tap-editor?
 
-| Criteria | @10play/tentap-editor |
-|----------|----------------------|
-| **GitHub Stars** | ~1.1k |
-| **Last Updated** | Active (v1.0.1, ~2 months ago) |
-| **Expo Compatible** | ✅ Yes (Expo Go + Dev Client) |
-| **RN 0.73+ / New Arch** | ✅ Supported |
-| **TypeScript** | ✅ Built-in declarations |
-| **Keyboard Handling** | ✅ Built-in `useKeyboard` hook |
-| **Customizable** | ✅ Custom Tiptap extensions |
+| Criteria                | @10play/tentap-editor          |
+| ----------------------- | ------------------------------ |
+| **GitHub Stars**        | ~1.1k                          |
+| **Last Updated**        | Active (v1.0.1, ~2 months ago) |
+| **Expo Compatible**     | ✅ Yes (Expo Go + Dev Client)  |
+| **RN 0.73+ / New Arch** | ✅ Supported                   |
+| **TypeScript**          | ✅ Built-in declarations       |
+| **Keyboard Handling**   | ✅ Built-in `useKeyboard` hook |
+| **Customizable**        | ✅ Custom Tiptap extensions    |
 
 ### Alternatives Considered
 
@@ -35,12 +35,14 @@
 ### Trade-offs
 
 ✅ **Pros:**
+
 - Full rich text formatting
 - Consistent HTML output (future web compatibility)
 - Active maintenance
 - Good documentation
 
 ⚠️ **Cons:**
+
 - WebView performance overhead
 - Slightly larger bundle size
 - Keyboard handling requires extra config on Android
@@ -52,6 +54,7 @@
 ### Task 1: Install 10tap-editor and dependencies
 
 **Files:**
+
 - Modify: `package.json`
 
 **Step 1: Install packages**
@@ -82,6 +85,7 @@ git commit -m "deps: add 10tap-editor and react-native-webview"
 ### Task 2: Create reusable RichTextEditor component
 
 **Files:**
+
 - Create: `components/RichTextEditor.tsx`
 
 **Step 1: Create the component**
@@ -178,17 +182,10 @@ export default function RichTextEditor({
       style={styles.container}
     >
       <View style={[styles.editorContainer, { minHeight }]}>
-        <RichText
-          editor={editor}
-          style={styles.richText}
-        />
+        <RichText editor={editor} style={styles.richText} />
       </View>
       {showToolbar && (
-        <Toolbar
-          editor={editor}
-          items={toolbarItems}
-          style={styles.toolbar}
-        />
+        <Toolbar editor={editor} items={toolbarItems} style={styles.toolbar} />
       )}
     </KeyboardAvoidingView>
   );
@@ -228,6 +225,7 @@ git commit -m "feat: create reusable RichTextEditor component"
 ### Task 3: Create editor utility functions
 
 **Files:**
+
 - Create: `lib/rich-text-utils.ts`
 
 **Step 1: Create utility file**
@@ -240,7 +238,7 @@ Create `lib/rich-text-utils.ts`:
  */
 export function htmlToPlainText(html: string): string {
   if (!html) return '';
-  
+
   return html
     .replace(/<br\s*\/?>/gi, '\n')
     .replace(/<\/p>/gi, '\n')
@@ -296,6 +294,7 @@ git commit -m "feat: add rich text utility functions"
 ### Task 4: Update Reflect screen to use RichTextEditor
 
 **Files:**
+
 - Modify: `app/(main)/reflect.tsx`
 
 **Step 1: Update imports and state**
@@ -323,7 +322,9 @@ const handleContentChange = (html: string) => {
 Replace the TextInput inside the main card:
 
 ```tsx
-{/* Replace this: */}
+{
+  /* Replace this: */
+}
 <TextInput
   placeholder="Write freely..."
   placeholderTextColor="#9ca3af"
@@ -332,9 +333,11 @@ Replace the TextInput inside the main card:
   value={content}
   onChangeText={setContent}
   textAlignVertical="top"
-/>
+/>;
 
-{/* With this: */}
+{
+  /* With this: */
+}
 <View className="min-h-[200px] -mx-6 -mt-2">
   <RichTextEditor
     placeholder="Write freely about your practice..."
@@ -343,7 +346,7 @@ Replace the TextInput inside the main card:
     minHeight={200}
     autoFocus={true}
   />
-</View>
+</View>;
 ```
 
 **Step 3: Update validation and submission**
@@ -399,6 +402,7 @@ git commit -m "feat: integrate rich text editor into Reflect screen"
 ### Task 5: Update entries display to render HTML
 
 **Files:**
+
 - Create: `components/HtmlRenderer.tsx`
 - Modify: `app/(main)/tracker.tsx`
 
@@ -422,13 +426,13 @@ type HtmlRendererProps = {
  * For full rendering, consider react-native-render-html.
  * This is a lightweight solution for previews only.
  */
-export default function HtmlRenderer({ 
-  html, 
+export default function HtmlRenderer({
+  html,
   maxLength = 100,
-  style 
+  style,
 }: HtmlRendererProps) {
   const preview = truncateHtml(html, maxLength);
-  
+
   return (
     <Text style={[styles.text, style]} numberOfLines={2}>
       {preview}
@@ -454,21 +458,22 @@ In `app/(main)/tracker.tsx`, update the entry preview:
 import HtmlRenderer from '../../components/HtmlRenderer';
 
 // Replace the raw_content display:
-{/* Replace this: */}
-<Text
-  className="text-gray-800 mt-1"
-  numberOfLines={2}
->
+{
+  /* Replace this: */
+}
+<Text className="text-gray-800 mt-1" numberOfLines={2}>
   {entry.raw_content.substring(0, 100)}
   {entry.raw_content.length > 100 ? '...' : ''}
-</Text>
+</Text>;
 
-{/* With this: */}
+{
+  /* With this: */
+}
 <HtmlRenderer
   html={entry.raw_content}
   maxLength={100}
   style={{ marginTop: 4 }}
-/>
+/>;
 ```
 
 **Step 3: Commit**
@@ -485,6 +490,7 @@ git commit -m "feat: add HTML renderer for entry previews"
 ### Task 6: Update Ask screen with rich text input
 
 **Files:**
+
 - Modify: `app/(main)/ask.tsx`
 
 **Step 1: Create simplified editor for chat input**
@@ -537,7 +543,9 @@ If you prefer to keep Ask simple, no changes needed here.
 If you want rich text in Ask, replace the input bar:
 
 ```tsx
-{/* Input Bar with Rich Text */}
+{
+  /* Input Bar with Rich Text */
+}
 <View className="px-6 pb-4">
   <View className="bg-white/90 rounded-2xl border border-gray-200 overflow-hidden">
     <RichTextEditor
@@ -563,7 +571,7 @@ If you want rich text in Ask, replace the input bar:
       </Text>
     </Pressable>
   </View>
-</View>
+</View>;
 ```
 
 **Step 3: Commit**
@@ -580,6 +588,7 @@ git commit -m "feat: update Ask screen input handling"
 ### Task 7: Update entry processing for HTML content
 
 **Files:**
+
 - Modify: `lib/entry-processor.ts`
 
 **Step 1: Update processor to handle HTML**
@@ -595,7 +604,7 @@ export async function processEntry(
 ): Promise<ProcessedSignals | null> {
   // Convert HTML to plain text for processing
   const content = htmlToPlainText(rawContent);
-  
+
   // Skip very short entries
   if (wordCount(rawContent) < 10) {
     return null;
@@ -620,6 +629,7 @@ git commit -m "refactor: update entry processor to handle HTML content"
 ### Task 8: Add full entry view with HTML rendering
 
 **Files:**
+
 - Create: `app/(main)/entry/[id].tsx`
 
 **Step 1: Create entry detail screen**
@@ -633,7 +643,13 @@ npm install react-native-render-html
 Create `app/(main)/entry/[id].tsx`:
 
 ```tsx
-import { View, Text, ScrollView, Pressable, useWindowDimensions } from 'react-native';
+import {
+  View,
+  Text,
+  ScrollView,
+  Pressable,
+  useWindowDimensions,
+} from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useLocalSearchParams, router } from 'expo-router';
@@ -676,7 +692,10 @@ export default function EntryDetailScreen() {
 
   if (loading) {
     return (
-      <LinearGradient colors={['#e6e0f5', '#fde8d7']} className="flex-1 justify-center items-center">
+      <LinearGradient
+        colors={['#e6e0f5', '#fde8d7']}
+        className="flex-1 justify-center items-center"
+      >
         <Text className="text-gray-500">Loading...</Text>
       </LinearGradient>
     );
@@ -684,7 +703,10 @@ export default function EntryDetailScreen() {
 
   if (!entry) {
     return (
-      <LinearGradient colors={['#e6e0f5', '#fde8d7']} className="flex-1 justify-center items-center">
+      <LinearGradient
+        colors={['#e6e0f5', '#fde8d7']}
+        className="flex-1 justify-center items-center"
+      >
         <Text className="text-gray-500">Entry not found</Text>
       </LinearGradient>
     );
@@ -708,7 +730,7 @@ export default function EntryDetailScreen() {
             <Text className="text-gray-500 text-sm mb-2">
               {formatDate(entry.created_at)}
             </Text>
-            
+
             {entry.duration_seconds && (
               <Text className="text-gray-500 text-sm mb-4">
                 {Math.round(entry.duration_seconds / 60)} minutes
@@ -761,10 +783,7 @@ export default function EntryDetailScreen() {
 In `app/(main)/_layout.tsx`, add the entry screen:
 
 ```tsx
-<Stack.Screen
-  name="entry/[id]"
-  options={{ presentation: 'card' }}
-/>
+<Stack.Screen name="entry/[id]" options={{ presentation: 'card' }} />
 ```
 
 **Step 3: Make entries tappable in tracker**
@@ -795,6 +814,7 @@ git commit -m "feat: add entry detail view with HTML rendering"
 ### Task 9: Handle keyboard properly on Android
 
 **Files:**
+
 - Modify: `components/RichTextEditor.tsx`
 
 **Step 1: Add Android-specific keyboard handling**
@@ -837,6 +857,7 @@ git commit -m "fix: improve Android keyboard handling for editor"
 ### Task 10: Add dark mode support (optional)
 
 **Files:**
+
 - Modify: `components/RichTextEditor.tsx`
 
 **Step 1: Add dark theme variant**
@@ -855,7 +876,7 @@ CoreBridge.configureCSS(`
     color: ${isDark ? '#f9fafb' : '#1f2937'};
     // ... rest of styles
   }
-`)
+`);
 ```
 
 **Step 2: Commit**
@@ -870,6 +891,7 @@ git commit -m "feat: add dark mode support for rich text editor"
 ## Summary
 
 **Phases completed:**
+
 1. Setup & Dependencies (Tasks 1-3)
 2. Integrate into Reflect Screen (Tasks 4-5)
 3. Integrate into Ask Screen (Task 6)
@@ -879,6 +901,7 @@ git commit -m "feat: add dark mode support for rich text editor"
 **Total tasks:** 10
 
 **What's built:**
+
 - Reusable `RichTextEditor` component wrapping 10tap-editor
 - HTML utility functions for text extraction/truncation
 - Rich text journaling in Reflect mode
@@ -886,11 +909,13 @@ git commit -m "feat: add dark mode support for rich text editor"
 - Backward-compatible — existing plain text entries still work
 
 **Dependencies added:**
+
 - `@10play/tentap-editor` — Core editor
 - `react-native-webview` — Peer dependency
 - `react-native-render-html` — For entry display (optional)
 
 **Not included (future considerations):**
+
 - Image embedding in entries
 - Custom mention extensions (@skill, @date)
 - Offline editor state persistence

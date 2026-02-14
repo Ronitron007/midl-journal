@@ -61,6 +61,7 @@ When piti is too strong - For some meditators, piti may become very intense, mak
 Progression Criteria:
 
 You are ready to progress to Meditation Skill 14: Second Pleasure Jhana when:
+
 - You are comfortable developing and abiding in the first pleasure jhana for longer periods, and your mind is inclining away from the stimulation of piti toward the subtler happiness of sukha.
 
 Tip: Once in access concentration, learn to bring the joyful happiness of sukha to the foreground of your awareness and relax your interest in the pleasant feeling of piti, so that it rests in peripheral awareness. This is done by allowing loud music at a party to fade into the background so it doesn't disturb your conversation. This shifting withdraws some of the energetic quality from the piti, allowing the focus to shift to subtler experiences of tranquillity and sukha.

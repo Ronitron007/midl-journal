@@ -1,17 +1,23 @@
-import { OpenAIProvider } from "../providers/openai.ts";
-import { SKILLS_DATA } from "../data/skills.ts";
-import type { AIRequest, AIResponse, EntryProcessPayload, ProcessedSignals } from "../types.ts";
-import { getSkillMarkdown } from "../data/skill-markdown.js";
+import { OpenAIProvider } from '../providers/openai.ts';
+import { SKILLS_DATA } from '../data/skills.ts';
+import type {
+  AIRequest,
+  AIResponse,
+  EntryProcessPayload,
+  ProcessedSignals,
+} from '../types.ts';
+import { getSkillMarkdown } from '../data/skill-markdown.js';
 
 export async function handleEntryProcess(req: AIRequest): Promise<AIResponse> {
-  const { entryId, content, skillPracticed } = req.payload as EntryProcessPayload;
+  const { entryId, content, skillPracticed } =
+    req.payload as EntryProcessPayload;
 
-  if (content.split(" ").length < 10) {
+  if (content.split(' ').length < 10) {
     return { skipped: true };
   }
 
   // Get skill data for the practiced skill (default to 00 if not found)
-  const skill = SKILLS_DATA[skillPracticed] || SKILLS_DATA["00"];
+  const skill = SKILLS_DATA[skillPracticed] || SKILLS_DATA['00'];
 
   const provider = new OpenAIProvider();
 
@@ -92,15 +98,15 @@ Be thorough but accurate. Only include information clearly present in the entry.
 
   try {
     const result = await provider.complete({
-      messages: [{ role: "user", content: prompt }],
+      messages: [{ role: 'user', content: prompt }],
       maxTokens: 600,
       jsonMode: true,
     });
-    const signals = JSON.parse(result || "{}") as ProcessedSignals;
+    const signals = JSON.parse(result || '{}') as ProcessedSignals;
 
     // Update entry with all signals
     await req.supabase
-      .from("entries")
+      .from('entries')
       .update({
         // MIDL-specific - Samatha
         skill_analyzed: signals.skill_analyzed,
@@ -127,11 +133,11 @@ Be thorough but accurate. Only include information clearly present in the entry.
         has_crisis_flag: signals.has_crisis_flag,
         processed_at: new Date().toISOString(),
       })
-      .eq("id", entryId);
+      .eq('id', entryId);
 
     return { signals };
   } catch (error) {
-    console.error("Entry process error:", error);
-    return { error: "Processing failed" };
+    console.error('Entry process error:', error);
+    return { error: 'Processing failed' };
   }
 }

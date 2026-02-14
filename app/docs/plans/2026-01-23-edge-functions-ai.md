@@ -13,6 +13,7 @@
 ## Task 1: Create chat edge function
 
 **Files:**
+
 - Create: `supabase/functions/chat/index.ts`
 
 **Step 1: Create function directory and file**
@@ -25,77 +26,81 @@ mkdir -p supabase/functions/chat
 
 ```typescript
 // supabase/functions/chat/index.ts
-import "jsr:@supabase/functions-js/edge-runtime.d.ts";
-import { createClient } from "jsr:@supabase/supabase-js@2";
+import 'jsr:@supabase/functions-js/edge-runtime.d.ts';
+import { createClient } from 'jsr:@supabase/supabase-js@2';
 
-const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
+const OPENAI_API_KEY = Deno.env.get('OPENAI_API_KEY');
 
 const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type",
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers':
+    'authorization, x-client-info, apikey, content-type',
 };
 
 Deno.serve(async (req) => {
-  if (req.method === "OPTIONS") {
-    return new Response("ok", { headers: corsHeaders });
+  if (req.method === 'OPTIONS') {
+    return new Response('ok', { headers: corsHeaders });
   }
 
   try {
     // Verify auth
-    const authHeader = req.headers.get("Authorization");
+    const authHeader = req.headers.get('Authorization');
     if (!authHeader) {
-      return new Response(JSON.stringify({ error: "No auth header" }), {
+      return new Response(JSON.stringify({ error: 'No auth header' }), {
         status: 401,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
 
     const supabase = createClient(
-      Deno.env.get("SUPABASE_URL")!,
-      Deno.env.get("SUPABASE_ANON_KEY")!,
+      Deno.env.get('SUPABASE_URL')!,
+      Deno.env.get('SUPABASE_ANON_KEY')!,
       { global: { headers: { Authorization: authHeader } } }
     );
 
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
     if (authError || !user) {
-      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
         status: 401,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
 
     const { messages } = await req.json();
 
     const systemMessage = {
-      role: "system",
+      role: 'system',
       content: `You are a meditation guide specializing in the MIDL (Mindfulness in Daily Life) system. You help users progress through 17 skills across 6 cultivations. Be warm, concise, and practical. When referencing MIDL content, mention that users can learn more at midlmeditation.com. Keep responses brief (2-4 sentences) unless the user asks for more detail.`,
     };
 
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
         Authorization: `Bearer ${OPENAI_API_KEY}`,
       },
       body: JSON.stringify({
-        model: "gpt-4o-mini",
+        model: 'gpt-4o-mini',
         messages: [systemMessage, ...messages],
         max_tokens: 500,
       }),
     });
 
     const data = await response.json();
-    const content = data.choices?.[0]?.message?.content || "Sorry, I had trouble responding.";
+    const content =
+      data.choices?.[0]?.message?.content || 'Sorry, I had trouble responding.';
 
     return new Response(JSON.stringify({ content }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   } catch (error) {
-    console.error("Chat error:", error);
-    return new Response(JSON.stringify({ error: "Internal error" }), {
+    console.error('Chat error:', error);
+    return new Response(JSON.stringify({ error: 'Internal error' }), {
       status: 500,
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   }
 });
@@ -113,6 +118,7 @@ git commit -m "feat: add chat edge function"
 ## Task 2: Create reflect-feedback edge function
 
 **Files:**
+
 - Create: `supabase/functions/reflect-feedback/index.ts`
 
 **Step 1: Create function directory**
@@ -125,43 +131,46 @@ mkdir -p supabase/functions/reflect-feedback
 
 ```typescript
 // supabase/functions/reflect-feedback/index.ts
-import "jsr:@supabase/functions-js/edge-runtime.d.ts";
-import { createClient } from "jsr:@supabase/supabase-js@2";
+import 'jsr:@supabase/functions-js/edge-runtime.d.ts';
+import { createClient } from 'jsr:@supabase/supabase-js@2';
 
-const OPENAI_API_KEY = Deno.env.get("OPENAI_API_KEY");
+const OPENAI_API_KEY = Deno.env.get('OPENAI_API_KEY');
 
 const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers":
-    "authorization, x-client-info, apikey, content-type",
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers':
+    'authorization, x-client-info, apikey, content-type',
 };
 
 Deno.serve(async (req) => {
-  if (req.method === "OPTIONS") {
-    return new Response("ok", { headers: corsHeaders });
+  if (req.method === 'OPTIONS') {
+    return new Response('ok', { headers: corsHeaders });
   }
 
   try {
     // Verify auth
-    const authHeader = req.headers.get("Authorization");
+    const authHeader = req.headers.get('Authorization');
     if (!authHeader) {
-      return new Response(JSON.stringify({ error: "No auth header" }), {
+      return new Response(JSON.stringify({ error: 'No auth header' }), {
         status: 401,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
 
     const supabase = createClient(
-      Deno.env.get("SUPABASE_URL")!,
-      Deno.env.get("SUPABASE_ANON_KEY")!,
+      Deno.env.get('SUPABASE_URL')!,
+      Deno.env.get('SUPABASE_ANON_KEY')!,
       { global: { headers: { Authorization: authHeader } } }
     );
 
-    const { data: { user }, error: authError } = await supabase.auth.getUser();
+    const {
+      data: { user },
+      error: authError,
+    } = await supabase.auth.getUser();
     if (authError || !user) {
-      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+      return new Response(JSON.stringify({ error: 'Unauthorized' }), {
         status: 401,
-        headers: { ...corsHeaders, "Content-Type": "application/json" },
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
 
@@ -183,30 +192,37 @@ Give brief, warm feedback (1-3 sentences). You can:
 
 Keep it conversational and supportive. No emojis.`;
 
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
-      method: "POST",
+    const response = await fetch('https://api.openai.com/v1/chat/completions', {
+      method: 'POST',
       headers: {
-        "Content-Type": "application/json",
+        'Content-Type': 'application/json',
         Authorization: `Bearer ${OPENAI_API_KEY}`,
       },
       body: JSON.stringify({
-        model: "gpt-4o-mini",
-        messages: [{ role: "user", content: prompt }],
+        model: 'gpt-4o-mini',
+        messages: [{ role: 'user', content: prompt }],
         max_tokens: 150,
       }),
     });
 
     const data = await response.json();
-    const feedback = data.choices?.[0]?.message?.content || "Good session. You showed up. That matters.";
+    const feedback =
+      data.choices?.[0]?.message?.content ||
+      'Good session. You showed up. That matters.';
 
     return new Response(JSON.stringify({ feedback }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
     });
   } catch (error) {
-    console.error("Reflect feedback error:", error);
-    return new Response(JSON.stringify({ feedback: "Good session. You showed up. That matters." }), {
-      headers: { ...corsHeaders, "Content-Type": "application/json" },
-    });
+    console.error('Reflect feedback error:', error);
+    return new Response(
+      JSON.stringify({
+        feedback: 'Good session. You showed up. That matters.',
+      }),
+      {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      }
+    );
   }
 });
 ```
@@ -223,6 +239,7 @@ git commit -m "feat: add reflect-feedback edge function"
 ## Task 3: Update lib/openai.ts to call edge function
 
 **Files:**
+
 - Modify: `lib/openai.ts`
 
 **Step 1: Rewrite to use supabase function**
@@ -262,6 +279,7 @@ git commit -m "refactor: use edge function for chat"
 ## Task 4: Update lib/ai-feedback.ts to call edge function
 
 **Files:**
+
 - Modify: `lib/ai-feedback.ts`
 
 **Step 1: Rewrite to use supabase function**
@@ -306,6 +324,7 @@ git commit -m "refactor: use edge function for reflect feedback"
 ## Task 5: Remove OPENAI_API_KEY from client env
 
 **Files:**
+
 - Modify: `.env.example`
 
 **Step 1: Remove OPENAI key from env example**

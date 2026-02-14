@@ -108,8 +108,8 @@
         }
       ],
       "support_articles": [
-        {"name": "Meditation Markers", "url": "/meditation-markers"},
-        {"name": "Meditative Hindrances", "url": "/meditative-hindrances"}
+        { "name": "Meditation Markers", "url": "/meditation-markers" },
+        { "name": "Meditative Hindrances", "url": "/meditative-hindrances" }
       ]
     },
     {
@@ -150,7 +150,7 @@
         }
       ],
       "support_articles": [
-        {"name": "Working with Dullness", "url": "/working-with-dullness"}
+        { "name": "Working with Dullness", "url": "/working-with-dullness" }
       ]
     },
     {
@@ -191,7 +191,7 @@
         }
       ],
       "support_articles": [
-        {"name": "Noble Eightfold Path", "url": "/noble-eightfold-path"}
+        { "name": "Noble Eightfold Path", "url": "/noble-eightfold-path" }
       ]
     },
     {
@@ -263,19 +263,71 @@
   "progression_map": {
     "description": "Each Meditation Marker is the antidote for its associated Meditative Hindrance",
     "levels": [
-      {"skill": "00", "marker": "Diaphragm Breathing", "hindrance": "Stress Breathing"},
-      {"skill": "01", "marker": "Body Relaxation", "hindrance": "Physical Restlessness"},
-      {"skill": "02", "marker": "Mind Relaxation", "hindrance": "Mental Restlessness"},
-      {"skill": "03", "marker": "Mindful Presence", "hindrance": "Sleepiness & Dullness"},
-      {"skill": "04", "marker": "Content Presence", "hindrance": "Habitual Forgetting"},
-      {"skill": "05", "marker": "Natural Breathing", "hindrance": "Habitual Control"},
-      {"skill": "06", "marker": "Whole of Each Breath", "hindrance": "Mind Wandering"},
-      {"skill": "07", "marker": "Breath Sensations", "hindrance": "Gross Dullness"},
-      {"skill": "08", "marker": "One Point of Sensation", "hindrance": "Subtle Dullness"},
-      {"skill": "09", "marker": "Sustained Attention", "hindrance": "Subtle Wandering"},
-      {"skill": "10", "marker": "Whole-Body Breathing", "hindrance": "Sensory Stimulation"},
-      {"skill": "11", "marker": "Sustained Awareness", "hindrance": "Anticipation of Pleasure"},
-      {"skill": "12", "marker": "Access Concentration", "hindrance": "Fear of Letting Go"}
+      {
+        "skill": "00",
+        "marker": "Diaphragm Breathing",
+        "hindrance": "Stress Breathing"
+      },
+      {
+        "skill": "01",
+        "marker": "Body Relaxation",
+        "hindrance": "Physical Restlessness"
+      },
+      {
+        "skill": "02",
+        "marker": "Mind Relaxation",
+        "hindrance": "Mental Restlessness"
+      },
+      {
+        "skill": "03",
+        "marker": "Mindful Presence",
+        "hindrance": "Sleepiness & Dullness"
+      },
+      {
+        "skill": "04",
+        "marker": "Content Presence",
+        "hindrance": "Habitual Forgetting"
+      },
+      {
+        "skill": "05",
+        "marker": "Natural Breathing",
+        "hindrance": "Habitual Control"
+      },
+      {
+        "skill": "06",
+        "marker": "Whole of Each Breath",
+        "hindrance": "Mind Wandering"
+      },
+      {
+        "skill": "07",
+        "marker": "Breath Sensations",
+        "hindrance": "Gross Dullness"
+      },
+      {
+        "skill": "08",
+        "marker": "One Point of Sensation",
+        "hindrance": "Subtle Dullness"
+      },
+      {
+        "skill": "09",
+        "marker": "Sustained Attention",
+        "hindrance": "Subtle Wandering"
+      },
+      {
+        "skill": "10",
+        "marker": "Whole-Body Breathing",
+        "hindrance": "Sensory Stimulation"
+      },
+      {
+        "skill": "11",
+        "marker": "Sustained Awareness",
+        "hindrance": "Anticipation of Pleasure"
+      },
+      {
+        "skill": "12",
+        "marker": "Access Concentration",
+        "hindrance": "Fear of Letting Go"
+      }
     ]
   }
 }

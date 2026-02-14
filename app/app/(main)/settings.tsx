@@ -1,4 +1,11 @@
-import { View, Text, Switch, Pressable, ScrollView, Platform } from 'react-native';
+import {
+  View,
+  Text,
+  Switch,
+  Pressable,
+  ScrollView,
+  Platform,
+} from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter } from 'expo-router';
 import { useEffect, useState } from 'react';
@@ -52,7 +59,9 @@ export default function SettingsScreen() {
   const onMedTimeChange = (_: DateTimePickerEvent, date?: Date) => {
     if (Platform.OS === 'android') setShowMedPicker(false);
     if (!date) return;
-    save({ meditationTime: { hour: date.getHours(), minute: date.getMinutes() } });
+    save({
+      meditationTime: { hour: date.getHours(), minute: date.getMinutes() },
+    });
   };
 
   const onJournalTimeChange = (_: DateTimePickerEvent, date?: Date) => {
@@ -75,9 +84,7 @@ export default function SettingsScreen() {
             <Pressable onPress={() => router.back()} className="mr-3 p-1">
               <Ionicons name="chevron-back" size={24} color="#3a5222" />
             </Pressable>
-            <Text className="text-xl font-semibold text-forest">
-              Settings
-            </Text>
+            <Text className="text-xl font-semibold text-forest">Settings</Text>
           </View>
 
           {/* Meditation Reminder */}

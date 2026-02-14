@@ -3,8 +3,8 @@
  * Data imported from shared/skills.json (source of truth: data/midl-skills/*.md)
  */
 
-import skillsData from "./skills.json" with { type: "json" };
-import type { Skill as FullSkill, SkillId } from "./types.ts";
+import skillsData from './skills.json' with { type: 'json' };
+import type { Skill as FullSkill, SkillId } from './types.ts';
 
 // Simplified type for AI prompts (backward compatible)
 export type SkillData = {
@@ -31,7 +31,7 @@ export const SKILLS_DATA: Record<string, SkillData> = Object.fromEntries(
     }
     // Add some from tips if available
     if (skill.tips && skill.tips.length > 0) {
-      techniques.push(...skill.tips.slice(0, 2).map(t => t.slice(0, 50)));
+      techniques.push(...skill.tips.slice(0, 2).map((t) => t.slice(0, 50)));
     }
 
     return [
@@ -41,7 +41,8 @@ export const SKILLS_DATA: Record<string, SkillData> = Object.fromEntries(
         name: skill.name,
         marker: skill.insight?.marker || skill.name,
         hindrance: skill.insight?.hindrance || '',
-        techniques: techniques.length > 0 ? techniques : [skill.name.toLowerCase()],
+        techniques:
+          techniques.length > 0 ? techniques : [skill.name.toLowerCase()],
         progressionCriteria: skill.progression?.criteria || '',
       },
     ];
@@ -49,7 +50,10 @@ export const SKILLS_DATA: Record<string, SkillData> = Object.fromEntries(
 );
 
 // Full skills data for advanced AI usage
-export const SKILLS_FULL: Record<SkillId, FullSkill> = skillsData as Record<SkillId, FullSkill>;
+export const SKILLS_FULL: Record<SkillId, FullSkill> = skillsData as Record<
+  SkillId,
+  FullSkill
+>;
 
 // Utility to get full skill
 export function getSkill(skillId: string): FullSkill | undefined {

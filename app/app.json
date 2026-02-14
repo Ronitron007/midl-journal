@@ -13,9 +13,7 @@
       "resizeMode": "contain",
       "backgroundColor": "#f5f0ff"
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
       "supportsTablet": false,
       "bundleIdentifier": "com.midljournal.app",

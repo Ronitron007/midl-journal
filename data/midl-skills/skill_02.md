@@ -32,6 +32,7 @@ Create space around thoughts and mind narratives by learning to relax your mind'
 Sit for meditation and develop relaxation of your body in Meditation Skill 01.
 
 Your Meditation So Far:
+
 - Sit in meditation.
 - Reflect gratefully.
 - Enjoy relaxing your body.

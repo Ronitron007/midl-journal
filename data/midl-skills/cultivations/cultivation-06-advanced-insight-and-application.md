@@ -5,6 +5,7 @@
 **Purpose:** To develop deep insight into anicca, anatta and idappaccayatā to create the conditions for Sotapanna: Stream Entry
 
 ## What You Will Learn
+
 - How to create the conditions for Sotāpanna Insight
 - How to recognise the conditions after Sotāpanna Insight
 - How to create the conditions for Sakadāgāmi Insight

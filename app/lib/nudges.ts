@@ -13,17 +13,20 @@ import { SamathaTendency } from './entries';
  */
 
 // Skill-specific prompts reframed around Stephen's questions
-const SKILL_PROMPTS: Record<string, {
-  samatha: string[];       // Tendency toward relaxation/calm
-  understanding: string[]; // What did you understand/experience
-  hindrance: string[];     // What was the dominant hindrance
-  conditions: string[];    // What conditions led to it
-  balance: string[];       // How to bring balance
-  curiosity: string[];     // Be curious about...
-}> = {
+const SKILL_PROMPTS: Record<
+  string,
+  {
+    samatha: string[]; // Tendency toward relaxation/calm
+    understanding: string[]; // What did you understand/experience
+    hindrance: string[]; // What was the dominant hindrance
+    conditions: string[]; // What conditions led to it
+    balance: string[]; // How to bring balance
+    curiosity: string[]; // Be curious about...
+  }
+> = {
   '00': {
     samatha: [
-      'What was your mind\'s tendency toward relaxation today?',
+      "What was your mind's tendency toward relaxation today?",
       'How did calm develop as you breathed with your diaphragm?',
     ],
     understanding: [
@@ -49,7 +52,7 @@ const SKILL_PROMPTS: Record<string, {
   },
   '01': {
     samatha: [
-      'What was your body\'s tendency toward relaxation today?',
+      "What was your body's tendency toward relaxation today?",
       'How did physical ease develop during your practice?',
     ],
     understanding: [
@@ -75,7 +78,7 @@ const SKILL_PROMPTS: Record<string, {
   },
   '02': {
     samatha: [
-      'What was your mind\'s tendency toward stillness today?',
+      "What was your mind's tendency toward stillness today?",
       'How did mental quiet develop?',
     ],
     understanding: [
@@ -153,7 +156,7 @@ const SKILL_PROMPTS: Record<string, {
   },
   '05': {
     samatha: [
-      'What was your breathing\'s tendency toward naturalness?',
+      "What was your breathing's tendency toward naturalness?",
       'How did effortless breathing develop?',
     ],
     understanding: [
@@ -178,9 +181,7 @@ const SKILL_PROMPTS: Record<string, {
     ],
   },
   '06': {
-    samatha: [
-      'How did sustained breath awareness develop?',
-    ],
+    samatha: ['How did sustained breath awareness develop?'],
     understanding: [
       'What did you understand about attention?',
       'What did you experience following whole breaths?',
@@ -199,12 +200,12 @@ const SKILL_PROMPTS: Record<string, {
     ],
     curiosity: [
       'Be curious about the whole length of each breath',
-      'Notice: what\'s different about in-breath and out-breath?',
+      "Notice: what's different about in-breath and out-breath?",
     ],
   },
   '07': {
     samatha: [
-      'What was your perception\'s tendency toward clarity?',
+      "What was your perception's tendency toward clarity?",
       'How did sensitivity to breath sensations develop?',
     ],
     understanding: [
@@ -225,12 +226,12 @@ const SKILL_PROMPTS: Record<string, {
     ],
     curiosity: [
       'Be curious about temperature, texture, movement in the breath',
-      'Notice: what\'s the elemental quality of breathing?',
+      "Notice: what's the elemental quality of breathing?",
     ],
   },
   '08': {
     samatha: [
-      'What was your focus\'s tendency toward stability?',
+      "What was your focus's tendency toward stability?",
       'How did one-pointed attention develop?',
     ],
     understanding: [
@@ -256,7 +257,7 @@ const SKILL_PROMPTS: Record<string, {
   },
   '09': {
     samatha: [
-      'What was your attention\'s tendency toward sustained stability?',
+      "What was your attention's tendency toward sustained stability?",
       'How did continuous presence develop?',
     ],
     understanding: [
@@ -282,7 +283,7 @@ const SKILL_PROMPTS: Record<string, {
   },
   '10': {
     samatha: [
-      'What was your awareness\'s tendency to fill the body?',
+      "What was your awareness's tendency to fill the body?",
       'How did whole-body breathing develop?',
     ],
     understanding: [
@@ -354,7 +355,7 @@ const SKILL_PROMPTS: Record<string, {
       'What helped you trust letting go?',
     ],
     curiosity: [
-      'Be curious about what\'s beyond letting go',
+      "Be curious about what's beyond letting go",
       'Notice: what does safety in depth feel like?',
     ],
   },
@@ -464,7 +465,14 @@ const SKILL_PROMPTS: Record<string, {
   },
 };
 
-export type NudgeType = 'samatha' | 'understanding' | 'hindrance' | 'conditions' | 'balance' | 'curiosity' | 'pattern';
+export type NudgeType =
+  | 'samatha'
+  | 'understanding'
+  | 'hindrance'
+  | 'conditions'
+  | 'balance'
+  | 'curiosity'
+  | 'pattern';
 
 export type Nudge = {
   type: NudgeType;
@@ -488,16 +496,20 @@ async function getRecentSkillHistory(
   userId: string,
   skillId: string,
   limit = 10
-): Promise<{
-  hindrance_present: boolean;
-  hindrance_conditions: string[] | null;
-  balance_approach: string | null;
-  samatha_tendency: SamathaTendency | null;
-}[]> {
+): Promise<
+  {
+    hindrance_present: boolean;
+    hindrance_conditions: string[] | null;
+    balance_approach: string | null;
+    samatha_tendency: SamathaTendency | null;
+  }[]
+> {
   // First try: entries for current skill only
   const { data: skillEntries } = await supabase
     .from('entries')
-    .select('hindrance_present, hindrance_conditions, balance_approach, samatha_tendency')
+    .select(
+      'hindrance_present, hindrance_conditions, balance_approach, samatha_tendency'
+    )
     .eq('user_id', userId)
     .eq('type', 'reflect') // Only reflect entries have MIDL signals
     .eq('skill_practiced', skillId)
@@ -512,7 +524,9 @@ async function getRecentSkillHistory(
   // Fallback: get recent entries across all skills for broader patterns
   const { data: allEntries } = await supabase
     .from('entries')
-    .select('hindrance_present, hindrance_conditions, balance_approach, samatha_tendency')
+    .select(
+      'hindrance_present, hindrance_conditions, balance_approach, samatha_tendency'
+    )
     .eq('user_id', userId)
     .eq('type', 'reflect')
     .order('created_at', { ascending: false })
@@ -548,7 +562,8 @@ function analyzePatterns(
     .slice(0, 3);
 
   // Get conditions from most recent hindrance entry (for single-entry personalization)
-  const recentConditions = hindranceEntries[0]?.hindrance_conditions?.slice(0, 3) || [];
+  const recentConditions =
+    hindranceEntries[0]?.hindrance_conditions?.slice(0, 3) || [];
 
   // Get recent successful balance approaches
   const recentBalanceApproaches = entries
@@ -557,7 +572,12 @@ function analyzePatterns(
     .slice(0, 2);
 
   // Calculate average samatha tendency
-  const tendencyOrder: SamathaTendency[] = ['none', 'weak', 'moderate', 'strong'];
+  const tendencyOrder: SamathaTendency[] = [
+    'none',
+    'weak',
+    'moderate',
+    'strong',
+  ];
   const validTendencies = entries
     .map((e) => e.samatha_tendency)
     .filter((t): t is SamathaTendency => !!t);
@@ -565,7 +585,8 @@ function analyzePatterns(
   let avgSamathaTendency: SamathaTendency | null = null;
   if (validTendencies.length > 0) {
     const avgIndex = Math.round(
-      validTendencies.reduce((sum, t) => sum + tendencyOrder.indexOf(t), 0) / validTendencies.length
+      validTendencies.reduce((sum, t) => sum + tendencyOrder.indexOf(t), 0) /
+        validTendencies.length
     );
     avgSamathaTendency = tendencyOrder[avgIndex];
   }
@@ -604,7 +625,10 @@ export async function generateNudges(
 
   // Debug: log what we found
   console.log('[nudges] history entries:', history.length);
-  console.log('[nudges] first 3 entries:', JSON.stringify(history.slice(0, 3), null, 2));
+  console.log(
+    '[nudges] first 3 entries:',
+    JSON.stringify(history.slice(0, 3), null, 2)
+  );
   console.log('[nudges] patterns:', JSON.stringify(patterns));
 
   // 3. Pattern nudges based on hindrance history
@@ -623,7 +647,10 @@ export async function generateNudges(
       text: `The hindrance; ${hindrance} has arisen in ${patterns.hindranceCount} recent sessions. Be curious: what conditions lead to it?`,
       priority: 15,
     });
-  } else if (patterns.hindranceCount === 1 && patterns.recentConditions.length > 0) {
+  } else if (
+    patterns.hindranceCount === 1 &&
+    patterns.recentConditions.length > 0
+  ) {
     // Single hindrance entry with conditions - still personalize
     const conditionText = patterns.recentConditions.slice(0, 2).join(' or ');
     nudges.push({
@@ -657,7 +684,8 @@ export async function generateNudges(
   });
 
   // 6. Add curiosity prompt for next session connection
-  const randomCuriosity = prompts.curiosity[Math.floor(Math.random() * prompts.curiosity.length)];
+  const randomCuriosity =
+    prompts.curiosity[Math.floor(Math.random() * prompts.curiosity.length)];
   nudges.push({
     type: 'curiosity',
     text: randomCuriosity,

@@ -37,11 +37,13 @@ Sustain the focus of your attention on breath sensation, to tranquilise the inte
 ### Step 1: Mindful Presence
 
 Develop Markers 01-03 purely by relaxing and letting go with a clear comprehension of the experience of it. This experience can be divided into three areas:
+
 - The experience of elements in your body.
 - The pleasantness of how nice it feels to relax and let go.
 - The increased awareness of your body develops as you relax effort in your body and mind.
 
 Meditate by relaxing and letting go to develop mindfulness and balanced effort.
+
 - Develop your skill in transitioning between Markers 01-03: M01: Body Relaxation > M02: Mind Relaxation > M03: Mindful Presence by taking your time to clearly comprehend and enjoy the subtle pleasantness of relaxing and letting go.
 - Observe how these three Markers establish the first three Awakening Factors of mindfulness, curiosity & balanced effort.
 
@@ -50,6 +52,7 @@ When you are comfortable developing Markers 01-03 by relaxing and letting go wit
 ### Step 2: Content Presence
 
 Meditate by relaxing and letting go to develop contentment and meditative joy.
+
 - Develop your skill in transitioning from Marker 03-04: M03: Mindful Presence > M04: Content Presence by taking your time to clearly comprehend and enjoy how nice it feels to be content and to abide mindfully in your body.
 - Observe how developing contentment in Marker 04: Content Presence begins to establish the fourth Awakening Factor of Meditative Joy by uplifting your mind with the spiritual pleasant feeling that comes from feeling content and satisfied.
 
@@ -58,6 +61,7 @@ When you are comfortable developing Markers 01-04 by relaxing and letting go wit
 ### Step 3: Calm Abiding
 
 Meditate only by relaxing & letting go to develop calm abiding.
+
 - Develop your skill in transitioning from Marker 05-07: M05: Natural Breathing > M06: Whole of Each Breath > M07: Breath Sensation by taking your time to clearly comprehend and enjoy the subtle pleasantness of growing calm within your body, breathing and mind.
 - Observe how, as calm develops, it also calms the fourth Awakening Factor: Meditative Joy, as the conditions for the fifth Awakening Factor: Tranquillity develop.
 
@@ -66,6 +70,7 @@ When you are comfortable developing Markers 01-07 by relaxing and letting go wit
 ### Step 4: Tranquillity & Seclusion
 
 Meditate by relaxing and letting go to develop meditative joy and tranquillity.
+
 - Develop your skill in transitioning from Marker 07-08: M07: Breath Sensation > M08: One Point of Breath Sensation by taking your time to clearly comprehend and enjoy the subtle pleasantness of growing tranquillity & seclusion.
 - To do this, gently smile into the pleasantness of growing tranquillity & seclusion while clearly comprehending the changing elemental qualities within the breath sensation. (You can replace breath with the touch of your thumbs if preferred). Enjoy the subtle pleasant feeling of the growing tranquillity while calming any desire 'to do' your attention. Gradually, the focus of your attention will stabilise on the one point of breath sensation.
 
@@ -96,6 +101,7 @@ Try developing devotion toward the Buddha, Dhamma, and Sangha, and carry that de
 The first thing to acknowledge when you find yourself caught in dry tranquillity is that this tranquil state is positive in terms of the Awakening Factors. The problem isn't the tranquillity; it is that your tranquillity is high, which is a good thing. However, everything creates causes and conditions, including the overdevelopment of tranquillity. Just as earlier-developed relaxation and calm meditators can end up in dullness due to over-calming their knowing ability when developing tranquillity, meditators can over-calm meditative joy and enjoyment. As tranquillity develops, it calms the intellectual functions of the mind, including the function of interest and caring toward what is being experienced. This removes the conditions for meditative pleasure and the ability to find enjoyment, causing both of these to fade from your mind gradually.
 
 The trick is to uplift your mind with meditative pleasure and enjoyment while calming the intellectual functions of your mind. This can be done by:
+
 - Enjoyment: Making the enjoyment of your meditation stronger before developing tranquillity in Skills 08-09, by intentionally finding enjoyment in the growing seclusion of calm and tranquillity. Be curious about and make a firm intention to enjoy the pleasure of relaxing and letting go of the sensory world.
 - Saddha: Try developing strong devotion toward the Buddha, Dhamma and Sangha and carrying that devotion into your mindfulness of breathing.
 - Loving-Kindness: Try switching to metta, loving-kindness, as your main practice for a time, until joy becomes strong and stable.

@@ -29,34 +29,34 @@ midl-skills/
 
 ### Cultivations
 
-| # | Name | Suitability | Skills |
-|---|------|-------------|--------|
-| 01 | Mindfulness of Body | Everyone | 00-03 |
-| 02 | Mindfulness of Breathing | Intermediate | 04-06 |
-| 03 | Calm & Tranquillity | Skilled | 07-09 |
-| 04 | Joyfulness & Unification | Accomplished | 10-12 |
-| 05 | Pleasure Jhana & Equanimity | Proficient | 13-16 |
-| 06 | Advanced Insight | Advanced | Stream Entry topics |
+| #   | Name                        | Suitability  | Skills              |
+| --- | --------------------------- | ------------ | ------------------- |
+| 01  | Mindfulness of Body         | Everyone     | 00-03               |
+| 02  | Mindfulness of Breathing    | Intermediate | 04-06               |
+| 03  | Calm & Tranquillity         | Skilled      | 07-09               |
+| 04  | Joyfulness & Unification    | Accomplished | 10-12               |
+| 05  | Pleasure Jhana & Equanimity | Proficient   | 13-16               |
+| 06  | Advanced Insight            | Advanced     | Stream Entry topics |
 
 ### Progression Map
 
 Each skill addresses a specific **Hindrance** and develops a corresponding **Marker** of progress:
 
-| Skill | Marker | Hindrance |
-|-------|--------|-----------|
-| 00 | Diaphragm Breathing | Stress Breathing |
-| 01 | Body Relaxation | Physical Restlessness |
-| 02 | Mind Relaxation | Mental Restlessness |
-| 03 | Mindful Presence | Sleepiness & Dullness |
-| 04 | Content Presence | Habitual Forgetting |
-| 05 | Natural Breathing | Habitual Control |
-| 06 | Whole of Each Breath | Mind Wandering |
-| 07 | Breath Sensations | Gross Dullness |
-| 08 | One Point of Sensation | Subtle Dullness |
-| 09 | Sustained Attention | Subtle Wandering |
-| 10 | Whole-Body Breathing | Sensory Stimulation |
-| 11 | Sustained Awareness | Anticipation of Pleasure |
-| 12 | Access Concentration | Fear of Letting Go |
+| Skill | Marker                 | Hindrance                |
+| ----- | ---------------------- | ------------------------ |
+| 00    | Diaphragm Breathing    | Stress Breathing         |
+| 01    | Body Relaxation        | Physical Restlessness    |
+| 02    | Mind Relaxation        | Mental Restlessness      |
+| 03    | Mindful Presence       | Sleepiness & Dullness    |
+| 04    | Content Presence       | Habitual Forgetting      |
+| 05    | Natural Breathing      | Habitual Control         |
+| 06    | Whole of Each Breath   | Mind Wandering           |
+| 07    | Breath Sensations      | Gross Dullness           |
+| 08    | One Point of Sensation | Subtle Dullness          |
+| 09    | Sustained Attention    | Subtle Wandering         |
+| 10    | Whole-Body Breathing   | Sensory Stimulation      |
+| 11    | Sustained Awareness    | Anticipation of Pleasure |
+| 12    | Access Concentration   | Fear of Letting Go       |
 
 ## Skills with Detailed Content
 
@@ -71,13 +71,16 @@ Skills 03-16 have metadata and structure but require additional scraping for ful
 ## Key Concepts
 
 ### GOSS Formula
+
 The GOSS Formula is used throughout for letting go of distraction:
+
 - **G** - Ground yourself in body
 - **O** - Observe what's happening
 - **S** - Soften/relax around it
 - **S** - Stay with the experience
 
 ### Softening Breaths
+
 Slow, relaxing breaths that help body and mind become softer. Key technique throughout all skills.
 
 ## Resources

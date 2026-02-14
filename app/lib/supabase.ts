@@ -22,7 +22,9 @@ const TOKEN_REFRESH_BUFFER_SECONDS = 60;
  * Use this before calling Edge Functions to ensure a valid access token.
  */
 export async function getValidSession(): Promise<Session> {
-  const { data: { session } } = await supabase.auth.getSession();
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
 
   if (!session) {
     throw new Error('Not authenticated');
@@ -34,7 +36,10 @@ export async function getValidSession(): Promise<Session> {
   const needsRefresh = expiresAt - now < TOKEN_REFRESH_BUFFER_SECONDS;
 
   if (needsRefresh) {
-    const { data: { session: refreshedSession }, error } = await supabase.auth.refreshSession();
+    const {
+      data: { session: refreshedSession },
+      error,
+    } = await supabase.auth.refreshSession();
     if (error || !refreshedSession) {
       throw new Error('Session expired, please sign in again');
     }

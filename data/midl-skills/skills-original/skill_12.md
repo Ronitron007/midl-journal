@@ -23,6 +23,7 @@ SoundCloud: Guided Meditation - https://soundcloud.com/user-677685629/midl-insig
 Step-by-Step Instructions:
 
 Preparation for access concentration:
+
 - Refine your sila (morality) in daily life.
 - Incline your mind toward the kusala (wholesome/skilful).
 - Calm the desire for sensory pleasure using GOSS.
@@ -33,6 +34,7 @@ Step 1: Meditation Skills 01-11.
 Your meditation remains the same as in Meditation Skills 01-11, except you now add Step 2 as a new addition to your meditation.
 
 Your Meditation So Far:
+
 - Sit in meditation.
 - Reflect gratefully.
 - Enjoy relaxing your body and mind.
@@ -55,8 +57,8 @@ Insight: Insight is developed at this stage of mindfulness of breathing by being
 
 Progression Map for Mindfulness of Breathing:
 
-Meditative Hindrances                          Meditation Markers
-(Hindrances to calm)                           (Signs of deepening calm)
+Meditative Hindrances Meditation Markers
+(Hindrances to calm) (Signs of deepening calm)
 
                                                01: Body Relaxation.
                                                02: Mind Relaxation.
@@ -66,11 +68,12 @@ Meditative Hindrances                          Meditation Markers
                                                06: Whole of Each Breath.
                                                10: Whole-Body Breathing.
                                                11: Sustained Awareness.
-12: Fear of Letting Go.          →             12: Access Concentration.
-13: Unstable Unification.                      13: First Pleasure Jhana.
-14: Enchantment with Piti.                     14: Second Pleasure Jhana.
-15: Enchantment with Sukha.                    15: Third Pleasure Jhana.
-16: Enchantment with Happiness.                16: Fourth Pleasure Jhana.
+
+12: Fear of Letting Go. → 12: Access Concentration.
+13: Unstable Unification. 13: First Pleasure Jhana.
+14: Enchantment with Piti. 14: Second Pleasure Jhana.
+15: Enchantment with Sukha. 15: Third Pleasure Jhana.
+16: Enchantment with Happiness. 16: Fourth Pleasure Jhana.
 
 Meditative Hindrance: Fear of Letting Go (12).
 Fear of giving up all control.
@@ -79,6 +82,7 @@ Fear of Letting Go refers to the deeply seated fear of giving up control to the 
 
 Antidote:
 Developing saddha: faith, confidence, and trust in the Buddha, your teacher, and your meditation community is the key to letting go (vosagga).
+
 - Develop trust in the Buddha, your teacher, your community and the Dhamma. A helpful reflection is: "I am not the first to walk this path; others have walked it before me".
 - Mature the depth of your contentment in seated meditation and all aspects of life.
 - Repeat your exposure to the growing blissful, pleasant feeling until your mind develops disenchantment towards it so that all anticipation and fear drops away.
@@ -90,26 +94,26 @@ Access Concentration:
 Access Concentration is made up of Six Characteristics:
 
 1. There will be an initial pleasant feeling or tingling in your body and mind.
-The first sign of the conditions for access concentration starting to develop is that your mind will no longer wander from your meditation object, and you will begin to feel a feeling of pleasantness growing in your body and mind (piti) around Skill 09. Piti arises as the mind begins to enjoy being secluded from sensory stimulation and the hindrances. Initially, you may experience piti as a pleasant sensation in your forehead, face, chest, or hands. Some meditators feel it in their legs or spine as an upward-moving, pleasurable energy.
+   The first sign of the conditions for access concentration starting to develop is that your mind will no longer wander from your meditation object, and you will begin to feel a feeling of pleasantness growing in your body and mind (piti) around Skill 09. Piti arises as the mind begins to enjoy being secluded from sensory stimulation and the hindrances. Initially, you may experience piti as a pleasant sensation in your forehead, face, chest, or hands. Some meditators feel it in their legs or spine as an upward-moving, pleasurable energy.
 
 Tip: The feeling of piti can vary for everyone and can range from very subtle to a strong flow that shakes or bounces your body. Once all hindrances are suppressed from your mind due to samadhi at Skill 11, the pleasant feeling of piti within your body will grow in strength. If tranquillity is high enough, the experience of piti will be quite beautiful, bringing a natural smile to your face and a feeling of happy joy to your mind.
 
 2. Your mind will have no interest in sensory pleasure.
-The second sign of the conditions for access concentration developing is that your mind will no longer have any interest in experiencing anything other than your meditation object, and it will incline toward the pleasure and enjoyment of letting go. As your mind inclines away from sensory experience, the sensations in your body and the borders of your body will completely fade away. All that will remain is the experience of pleasant piti within your awareness, with the happiness of sukha and an awareness of sound being far away in the background.
+   The second sign of the conditions for access concentration developing is that your mind will no longer have any interest in experiencing anything other than your meditation object, and it will incline toward the pleasure and enjoyment of letting go. As your mind inclines away from sensory experience, the sensations in your body and the borders of your body will completely fade away. All that will remain is the experience of pleasant piti within your awareness, with the happiness of sukha and an awareness of sound being far away in the background.
 
 3. There will be no hindrances present within your mind.
-The third sign is that your samadhi (unification or collectedness of mind) will be strong enough to suppress all hindrances from your mind. This means that your mind becomes so unified and intimate with your meditative experience that there is no room within it for any hindrance to be present. The presence of thinking in the background, anticipation, fear of letting go or doubt are signs that your samadhi is not yet stable enough to suppress the hindrances.
+   The third sign is that your samadhi (unification or collectedness of mind) will be strong enough to suppress all hindrances from your mind. This means that your mind becomes so unified and intimate with your meditative experience that there is no room within it for any hindrance to be present. The presence of thinking in the background, anticipation, fear of letting go or doubt are signs that your samadhi is not yet stable enough to suppress the hindrances.
 
 4. Your mind will switch from applied to sustained attention.
-The fourth sign is the effort of focus your attention (vitakka) on your meditation object dropping away. A sign that effort has dropped away is that keeping your meditation object in mind becomes effortless and autonomous (vicara) as your mind takes over the application of awareness (vitakka) to your meditation object, itself.
+   The fourth sign is the effort of focus your attention (vitakka) on your meditation object dropping away. A sign that effort has dropped away is that keeping your meditation object in mind becomes effortless and autonomous (vicara) as your mind takes over the application of awareness (vitakka) to your meditation object, itself.
 
 5. Your attention and awareness will feel unified, steady and firm.
-The fifth sign of access concentration developing is when the previous conditions come together as your samadhi matures, and awareness and attention merge as one. This is experienced as your awareness becoming steady, firm, effortless, unmoving, and free from distraction and hindrances, like looking through a still, clean glass window.
+   The fifth sign of access concentration developing is when the previous conditions come together as your samadhi matures, and awareness and attention merge as one. This is experienced as your awareness becoming steady, firm, effortless, unmoving, and free from distraction and hindrances, like looking through a still, clean glass window.
 
 Tip: As your samadhi matures, sensory stimulation will fade in your awareness. Your mind will begin to replace sensory stimulation with mind-created experiences. A light may appear in your visual field, like someone has opened the curtains and let light into the room. You may even see flickering lights in front of your eyes. This is a direct reflection of the strength of your samadhi and the seclusion of your mind from the six sense fields.
 
 6. There will be an absence of any desire 'to do' or 'doer' within your mind.
-The sixth sign is that, after samadhi has matured, there will be no longer a desire 'to do' and a complete absence of a 'doer', making the unification of the samadhi feel effortless and desireless. You will no longer feel like you are 'doing' your attention or awareness, and your mind will begin to flow with the experience of a pleasurable feeling of piti that arises within the awareness of your body and mind.
+   The sixth sign is that, after samadhi has matured, there will be no longer a desire 'to do' and a complete absence of a 'doer', making the unification of the samadhi feel effortless and desireless. You will no longer feel like you are 'doing' your attention or awareness, and your mind will begin to flow with the experience of a pleasurable feeling of piti that arises within the awareness of your body and mind.
 
 Issues with Samadhi Balance:
 
@@ -126,6 +130,7 @@ Progression Criteria:
 Congratulations, you have finished Cultivation 04.
 
 You are ready to progress to Meditation Skill 13: First Pleasure Jhana when you:
+
 - Are comfortable developing access concentration and can remain in it for at least 15 minutes with the pleasant feeling of piti remaining stable within the awareness of your body without fading.
 
 Tip: Once you are comfortable reaching access concentration and resting in it, focus on developing the speed at which you can reach it during mindfulness of breathing. It is important to continue developing mindfulness of breathing based on a momentum of letting go, rather than effort so that an inclination toward letting go increases within your mind.

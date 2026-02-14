@@ -45,22 +45,26 @@ export default function FloatingButtons() {
             elevation: 4,
           }}
         >
-          <Text style={{ textAlign: 'center', color: '#3a5222', fontWeight: '500' }}>
+          <Text
+            style={{ textAlign: 'center', color: '#3a5222', fontWeight: '500' }}
+          >
             Reflect
           </Text>
         </Pressable>
         {hasReflectDraft && (
-          <View style={{
-            position: 'absolute',
-            top: -4,
-            right: -4,
-            width: 12,
-            height: 12,
-            borderRadius: 6,
-            backgroundColor: '#de8649',
-            borderWidth: 2,
-            borderColor: '#ffffff',
-          }} />
+          <View
+            style={{
+              position: 'absolute',
+              top: -4,
+              right: -4,
+              width: 12,
+              height: 12,
+              borderRadius: 6,
+              backgroundColor: '#de8649',
+              borderWidth: 2,
+              borderColor: '#ffffff',
+            }}
+          />
         )}
       </View>
       <View style={{ flex: 1, position: 'relative' }}>
@@ -77,22 +81,26 @@ export default function FloatingButtons() {
             elevation: 4,
           }}
         >
-          <Text style={{ textAlign: 'center', color: '#ffffff', fontWeight: '500' }}>
+          <Text
+            style={{ textAlign: 'center', color: '#ffffff', fontWeight: '500' }}
+          >
             Ask
           </Text>
         </Pressable>
         {hasAskDraft && (
-          <View style={{
-            position: 'absolute',
-            top: -4,
-            right: -4,
-            width: 12,
-            height: 12,
-            borderRadius: 6,
-            backgroundColor: '#de8649',
-            borderWidth: 2,
-            borderColor: '#ffffff',
-          }} />
+          <View
+            style={{
+              position: 'absolute',
+              top: -4,
+              right: -4,
+              width: 12,
+              height: 12,
+              borderRadius: 6,
+              backgroundColor: '#de8649',
+              borderWidth: 2,
+              borderColor: '#ffffff',
+            }}
+          />
         )}
       </View>
     </View>

@@ -3,8 +3,12 @@
   "private": true,
   "type": "module",
   "scripts": {
+    "format": "prettier --write .",
     "generate": "node --experimental-strip-types scripts/generate-shared-data.ts",
     "predeploy:functions": "npm run generate"
+  },
+  "devDependencies": {
+    "prettier": "^3.4.2"
   },
   "dependencies": {
     "@expo/ngrok": "^4.1.3",

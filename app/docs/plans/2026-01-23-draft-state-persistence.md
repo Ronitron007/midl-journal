@@ -13,6 +13,7 @@
 ## Task 1: Create Draft Store Context
 
 **Files:**
+
 - Create: `lib/draft-context.tsx`
 
 **Step 1: Write the draft context with types and reducer**
@@ -103,7 +104,13 @@ export function DraftProvider({ children }: { children: ReactNode }) {
 
   return (
     <DraftContext.Provider
-      value={{ state, setReflectDraft, setAskDraft, clearReflectDraft, clearAskDraft }}
+      value={{
+        state,
+        setReflectDraft,
+        setAskDraft,
+        clearReflectDraft,
+        clearAskDraft,
+      }}
     >
       {children}
     </DraftContext.Provider>
@@ -135,6 +142,7 @@ git commit -m "feat: add draft context for modal state persistence"
 ## Task 2: Add DraftProvider to App Layout
 
 **Files:**
+
 - Modify: `app/_layout.tsx`
 
 **Step 1: Read current layout to understand structure**
@@ -144,16 +152,16 @@ Check how AuthProvider is wrapped.
 **Step 2: Import and wrap with DraftProvider**
 
 Add import at top:
+
 ```tsx
 import { DraftProvider } from '../lib/draft-context';
 ```
 
 Wrap children with DraftProvider (inside AuthProvider):
+
 ```tsx
 <AuthProvider>
-  <DraftProvider>
-    {/* existing children */}
-  </DraftProvider>
+  <DraftProvider>{/* existing children */}</DraftProvider>
 </AuthProvider>
 ```
 
@@ -169,6 +177,7 @@ git commit -m "feat: wrap app with DraftProvider"
 ## Task 3: Update Reflect Screen to Use Draft Store
 
 **Files:**
+
 - Modify: `app/(main)/reflect.tsx`
 
 **Step 1: Import useDraft hook**
@@ -186,11 +195,19 @@ const { state: draftState, setReflectDraft, clearReflectDraft } = useDraft();
 
 // Initialize from draft or defaults
 const [content, setContent] = useState(draftState.reflect?.content ?? '');
-const [showDetails, setShowDetails] = useState(draftState.reflect?.showDetails ?? false);
-const [duration, setDuration] = useState<number | null>(draftState.reflect?.duration ?? null);
+const [showDetails, setShowDetails] = useState(
+  draftState.reflect?.showDetails ?? false
+);
+const [duration, setDuration] = useState<number | null>(
+  draftState.reflect?.duration ?? null
+);
 const [isGuided, setIsGuided] = useState(draftState.reflect?.isGuided ?? false);
-const [trackProgress, setTrackProgress] = useState(draftState.reflect?.trackProgress ?? true);
-const [skillPracticed, setSkillPracticed] = useState(draftState.reflect?.skillPracticed ?? '00');
+const [trackProgress, setTrackProgress] = useState(
+  draftState.reflect?.trackProgress ?? true
+);
+const [skillPracticed, setSkillPracticed] = useState(
+  draftState.reflect?.skillPracticed ?? '00'
+);
 ```
 
 **Step 3: Add useEffect to save draft on changes**
@@ -214,6 +231,7 @@ useEffect(() => {
 **Step 4: Clear draft on successful submit**
 
 In `handleSubmit`, after successful entry creation, add:
+
 ```tsx
 clearReflectDraft();
 ```
@@ -225,6 +243,7 @@ Remove any draft clearing from handleClose - the draft should persist.
 **Step 6: Add explicit "Discard" option in Cancel**
 
 Change Cancel button to show confirmation if draft exists:
+
 ```tsx
 const handleCancel = () => {
   if (content.trim()) {
@@ -247,6 +266,7 @@ git commit -m "feat: persist reflect draft on modal dismiss"
 ## Task 4: Update Ask Screen to Use Draft Store
 
 **Files:**
+
 - Modify: `app/(main)/ask.tsx`
 
 **Step 1: Import useDraft hook**
@@ -260,9 +280,13 @@ import { useDraft, AskDraft } from '../../lib/draft-context';
 ```tsx
 const { state: draftState, setAskDraft, clearAskDraft } = useDraft();
 
-const [messages, setMessages] = useState<Message[]>(draftState.ask?.messages ?? []);
+const [messages, setMessages] = useState<Message[]>(
+  draftState.ask?.messages ?? []
+);
 const [input, setInput] = useState(draftState.ask?.input ?? '');
-const [trackProgress, setTrackProgress] = useState(draftState.ask?.trackProgress ?? true);
+const [trackProgress, setTrackProgress] = useState(
+  draftState.ask?.trackProgress ?? true
+);
 ```
 
 **Step 3: Add useEffect to save draft on changes**
@@ -283,6 +307,7 @@ useEffect(() => {
 **Step 4: Clear draft on explicit Done (with save)**
 
 In `handleClose`, after saving entry, add:
+
 ```tsx
 clearAskDraft();
 ```
@@ -299,6 +324,7 @@ git commit -m "feat: persist ask draft on modal dismiss"
 ## Task 5: Add Visual Indicator for Existing Draft
 
 **Files:**
+
 - Modify: `components/FloatingButtons.tsx`
 
 **Step 1: Import useDraft**
@@ -314,24 +340,31 @@ Show a small dot or different style when draft exists:
 ```tsx
 const { state: draftState } = useDraft();
 const hasReflectDraft = !!draftState.reflect?.content;
-const hasAskDraft = draftState.ask && (draftState.ask.messages.length > 0 || draftState.ask.input);
+const hasAskDraft =
+  draftState.ask &&
+  (draftState.ask.messages.length > 0 || draftState.ask.input);
 ```
 
 Add indicator dot to button:
+
 ```tsx
-{hasReflectDraft && (
-  <View style={{
-    position: 'absolute',
-    top: -4,
-    right: -4,
-    width: 12,
-    height: 12,
-    borderRadius: 6,
-    backgroundColor: '#ef4444',
-    borderWidth: 2,
-    borderColor: '#ffffff',
-  }} />
-)}
+{
+  hasReflectDraft && (
+    <View
+      style={{
+        position: 'absolute',
+        top: -4,
+        right: -4,
+        width: 12,
+        height: 12,
+        borderRadius: 6,
+        backgroundColor: '#ef4444',
+        borderWidth: 2,
+        borderColor: '#ffffff',
+      }}
+    />
+  );
+}
 ```
 
 **Step 3: Commit**
@@ -345,13 +378,13 @@ git commit -m "feat: show draft indicator on floating buttons"
 
 ## Summary
 
-| Task | Description |
-|------|-------------|
-| 1 | Create draft-context.tsx with types, reducer, provider, hook |
-| 2 | Wrap app with DraftProvider |
-| 3 | Update reflect.tsx to restore/save drafts |
-| 4 | Update ask.tsx to restore/save drafts |
-| 5 | Add visual draft indicators to floating buttons |
+| Task | Description                                                  |
+| ---- | ------------------------------------------------------------ |
+| 1    | Create draft-context.tsx with types, reducer, provider, hook |
+| 2    | Wrap app with DraftProvider                                  |
+| 3    | Update reflect.tsx to restore/save drafts                    |
+| 4    | Update ask.tsx to restore/save drafts                        |
+| 5    | Add visual draft indicators to floating buttons              |
 
 ## Unresolved Questions
 

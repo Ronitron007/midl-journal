@@ -7,6 +7,7 @@
 ## Overview
 
 Replace the current "fools grade" AI implementation with production-grade infrastructure:
+
 - Official OpenAI SDK with proper error handling
 - Streaming responses for better UX
 - Tool calling for dynamic context
@@ -23,30 +24,30 @@ Replace the current "fools grade" AI implementation with production-grade infras
 
 ```typescript
 // supabase/functions/ai/providers/openai.ts
-import OpenAI from "openai";
+import OpenAI from 'openai';
 
 export class OpenAIProvider {
   private client: OpenAI;
 
   constructor() {
     this.client = new OpenAI({
-      apiKey: Deno.env.get("OPENAI_API_KEY"),
+      apiKey: Deno.env.get('OPENAI_API_KEY'),
     });
   }
 
   async complete(options: CompletionOptions): Promise<string> {
     const response = await this.client.chat.completions.create({
-      model: "gpt-4o-mini",
+      model: 'gpt-4o-mini',
       messages: options.messages,
       max_tokens: options.maxTokens ?? 500,
-      response_format: options.jsonMode ? { type: "json_object" } : undefined,
+      response_format: options.jsonMode ? { type: 'json_object' } : undefined,
     });
-    return response.choices[0]?.message?.content ?? "";
+    return response.choices[0]?.message?.content ?? '';
   }
 
   async *stream(options: CompletionOptions): AsyncGenerator<string> {
     const stream = await this.client.chat.completions.create({
-      model: "gpt-4o-mini",
+      model: 'gpt-4o-mini',
       messages: options.messages,
       max_tokens: options.maxTokens ?? 500,
       stream: true,
@@ -60,7 +61,7 @@ export class OpenAIProvider {
 
   async embed(text: string): Promise<number[]> {
     const response = await this.client.embeddings.create({
-      model: "text-embedding-3-small",
+      model: 'text-embedding-3-small',
       input: text,
     });
     return response.data[0].embedding;
@@ -69,6 +70,7 @@ export class OpenAIProvider {
 ```
 
 **Files to modify:**
+
 - `supabase/functions/ai/providers/openai.ts` - replace implementation
 - `supabase/functions/ai/types.ts` - add streaming types
 
@@ -115,12 +117,12 @@ export async function chatStream(
   const session = await getValidSession();
 
   const response = await fetch(`${SUPABASE_URL}/functions/v1/ai`, {
-    method: "POST",
+    method: 'POST',
     headers: {
       Authorization: `Bearer ${session.access_token}`,
-      "Content-Type": "application/json",
+      'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ type: "chat-stream", messages }),
+    body: JSON.stringify({ type: 'chat-stream', messages }),
   });
 
   const reader = response.body?.getReader();
@@ -130,9 +132,9 @@ export async function chatStream(
     const { done, value } = await reader.read();
     if (done) break;
 
-    const lines = decoder.decode(value).split("\n");
+    const lines = decoder.decode(value).split('\n');
     for (const line of lines) {
-      if (line.startsWith("data: ") && line !== "data: [DONE]") {
+      if (line.startsWith('data: ') && line !== 'data: [DONE]') {
         const { content } = JSON.parse(line.slice(6));
         onChunk(content);
       }
@@ -151,61 +153,69 @@ export async function chatStream(
 // supabase/functions/ai/tools/definitions.ts
 export const CHAT_TOOLS = [
   {
-    type: "function",
+    type: 'function',
     function: {
-      name: "get_user_profile",
+      name: 'get_user_profile',
       description: "Get the user's current skill, stats, and onboarding data",
-      parameters: { type: "object", properties: {} },
+      parameters: { type: 'object', properties: {} },
     },
   },
   {
-    type: "function",
+    type: 'function',
     function: {
-      name: "get_skill_details",
-      description: "Get details about a MIDL skill including marker, hindrance, and techniques",
+      name: 'get_skill_details',
+      description:
+        'Get details about a MIDL skill including marker, hindrance, and techniques',
       parameters: {
-        type: "object",
+        type: 'object',
         properties: {
-          skill_id: { type: "string", description: "Skill ID (00-16)" },
+          skill_id: { type: 'string', description: 'Skill ID (00-16)' },
         },
-        required: ["skill_id"],
+        required: ['skill_id'],
       },
     },
   },
   {
-    type: "function",
+    type: 'function',
     function: {
-      name: "get_recent_entries",
-      description: "Get the user's recent journal entries with extracted signals",
+      name: 'get_recent_entries',
+      description:
+        "Get the user's recent journal entries with extracted signals",
       parameters: {
-        type: "object",
+        type: 'object',
         properties: {
-          limit: { type: "number", description: "Number of entries (default 5)" },
-          skill_filter: { type: "string", description: "Filter by skill practiced" },
+          limit: {
+            type: 'number',
+            description: 'Number of entries (default 5)',
+          },
+          skill_filter: {
+            type: 'string',
+            description: 'Filter by skill practiced',
+          },
         },
       },
     },
   },
   {
-    type: "function",
+    type: 'function',
     function: {
-      name: "get_progression_stats",
+      name: 'get_progression_stats',
       description: "Get user's progression stats for their current skill",
-      parameters: { type: "object", properties: {} },
+      parameters: { type: 'object', properties: {} },
     },
   },
   {
-    type: "function",
+    type: 'function',
     function: {
-      name: "search_entries",
+      name: 'search_entries',
       description: "Search user's past entries by topic or theme",
       parameters: {
-        type: "object",
+        type: 'object',
         properties: {
-          query: { type: "string", description: "Search query" },
-          limit: { type: "number", description: "Max results (default 3)" },
+          query: { type: 'string', description: 'Search query' },
+          limit: { type: 'number', description: 'Max results (default 3)' },
         },
-        required: ["query"],
+        required: ['query'],
       },
     },
   },
@@ -222,15 +232,19 @@ export async function executeTool(
   context: { userId: string; supabase: SupabaseClient }
 ): Promise<unknown> {
   switch (name) {
-    case "get_user_profile":
+    case 'get_user_profile':
       return getUserProfile(context);
-    case "get_skill_details":
+    case 'get_skill_details':
       return getSkillDetails(args.skill_id as string);
-    case "get_recent_entries":
-      return getRecentEntries(context, args.limit as number, args.skill_filter as string);
-    case "get_progression_stats":
+    case 'get_recent_entries':
+      return getRecentEntries(
+        context,
+        args.limit as number,
+        args.skill_filter as string
+      );
+    case 'get_progression_stats':
       return getProgressionStats(context);
-    case "search_entries":
+    case 'search_entries':
       return searchEntries(context, args.query as string, args.limit as number);
     default:
       throw new Error(`Unknown tool: ${name}`);
@@ -247,12 +261,18 @@ export async function handleChat(req: AIRequest): Promise<AIResponse> {
   const provider = new OpenAIProvider();
 
   // Build dynamic system prompt with user context
-  const userProfile = await getUserProfile({ userId: req.userId, supabase: req.supabase });
+  const userProfile = await getUserProfile({
+    userId: req.userId,
+    supabase: req.supabase,
+  });
   const systemPrompt = buildSystemPrompt(userProfile);
 
   // Trim conversation to token budget (8k tokens ~= 32k chars)
   const trimmedMessages = trimConversationHistory(messages, 32000);
-  let allMessages = [{ role: "system", content: systemPrompt }, ...trimmedMessages];
+  let allMessages = [
+    { role: 'system', content: systemPrompt },
+    ...trimmedMessages,
+  ];
 
   let toolCallCount = 0;
   const toolsUsed: string[] = [];
@@ -266,7 +286,7 @@ export async function handleChat(req: AIRequest): Promise<AIResponse> {
 
     if (!response.tool_calls?.length) {
       // Log tool usage
-      log.info("Chat completed", {
+      log.info('Chat completed', {
         userId: req.userId,
         toolCallCount,
         toolsUsed,
@@ -280,19 +300,34 @@ export async function handleChat(req: AIRequest): Promise<AIResponse> {
       toolCallCount++;
       toolsUsed.push(call.function.name);
 
-      const result = await executeTool(call.function.name, JSON.parse(call.function.arguments), {
-        userId: req.userId,
-        supabase: req.supabase,
+      const result = await executeTool(
+        call.function.name,
+        JSON.parse(call.function.arguments),
+        {
+          userId: req.userId,
+          supabase: req.supabase,
+        }
+      );
+      allMessages.push({
+        role: 'tool',
+        tool_call_id: call.id,
+        content: JSON.stringify(result),
       });
-      allMessages.push({ role: "tool", tool_call_id: call.id, content: JSON.stringify(result) });
     }
   }
 
-  log.warn("Chat hit tool loop limit", { userId: req.userId, toolCallCount, toolsUsed });
-  return { content: "I had trouble processing that request." };
+  log.warn('Chat hit tool loop limit', {
+    userId: req.userId,
+    toolCallCount,
+    toolsUsed,
+  });
+  return { content: 'I had trouble processing that request.' };
 }
 
-function trimConversationHistory(messages: Message[], maxChars: number): Message[] {
+function trimConversationHistory(
+  messages: Message[],
+  maxChars: number
+): Message[] {
   let totalChars = 0;
   const result: Message[] = [];
 
@@ -325,13 +360,13 @@ export async function handleEntryProcess(req: AIRequest): Promise<AIResponse> {
 
   // Update entry with signals AND embedding
   await req.supabase
-    .from("entries")
+    .from('entries')
     .update({
       ...signals,
       embedding,
       processed_at: new Date().toISOString(),
     })
-    .eq("id", entryId);
+    .eq('id', entryId);
 
   return { signals };
 }
@@ -349,7 +384,7 @@ export async function searchEntries(
   const provider = new OpenAIProvider();
   const queryEmbedding = await provider.embed(query);
 
-  const { data, error } = await context.supabase.rpc("match_entries", {
+  const { data, error } = await context.supabase.rpc('match_entries', {
     query_embedding: queryEmbedding,
     match_threshold: 0.7,
     match_count: limit,
@@ -421,7 +456,7 @@ USER CONTEXT:
 CURRENT SKILL FOCUS:
 - Marker to develop: ${skill.marker}
 - Hindrance to work with: ${skill.hindrance}
-- Key techniques: ${skill.techniques.join(", ")}
+- Key techniques: ${skill.techniques.join(', ')}
 
 GUIDELINES:
 - Be warm, concise, practical (2-4 sentences unless asked for more)
@@ -436,20 +471,20 @@ GUIDELINES:
 
 ## File Changes Summary
 
-| File | Action | Description |
-|------|--------|-------------|
-| `supabase/functions/ai/providers/openai.ts` | Rewrite | Use official SDK, add streaming + embed |
-| `supabase/functions/ai/handlers/chat.ts` | Rewrite | Tool-aware with dynamic context, logging |
-| `supabase/functions/ai/handlers/chat-stream.ts` | New | SSE streaming handler |
-| `supabase/functions/ai/tools/definitions.ts` | New | Tool schemas |
-| `supabase/functions/ai/tools/handlers.ts` | New | Tool execution |
-| `supabase/functions/ai/tools/search.ts` | New | Vector search |
-| `supabase/functions/ai/prompts/system.ts` | New | Dynamic prompt builder |
-| `supabase/functions/ai/handlers/entry-process.ts` | Modify | Add embedding generation |
-| `supabase/functions/backfill-embeddings/index.ts` | New | Backfill embeddings for existing entries |
-| `supabase/migrations/006_add_vector_search.sql` | New | match_entries RPC |
-| `app/lib/ai.ts` | Modify | Add chatStream function |
-| `app/app/(main)/ask.tsx` | Modify | Use streaming, show tokens as they arrive |
+| File                                              | Action  | Description                               |
+| ------------------------------------------------- | ------- | ----------------------------------------- |
+| `supabase/functions/ai/providers/openai.ts`       | Rewrite | Use official SDK, add streaming + embed   |
+| `supabase/functions/ai/handlers/chat.ts`          | Rewrite | Tool-aware with dynamic context, logging  |
+| `supabase/functions/ai/handlers/chat-stream.ts`   | New     | SSE streaming handler                     |
+| `supabase/functions/ai/tools/definitions.ts`      | New     | Tool schemas                              |
+| `supabase/functions/ai/tools/handlers.ts`         | New     | Tool execution                            |
+| `supabase/functions/ai/tools/search.ts`           | New     | Vector search                             |
+| `supabase/functions/ai/prompts/system.ts`         | New     | Dynamic prompt builder                    |
+| `supabase/functions/ai/handlers/entry-process.ts` | Modify  | Add embedding generation                  |
+| `supabase/functions/backfill-embeddings/index.ts` | New     | Backfill embeddings for existing entries  |
+| `supabase/migrations/006_add_vector_search.sql`   | New     | match_entries RPC                         |
+| `app/lib/ai.ts`                                   | Modify  | Add chatStream function                   |
+| `app/app/(main)/ask.tsx`                          | Modify  | Use streaming, show tokens as they arrive |
 
 ---
 
@@ -465,6 +500,7 @@ GUIDELINES:
 **Location:** `supabase/functions/backfill-embeddings/index.ts`
 
 **Usage:**
+
 ```bash
 # Deploy the function
 supabase functions deploy backfill-embeddings
@@ -483,6 +519,7 @@ curl -X POST "https://<project>.supabase.co/functions/v1/backfill-embeddings" \
 ```
 
 **What it does:**
+
 - Fetches reflect entries without embeddings
 - Filters to 50+ words
 - Generates embeddings via text-embedding-3-small
@@ -493,21 +530,21 @@ curl -X POST "https://<project>.supabase.co/functions/v1/backfill-embeddings" \
 
 ## Decisions
 
-| Question | Decision |
-|----------|----------|
-| Rate limiting | No limit for now, but **log tool usage count** per request |
-| Token budget | **8,000 tokens** for conversation history (~10-15 exchanges), sliding window |
-| Streaming | **Default for chat**, non-streaming for other handlers |
-| Backfill | Script for reflect entries with **50+ words** |
+| Question      | Decision                                                                     |
+| ------------- | ---------------------------------------------------------------------------- |
+| Rate limiting | No limit for now, but **log tool usage count** per request                   |
+| Token budget  | **8,000 tokens** for conversation history (~10-15 exchanges), sliding window |
+| Streaming     | **Default for chat**, non-streaming for other handlers                       |
+| Backfill      | Script for reflect entries with **50+ words**                                |
 
 ## Token Budget Breakdown
 
-| Component | Tokens |
-|-----------|--------|
-| System prompt | ~500 |
-| Tool definitions | ~1,000 |
-| User context (profile, skill) | ~500 |
-| Conversation history | **8,000 max** |
-| Tool results | ~2,000 |
-| Response buffer | ~500 |
-| **Total** | ~12,500 (well under 128k limit) |
+| Component                     | Tokens                          |
+| ----------------------------- | ------------------------------- |
+| System prompt                 | ~500                            |
+| Tool definitions              | ~1,000                          |
+| User context (profile, skill) | ~500                            |
+| Conversation history          | **8,000 max**                   |
+| Tool results                  | ~2,000                          |
+| Response buffer               | ~500                            |
+| **Total**                     | ~12,500 (well under 128k limit) |

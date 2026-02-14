@@ -32,6 +32,7 @@ Your meditation is the same as Meditation Skill 04, except you now develop mindf
 Your meditation remains the same as in Meditation Skills 01-04, except you now add Steps 2-3 as new additions to your meditation.
 
 Your Meditation So Far:
+
 - Sit in meditation.
 - Reflect gratefully.
 - Enjoy relaxing your body and mind.
@@ -54,6 +55,7 @@ Smiling with your eyes, really enjoying it, will increase the pleasant feeling f
 Develop insight by observing and softening any tendency of your mind to control your breathing. Breath control appears as tightness, tension, and breathing that does not settle or calm down as the meditation progresses. If you suspect breath control, allow a slow breath out through your nose, then relax and wait for the breath to draw back in by itself.
 
 GOSS: Ground --> Observe --> Soften --> Smile.
+
 - Ground: Be aware of the experience of your body's natural breathing.
 - Observe: Notice whenever your mind begins to control your breathing.
 - Soften: Allow a gentle softening breath out through your nose and relax and wait for it to come back in to reset your breathing.
@@ -104,6 +106,7 @@ When referring to the experience of delusion in MIDL, we are talking about the o
 While we are in habitual delusion, we cannot know it; this is because one of the primary conditions for it to arise is awareness of awareness ceasing. We can observe that this has happened when mindfulness returns, as awareness of awareness rearises again. It is at this point when you realise that you have been lost in thought or fantasy for a while and didn't realise it until now. On reflection, we can see that we were completely immersed in thought, fantasy, or memory, acting and reacting habitually and that we had no idea what was going on at that time.
 
 There is an answer to this problem, and that is the development of samadhi (unification of mind/collectedness) built out of the Seven Awakening Factors:
+
 1. Mindfulness.
 2. Curiosity.
 3. Balanced Effort.

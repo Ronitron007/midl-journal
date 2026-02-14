@@ -1,4 +1,4 @@
-import { SupabaseClient } from "jsr:@supabase/supabase-js@2";
+import { SupabaseClient } from 'jsr:@supabase/supabase-js@2';
 
 export type AIRequest = {
   payload: Record<string, unknown>;
@@ -51,18 +51,18 @@ export type ProcessedSignals = {
   skill_analyzed: string;
 
   // Samatha (relaxation/calm) assessment
-  samatha_tendency: SamathaTendency;  // tendency toward relaxation and calm
+  samatha_tendency: SamathaTendency; // tendency toward relaxation and calm
   marker_present: boolean;
   marker_notes: string | null;
 
   // Hindrance assessment
   hindrance_present: boolean;
   hindrance_notes: string | null;
-  hindrance_conditions: string[];     // what triggered/led to the hindrance
+  hindrance_conditions: string[]; // what triggered/led to the hindrance
 
   // Working with experience
-  balance_approach: string | null;    // how they worked with the hindrance
-  key_understanding: string | null;   // insight or understanding gained
+  balance_approach: string | null; // how they worked with the hindrance
+  key_understanding: string | null; // insight or understanding gained
 
   // Techniques and progression
   techniques_mentioned: string[];

@@ -31,6 +31,7 @@ Increase mindfulness and clear comprehension of the whole of each in- and out-br
 Your meditation remains the same as in Meditation Skills 01-05, except you now add Steps 2-3 as new additions to your meditation.
 
 Your Meditation So Far:
+
 - Sit in meditation.
 - Reflect gratefully.
 - Enjoy relaxing your body and mind.

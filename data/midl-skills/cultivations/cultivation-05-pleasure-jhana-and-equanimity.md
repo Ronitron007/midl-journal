@@ -5,6 +5,7 @@
 **Purpose:** To develop the first four pleasure jhanas and equanimity for advanced insight practice
 
 ## What You Will Learn
+
 - How to access the first pleasure jhana
 - How to access the second pleasure jhana
 - How to access the third pleasure jhana

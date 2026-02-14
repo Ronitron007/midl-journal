@@ -27,6 +27,7 @@ Step 1: Meditation Skills 01-06.
 Your meditation remains the same as in Meditation Skills 01-06, except you now move directly to Skill 10 once tranquillity is developed and add Steps 2-3 as new additions to your meditation. You will know when enough tranquillity has developed because your mind will become tranquil as mind wandering calms, and awareness will become clear as dullness is removed from your mind.
 
 Your Meditation So Far:
+
 - Sit in meditation.
 - Reflect gratefully.
 - Enjoy relaxing your body and mind.
@@ -56,8 +57,8 @@ After developing intimacy with Marker 06: Whole of Each Breath, your meditation 
 
 NEW Progression Map for Mindfulness of Breathing:
 
-Meditative Hindrances                          Meditation Markers
-(Hindrances to calm)                           (Signs of deepening calm)
+Meditative Hindrances Meditation Markers
+(Hindrances to calm) (Signs of deepening calm)
 
                                                01: Body Relaxation.
                                                02: Mind Relaxation.
@@ -66,13 +67,13 @@ Meditative Hindrances                          Meditation Markers
                                                05: Natural Breathing.
                                                06: Whole of Each Breath.
 
-10: Sensory Stimulation.         →             10: Whole-Body Breathing.
-11: Anticipation of Pleasure.                  11: Sustained Awareness.
-12: Fear of Letting Go.                        12: Access Concentration.
-13: Unstable Unification.                      13: First Pleasure Jhana.
-14: Enchantment with Piti.                     14: Second Pleasure Jhana.
-15: Enchantment with Sukha.                    15: Third Pleasure Jhana.
-16: Enchantment with Happiness.                16: Fourth Pleasure Jhana.
+10: Sensory Stimulation. → 10: Whole-Body Breathing.
+11: Anticipation of Pleasure. 11: Sustained Awareness.
+12: Fear of Letting Go. 12: Access Concentration.
+13: Unstable Unification. 13: First Pleasure Jhana.
+14: Enchantment with Piti. 14: Second Pleasure Jhana.
+15: Enchantment with Sukha. 15: Third Pleasure Jhana.
+16: Enchantment with Happiness. 16: Fourth Pleasure Jhana.
 
 Note: Markers 00 is no longer needed. Markers 07-09 are no longer needed.
 
@@ -89,4 +90,5 @@ Tip: You may experience shaking in your attention as you transition from sustain
 Progression Criteria:
 
 You are ready to progress to Meditation Skill 11: Sustained Awareness when:
+
 - You become intimately aware of the experience of your whole-body breathing as a pleasurable breath experience, and your awareness of your five physical senses begins to fade (viraga).

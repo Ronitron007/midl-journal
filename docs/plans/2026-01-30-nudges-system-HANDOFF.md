@@ -7,6 +7,7 @@
 ## Summary
 
 Built a nudges system aligned with **Stephen's post-meditation reflection framework**. Generates personalized prompts across six categories:
+
 1. **Samatha** - tendency toward relaxation/calm
 2. **Understanding** - what was experienced/understood
 3. **Hindrance** - dominant obstacle
@@ -19,6 +20,7 @@ Built a nudges system aligned with **Stephen's post-meditation reflection framew
 ### 1. Created Nudges Module (`app/lib/nudges.ts`)
 
 **Skill-specific prompts for all 17 skills, organized by Stephen's categories:**
+
 - `samatha` - "What was your mind's tendency toward calm?"
 - `understanding` - "What did you experience/understand?"
 - `hindrance` - "What was the dominant hindrance?"
@@ -27,6 +29,7 @@ Built a nudges system aligned with **Stephen's post-meditation reflection framew
 - `curiosity` - "What seeds for next session?"
 
 **Nudge types:**
+
 - `focus` (gray) - Samatha/understanding questions
 - `marker` (green) - Positive experience questions
 - `hindrance` (amber) - Obstacle questions
@@ -34,6 +37,7 @@ Built a nudges system aligned with **Stephen's post-meditation reflection framew
 - `pattern` (yellow) - Personalized from history (hindrance_conditions, balance_approach, samatha_tendency)
 
 **Functions:**
+
 - `generateNudges(userId, skillId)` - Fetches history, analyzes patterns, returns personalized nudges
 - `getStaticNudges(skillId)` - Immediate nudges without DB call
 - `analyzePatterns()` - Analyzes:
@@ -76,20 +80,20 @@ Sorted by priority, returns top 4 nudges.
 
 ## Color Coding
 
-| Type | Background | Text | Example |
-|------|------------|------|---------|
-| focus | #f3f4f6 (gray) | #4b5563 | "Where was your breath?" |
-| marker | #dcfce7 (green) | #166534 | "Did belly breathing feel natural?" |
-| hindrance | (via pattern) | #92400e | "Did chest breathing show up?" |
-| technique | #dbeafe (blue) | #1e40af | "Try slow exhales..." |
-| pattern | #fef3c7 (amber) | #92400e | "You've noticed... in 3 sessions" |
+| Type      | Background      | Text    | Example                             |
+| --------- | --------------- | ------- | ----------------------------------- |
+| focus     | #f3f4f6 (gray)  | #4b5563 | "Where was your breath?"            |
+| marker    | #dcfce7 (green) | #166534 | "Did belly breathing feel natural?" |
+| hindrance | (via pattern)   | #92400e | "Did chest breathing show up?"      |
+| technique | #dbeafe (blue)  | #1e40af | "Try slow exhales..."               |
+| pattern   | #fef3c7 (amber) | #92400e | "You've noticed... in 3 sessions"   |
 
 ## Files Changed
 
-| File | Change Type |
-|------|-------------|
-| `app/lib/nudges.ts` | **NEW** - Nudges generation and data |
-| `app/app/(main)/reflect.tsx` | Modified - Added nudges UI |
+| File                         | Change Type                          |
+| ---------------------------- | ------------------------------------ |
+| `app/lib/nudges.ts`          | **NEW** - Nudges generation and data |
+| `app/app/(main)/reflect.tsx` | Modified - Added nudges UI           |
 
 ## Testing
 
@@ -102,6 +106,7 @@ Sorted by priority, returns top 4 nudges.
 ## What's Next (Final Part)
 
 ### Part 4: Skill Progression
+
 - Count marker_present sessions for advancement
 - Use progression_signals to determine readiness
 - Show progression UI (how close to next skill)

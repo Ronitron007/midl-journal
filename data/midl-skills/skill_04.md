@@ -33,6 +33,7 @@ Your meditation is the same as Meditation Skill 03, except that you now focus on
 Develop Mindful Presence in your body as you did in Skills 01-03. Once you feel very present in your body, begin to find contentment and enjoyment in the simple act of resting mindfully in meditation by adding Steps 2-4.
 
 Your Meditation So Far:
+
 - Sit in meditation.
 - Reflect gratefully.
 - Enjoy relaxing your body and mind.
@@ -53,6 +54,7 @@ Smile with your eyes, radiating kindness and care to connect your heart to your 
 To develop insight, become interested in distraction and apply the GOSS Formula anytime you observe that you have forgotten your meditation. During this stage of meditation, the main hindrance you want to weaken is the length of time you forget that you are meditating when your mind wanders to thoughts, etc. Applying the GOSS Formula and enjoying returning to the presence of your body, finding contentment in it will reward your mind for returning to mindful presence, weakening habitual mind wandering and forgetting.
 
 GOSS Formula: How to Let Go.
+
 - Ground.
 - Observe.
 - Soften.
@@ -76,6 +78,7 @@ Smile = Smile with your eyes, enjoying how nice it feels to let go of distractio
 Are you feeling stuck on this meditation? I will start by saying that what you are experiencing in your meditation, though difficult, is exactly what is meant to be happening. The ebb and flow of enjoyment in meditation is a normal part of developing an insight meditation practice.
 
 In MIDL, there are four rites of passage that meditators often feel stuck on:
+
 1. Skill 04 with enjoyment and pleasure.
 2. Skill 07 with gross dullness.
 3. Skill 09 with becoming too tranquil.
@@ -130,6 +133,7 @@ It's important to understand that habitual forgetting is a natural function of t
 ### Working with the Hindrance
 
 To weaken the mental habit of habitual forgetting, once you are familiar with Skills 01-03, you can apply them to support this process:
+
 1. Sit in meditation with your palms resting in your lap, one thumb gently resting on the other. This creates a reference point from which you can observe your mind wandering away from this touch, helping you remember your meditation practice.
 2. Develop enjoyment of Mindful Presence of your body as in Skills 01-04. Gently soften your mental effort so that your awareness of the touch of your thumbs goes slightly out of focus. This will loosen your mind's grip on that sensation and allow your attention to habitually wander so that you can observe it.
 3. Mind Wandering: If you notice a thought, memory, or fantasy arise in your mind but don't become lost in it, there's no need to do anything with it. Simply acknowledge its presence as something that occurred on its own (anatta) and continue to enjoy the relaxation and presence of your body. If you feel a slight pull of interest toward a thought, memory, or fantasy, simply soften the effort of your mind to let go of this interest, as described in Skill 02.
@@ -146,6 +150,7 @@ At this stage of mindfulness of breathing, insight is developed by being curious
 The mental habit of forgetting your meditation object and becoming lost within mind wandering will gradually weaken with increased intimacy with the enjoyment of breathing in Markers 04-06, and a weakened version may still be present until the transition onto Marker 07 with increased calm of body, breathing and mind.
 
 Meditative Hindrances (Hindrances to calm) -> Meditation Markers (Signs of deepening calm)
+
 - 00: -> Diaphragm Breathing
 - 01: -> Body Relaxation
 - 02: -> Mind Relaxation

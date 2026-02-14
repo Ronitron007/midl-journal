@@ -50,16 +50,19 @@ AI-powered meditation companion app built around the MIDL (Mindfulness in Daily 
 **Layout:**
 
 **Top area: Skill Map**
+
 - Visual representation of 6 cultivations, 17 skills
 - Current skill highlighted
 - Completed skills marked
 - Tapping a skill shows brief info + link to midlmeditation.com
 
 **Middle area: Stats (minimal)**
+
 - One consistency metric: streak or sessions this week
 - One progress metric: current skill + days on it
 
 **Bottom area: Session History**
+
 - Scrollable list of past entries (Reflect + Ask)
 - Each entry shows: date, type, duration (if Reflect), brief preview
 - Tapping opens full entry
@@ -71,12 +74,14 @@ AI-powered meditation companion app built around the MIDL (Mindfulness in Daily 
 ### 2. Reflect Mode (Journal)
 
 **Visual (iOS Journal / Floating Card style):**
+
 - Soft gradient background (lavender → peach)
 - Floating card with 24px rounded corners, subtle shadow
 - Serif header: "How was your practice?"
 - Large text area (70% of card), sans-serif 16pt
 
 **Flow:**
+
 1. Screen opens, keyboard auto-focuses on text area
 2. Below text: collapsed "Add details +" row
 3. Tapping expands metadata fields
@@ -86,16 +91,19 @@ AI-powered meditation companion app built around the MIDL (Mindfulness in Daily 
 7. Dismiss → save → return to Tracker
 
 **Metadata fields (optional, collapsible):**
+
 - Duration: pill selector [15 min] [30 min] [45 min] [Custom]
 - Type: binary toggle [Guided] [Unguided]
 - Skill: dropdown of MIDL skills
 
 **Track progress toggle:**
+
 - Visible when metadata expanded
 - ON: entry contributes to progress tracking
 - OFF: entry stored but not used for tracking
 
 **AI feedback (adaptive):**
+
 - Sometimes encouragement: "Good session. You showed up."
 - Sometimes direction: "Try extending body relaxation tomorrow."
 - Sometimes pattern: "Third time this week you mention drifting — might revisit Skill 03."
@@ -105,11 +113,13 @@ AI-powered meditation companion app built around the MIDL (Mindfulness in Daily 
 ### 3. Ask Mode (Free Chat)
 
 **Visual:**
+
 - Same gradient background as Reflect
 - Chat interface: user messages right (blue), AI messages left (white)
 - Input bar fixed at bottom — built with Tiptap
 
 **Features:**
+
 - "Track progress" toggle visible above input
 - AI can reference past sessions: "In your January 15th reflection, you mentioned restlessness..."
 - AI links to midlmeditation.com when citing MIDL content
@@ -117,11 +127,13 @@ AI-powered meditation companion app built around the MIDL (Mindfulness in Daily 
 - Each Ask session saved to Tracker
 
 **Memory access:**
+
 - AI has tools to query past entries by date/date-range
 - Can pull journal summaries to inform responses
 - User can explicitly ask: "What did I write last week about focus?"
 
 **Behavior:**
+
 - No opening prompt from AI — user initiates
 - AI responds conversationally, adapts tone to question type
 - MIDL content served through chat with links to source
@@ -133,27 +145,33 @@ AI-powered meditation companion app built around the MIDL (Mindfulness in Daily 
 **Format:** Interactive form with AI intro and personalized summary (~2 min)
 
 **Opening:**
+
 - AI avatar/icon with welcome message
 - "Let's get to know each other so I can guide your practice."
 
 **Form sections:**
 
 **1. Meditation experience**
+
 - "Have you meditated before?" [Never / A little / Regularly / Years of practice]
 - "What styles have you tried?" [Multi-select: Guided apps, Breath focus, Body scan, Vipassana, Zen, Other]
 - "What do you struggle with?" [Multi-select: Staying consistent, Mind wandering, Restlessness, Sleepiness, Not sure what to do]
 
 **2. Life context**
+
 - "What brings you here?" [Open text, optional]
 - "What's going on in your life right now?" [Multi-select: Stress, Anxiety, Depression, Life transition, Seeking growth, Curiosity]
 
 **3. Neurodivergence / mental health**
+
 - "Anything that affects how you learn or focus?" [Multi-select: ADHD, Anxiety, Depression, Trauma history, None, Prefer not to say]
 
 **4. Goals**
+
 - "What does success look like in 6 months?" [Multi-select: Daily habit, Less anxiety, Better focus, Deeper practice, Self-understanding, Not sure yet]
 
 **Closing:**
+
 - AI generates personalized summary
 - "Based on what you shared, I'd suggest starting with Skill 00..."
 - Recommended starting skill shown
@@ -164,12 +182,14 @@ AI-powered meditation companion app built around the MIDL (Mindfulness in Daily 
 ## Push Notifications
 
 **Setup:**
+
 - During onboarding or in settings
 - "Want a daily nudge to practice?"
 - Time picker: single time, defaults to 8:00am
 - On/off toggle
 
 **Content:**
+
 - Brief, varies daily
 - Includes focus for session based on current skill
 - Examples:
@@ -185,6 +205,7 @@ AI-powered meditation companion app built around the MIDL (Mindfulness in Daily 
 ### Entry Data
 
 **Structured metadata (all entries):**
+
 - Date/time
 - Type (Reflect / Ask)
 - Duration (if Reflect)
@@ -194,6 +215,7 @@ AI-powered meditation companion app built around the MIDL (Mindfulness in Daily 
 - Entry ID
 
 **AI-extracted signals (populated async):**
+
 - mood_score: 1-5
 - mood_tags: ["anxious", "calm", "restless"]
 - themes: ["sleep", "work", "practice difficulty"]
@@ -204,12 +226,14 @@ AI-powered meditation companion app built around the MIDL (Mindfulness in Daily 
 ### Summarization
 
 **Per-entry summaries:**
+
 - Generated 24h after entry OR on first AI access
 - Skip for entries <50 words
 - Regenerated if user edits entry
 - Both Reflect and Ask entries get summarized
 
 **Rolling summaries:**
+
 - Generated every 5-7 entries
 - Compress oldest entries into summary chain
 - No fixed weekly/monthly cron jobs
@@ -226,10 +250,12 @@ AI-powered meditation companion app built around the MIDL (Mindfulness in Daily 
 ### AI Context Strategy (Tiered)
 
 **Always include:**
+
 - User profile + current skill
 - Structured stats (streak, avg duration, mood trend)
 
 **Conditionally include:**
+
 - Last 1-2 raw entries (freshness)
 - 2-3 semantically relevant summaries (relevance)
 - Rolling summary if exists (breadth)
@@ -317,16 +343,19 @@ CREATE INDEX idx_context_summaries_user ON context_summaries(user_id, created_at
 ### How Users Progress
 
 **AI-suggested advancement:**
+
 - AI monitors patterns: consistent practice, markers achieved, fewer struggles
 - When ready, AI suggests in Reflect feedback: "You seem solid on Skill 02. Ready to move to Skill 03?"
 - User confirms → skill advances → Tracker updates
 
 **User self-advancement:**
+
 - User taps any skill on the skill map
 - Option to "Start practicing this skill"
 - If AI thinks they're not ready: warning modal (advisory only)
 
 **Warning modal (advisory, not blocking):**
+
 - "You haven't spent much time on Skill 02 yet. The foundation matters."
 - Options: "Start anyway" / "Stay on Skill 02"
 - User can always proceed — no hard gates
@@ -375,4 +404,4 @@ CREATE INDEX idx_context_summaries_user ON context_summaries(user_id, created_at
 
 ---
 
-*Document generated from brainstorming session 2026-01-22*
+_Document generated from brainstorming session 2026-01-22_

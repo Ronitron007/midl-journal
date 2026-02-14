@@ -37,13 +37,13 @@
 
 ## Core AI Components
 
-| Component | File | Purpose |
-|-----------|------|---------|
-| Chat Edge Func | `supabase/functions/chat/` | Meditation guide conversations |
-| AI Feedback | `lib/ai-feedback.ts` | Post-reflection insights |
-| Entry Processor | `lib/entry-processor.ts` | NLP signal extraction |
-| Onboarding Eval | `lib/onboarding-eval.ts` | Skill recommendation |
-| OpenAI Client | `lib/openai.ts` | Base chat wrapper |
+| Component       | File                       | Purpose                        |
+| --------------- | -------------------------- | ------------------------------ |
+| Chat Edge Func  | `supabase/functions/chat/` | Meditation guide conversations |
+| AI Feedback     | `lib/ai-feedback.ts`       | Post-reflection insights       |
+| Entry Processor | `lib/entry-processor.ts`   | NLP signal extraction          |
+| Onboarding Eval | `lib/onboarding-eval.ts`   | Skill recommendation           |
+| OpenAI Client   | `lib/openai.ts`            | Base chat wrapper              |
 
 ## RAG Data Flow
 
@@ -258,9 +258,9 @@
 
 ## Planned Migrations
 
-| From | To | Status |
-|------|----|--------|
-| `lib/openai.ts` client call | `chat/` edge function | In Progress |
-| `lib/ai-feedback.ts` | `reflect-feedback/` edge func | Planned |
-| Client-side `OPENAI_API_KEY` | Server-only | Planned |
-| Context useReducer | Zustand/Jotai | Future |
+| From                         | To                            | Status      |
+| ---------------------------- | ----------------------------- | ----------- |
+| `lib/openai.ts` client call  | `chat/` edge function         | In Progress |
+| `lib/ai-feedback.ts`         | `reflect-feedback/` edge func | Planned     |
+| Client-side `OPENAI_API_KEY` | Server-only                   | Planned     |
+| Context useReducer           | Zustand/Jotai                 | Future      |

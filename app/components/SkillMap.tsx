@@ -1,7 +1,22 @@
-import { View, Text, ScrollView, Pressable, LayoutChangeEvent } from 'react-native';
-import { SKILLS, CULTIVATIONS, isSkillCompleted, isCurrentSkill } from '../lib/midl-skills';
+import {
+  View,
+  Text,
+  ScrollView,
+  Pressable,
+  LayoutChangeEvent,
+} from 'react-native';
+import {
+  SKILLS,
+  CULTIVATIONS,
+  isSkillCompleted,
+  isCurrentSkill,
+} from '../lib/midl-skills';
 import { useState, useEffect, useRef } from 'react';
-import { ProgressionStats, getProgressPercentage, getProgressDescription } from '../lib/progression';
+import {
+  ProgressionStats,
+  getProgressPercentage,
+  getProgressDescription,
+} from '../lib/progression';
 
 type SkillMapProps = {
   currentSkill: string;
@@ -10,9 +25,16 @@ type SkillMapProps = {
   onAdvance?: () => void;
 };
 
-export default function SkillMap({ currentSkill, progressionStats, onSkillPress, onAdvance }: SkillMapProps) {
+export default function SkillMap({
+  currentSkill,
+  progressionStats,
+  onSkillPress,
+  onAdvance,
+}: SkillMapProps) {
   // Default to showing current skill info
-  const [selectedSkill, setSelectedSkill] = useState<string | null>(currentSkill);
+  const [selectedSkill, setSelectedSkill] = useState<string | null>(
+    currentSkill
+  );
   const scrollViewRef = useRef<ScrollView>(null);
   const [containerWidth, setContainerWidth] = useState(0);
 
@@ -43,7 +65,8 @@ export default function SkillMap({ currentSkill, progressionStats, onSkillPress,
     const nodeWidth = 48; // 40px node + 8px margins
     const lineWidth = 16;
     const markerWidth = 17;
-    const position = currentIndex * (nodeWidth + lineWidth) + cultivationMarkers * markerWidth;
+    const position =
+      currentIndex * (nodeWidth + lineWidth) + cultivationMarkers * markerWidth;
 
     // Center the current skill in view
     const scrollX = Math.max(0, position - containerWidth / 2 + nodeWidth / 2);
@@ -77,7 +100,8 @@ export default function SkillMap({ currentSkill, progressionStats, onSkillPress,
 
             // Check if this is the start of a new cultivation
             const prevSkill = index > 0 ? SKILLS[allSkills[index - 1]] : null;
-            const isNewCultivation = !prevSkill || prevSkill.cultivation !== skill.cultivation;
+            const isNewCultivation =
+              !prevSkill || prevSkill.cultivation !== skill.cultivation;
 
             // Determine colors based on state - using new palette
             const getBackgroundColor = () => {
@@ -160,7 +184,9 @@ export default function SkillMap({ currentSkill, progressionStats, onSkillPress,
                     style={{
                       width: 16,
                       height: 2,
-                      backgroundColor: isCompleted ? '#707927' : 'rgba(112,121,39,0.2)',
+                      backgroundColor: isCompleted
+                        ? '#707927'
+                        : 'rgba(112,121,39,0.2)',
                     }}
                   />
                 )}
@@ -202,12 +228,20 @@ export default function SkillMap({ currentSkill, progressionStats, onSkillPress,
             borderTopColor: 'rgba(112,121,39,0.1)',
           }}
         >
-          <Text style={{ fontWeight: '500', color: '#3a5222', marginBottom: 8 }}>
+          <Text
+            style={{ fontWeight: '500', color: '#3a5222', marginBottom: 8 }}
+          >
             Progression
           </Text>
 
           {/* Progress bar */}
-          <View style={{ flexDirection: 'row', alignItems: 'center', marginBottom: 8 }}>
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              marginBottom: 8,
+            }}
+          >
             <View
               style={{
                 flex: 1,
@@ -221,7 +255,9 @@ export default function SkillMap({ currentSkill, progressionStats, onSkillPress,
                 style={{
                   width: `${getProgressPercentage(progressionStats)}%`,
                   height: '100%',
-                  backgroundColor: progressionStats.readyToAdvance ? '#707927' : '#de8649',
+                  backgroundColor: progressionStats.readyToAdvance
+                    ? '#707927'
+                    : '#de8649',
                   borderRadius: 4,
                 }}
               />
@@ -260,7 +296,8 @@ export default function SkillMap({ currentSkill, progressionStats, onSkillPress,
               }}
             >
               <Text style={{ color: '#ffffff', fontWeight: '500' }}>
-                Advance to Skill {progressionStats.nextSkillId}: {SKILLS[progressionStats.nextSkillId]?.name}
+                Advance to Skill {progressionStats.nextSkillId}:{' '}
+                {SKILLS[progressionStats.nextSkillId]?.name}
               </Text>
             </Pressable>
           ) : progressionStats.nextSkillId ? (
@@ -268,7 +305,9 @@ export default function SkillMap({ currentSkill, progressionStats, onSkillPress,
               {getProgressDescription(progressionStats)}
             </Text>
           ) : (
-            <Text style={{ color: '#707927', fontSize: 13, fontStyle: 'italic' }}>
+            <Text
+              style={{ color: '#707927', fontSize: 13, fontStyle: 'italic' }}
+            >
               You've reached the final skill
             </Text>
           )}

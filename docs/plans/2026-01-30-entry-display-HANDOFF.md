@@ -13,12 +13,14 @@ Enhanced the entry cards in the tracker list view to display MIDL signals from P
 ### 1. Created `EntryCard` Component (`app/components/EntryCard.tsx`)
 
 New reusable component that displays:
+
 - **Top row:** Date, type badge, skill number, signal indicators, mood emoji
 - **Middle:** Summary or raw content preview (2 lines max)
 - **Bottom:** Technique chips (blue) + mood tag chips (pink)
 - **Progression indicator:** Green badge when progression signs detected
 
 Signal indicators (small colored circles):
+
 - ✓ Green = marker present
 - ⚡ Amber = hindrance noticed
 - ⭐ Yellow = breakthrough
@@ -32,6 +34,7 @@ Signal indicators (small colored circles):
 ## Visual Design
 
 Entry card layout:
+
 ```
 ┌─────────────────────────────────────────┐
 │ Jan 30  [reflect]  00       ✓ ⚡ 😊     │
@@ -45,6 +48,7 @@ Entry card layout:
 ```
 
 Color coding:
+
 - Technique chips: Blue (#dbeafe / #1e40af)
 - Mood tag chips: Pink (#fce7f3 / #9d174d)
 - Marker indicator: Green (#dcfce7)
@@ -53,10 +57,10 @@ Color coding:
 
 ## Files Changed
 
-| File | Change Type |
-|------|-------------|
+| File                           | Change Type                             |
+| ------------------------------ | --------------------------------------- |
 | `app/components/EntryCard.tsx` | **NEW** - Reusable entry card component |
-| `app/app/(main)/tracker.tsx` | Modified - Uses EntryCard, cleaned up |
+| `app/app/(main)/tracker.tsx`   | Modified - Uses EntryCard, cleaned up   |
 
 ## Files From Part 1 (Still Needed)
 
@@ -84,11 +88,13 @@ supabase db push
 ## What's Next (Remaining 2 Parts)
 
 ### Part 3: Nudges System
+
 - Generate personalized reflection prompts
 - Use hindrance history to identify recurring struggles
 - Pull skill-specific guidance into prompts
 
 ### Part 4: Skill Progression
+
 - Count marker sessions for advancement
 - Use progression_signals to determine readiness
 - Implement advancement logic and UI

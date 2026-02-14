@@ -32,17 +32,20 @@ Step 1: Learn how to breathe with your diaphragm.
 Start by lying on the floor. If needed, use a pillow under your head and a rolled blanket under your knees. Place both palms below your belly button, pressing slightly inwards so that you can feel the movement of your belly as you breathe.
 
 Slowly raising and lowering your abdomen will cause your diaphragm muscle to engage and get stronger. Lie down as described above and try these steps:
+
 - Gently raise your palms away from your body by slowly extending the lower part of your abdomen upwards. Then, lower your palms by slowly lowering your abdomen.
 - Next, notice that air is drawn in through your nose when your abdomen rises and expelled out again as your lower abdomen falls.
 - Take five slow, relaxing breaths by slowly raising and lowering your abdomen. Do this a few times until you are comfortable with the movement.
 
 Step 2: Gently slow down your breathing rate.
 Slowing down the movement of your abdominal breaths will slow down your breathing rate, increasing carbon dioxide reabsorption and increasing the calming effect.
+
 - Take ten more relaxing breaths by slowing down the movement of raising and lowering your abdomen. Keep this movement relaxed so that it feels comfortable.
 - Important: You are simply reminding your body how to breathe in this step. After 10 slow belly breaths allow your body to breathe naturally by itself without your help for a while before moving onto the next step.
 
 Step 3: Breathe from your abdomen into your chest.
 Once you have done ten repetitions of breathing with your abdomen, the next stage is to learn to breathe from your abdomen up into your chest.
+
 - Bring one palm to the top of your chest, leave the other below your belly button.
 - Slowly breathe in from your belly button, extending your ribs out slightly and allow the breath to fill your chest like a balloon.
 - At the end of each in-breath, allow your whole body to relax with a slow out-breath.
@@ -50,6 +53,7 @@ Once you have done ten repetitions of breathing with your abdomen, the next stag
 
 Step 4: Lie still and allow your breathing to happen naturally.
 This final stage of lying still and doing nothing is essential in lowering anxiety as it reinforces diaphragmatic breathing; it will teach your body and mind how to relax deeply.
+
 - Stop controlling your breathing, allowing it to find its own rhythm and pace.
 - If your mind wants to control your breathing, distract yourself by being aware of different parts of your body touching the floor.
 - Lie still and allow your breathing to happen by itself while being aware of its calming effect.
@@ -63,18 +67,18 @@ To weaken OCD: Stillness Meditation - https://midlmeditation.com/meditation-for-
 Common Obstacles:
 
 1. Experiencing struggle and strain.
-Be careful of any over-effort or strain. Anxiety can generate the desire to try to fix and to control things within our lives. If you notice any struggle or strain, then stop what you are doing for a short while and allow yourself to relax before starting again. Breathing in the lower belly is enjoyable if it is done in a relaxed and gentle way. Avoid the urge to overinflate your belly or to try harder; slow, gentle movement is the key. Feel your way into this simple exercise. When the rhythm is correct, it will feel good, and the feeling of relaxation and calm in your body and mind will increase.
+   Be careful of any over-effort or strain. Anxiety can generate the desire to try to fix and to control things within our lives. If you notice any struggle or strain, then stop what you are doing for a short while and allow yourself to relax before starting again. Breathing in the lower belly is enjoyable if it is done in a relaxed and gentle way. Avoid the urge to overinflate your belly or to try harder; slow, gentle movement is the key. Feel your way into this simple exercise. When the rhythm is correct, it will feel good, and the feeling of relaxation and calm in your body and mind will increase.
 
 2. Feeling light-headed.
-Because you are not used to breathing this slowly, you may experience some light-headedness. Whenever you experience this, stop the exercise for a while and allow yourself to stay still until the symptoms settle down. Generally, after 10 seconds, this feeling will settle, leaving you feeling calmer and more relaxed. Once it has settled, you can resume your training. With regular practice, this light-headed feeling will gradually lessen and no longer occur.
-***See your doctor if light-headedness persists***
+   Because you are not used to breathing this slowly, you may experience some light-headedness. Whenever you experience this, stop the exercise for a while and allow yourself to stay still until the symptoms settle down. Generally, after 10 seconds, this feeling will settle, leaving you feeling calmer and more relaxed. Once it has settled, you can resume your training. With regular practice, this light-headed feeling will gradually lessen and no longer occur.
+   **_See your doctor if light-headedness persists_**
 
 3. Feeling like you don't have enough air.
-If stress breathing is normal for you, then you may feel as if you are not getting enough air when you slow your breathing rate. If this feeling arises, it's okay to take a few extra breaths to settle it down. Once your belly breathing movement slows down, the sense of needing more air will gradually dissipate.
+   If stress breathing is normal for you, then you may feel as if you are not getting enough air when you slow your breathing rate. If this feeling arises, it's okay to take a few extra breaths to settle it down. Once your belly breathing movement slows down, the sense of needing more air will gradually dissipate.
 
 4. Your breathing feels tight.
-If you feel a tightness in your lower chest when you breathe in, you may be breathing in from the top of your chest downwards in an attempt to push your breath down into your belly. This will not work. The diaphragm muscle is dome-shaped and cannot be pushed down; it needs to be pulled.
-It can be helpful to think of your diaphragm as an upside-down plunger. When you pull the handle downward, the plunger will suck in air, and as you push it back up, it expels it. To engage your diaphragm muscle, slowly raise the lower part of your abdomen upwards rather than trying to push air down into it from your chest. Placing your palms below your belly button, as in the instructions above, will allow you to feel the movement as you breathe.
+   If you feel a tightness in your lower chest when you breathe in, you may be breathing in from the top of your chest downwards in an attempt to push your breath down into your belly. This will not work. The diaphragm muscle is dome-shaped and cannot be pushed down; it needs to be pulled.
+   It can be helpful to think of your diaphragm as an upside-down plunger. When you pull the handle downward, the plunger will suck in air, and as you push it back up, it expels it. To engage your diaphragm muscle, slowly raise the lower part of your abdomen upwards rather than trying to push air down into it from your chest. Placing your palms below your belly button, as in the instructions above, will allow you to feel the movement as you breathe.
 
 Insight Section:
 
@@ -84,22 +88,22 @@ Insight: We begin mindfulness of breathing by creating the conditions that suppo
 
 Progression Map for Mindfulness of Breathing:
 
-Meditative Hindrances                          Meditation Markers
-(Hindrances to calm)                           (Signs of deepening calm)
+Meditative Hindrances Meditation Markers
+(Hindrances to calm) (Signs of deepening calm)
 
-00: Stress Breathing.           →             00: Diaphragm Breathing.
-                                               01: Body Relaxation.
-                                               02: Mind Relaxation.
-                                               03: Mindful Presence.
-                                               04: Content Presence.
-                                               05: Natural Breathing.
-                                               06: Whole of Each Breath.
-                                               07: Breath Sensations.
-                                               08: One Point of Sensation.
-                                               09: Sustained Attention.
-                                               10: Whole-Body Breathing.
-                                               11: Sustained Awareness.
-                                               12: Access Concentration.
+00: Stress Breathing. → 00: Diaphragm Breathing.
+01: Body Relaxation.
+02: Mind Relaxation.
+03: Mindful Presence.
+04: Content Presence.
+05: Natural Breathing.
+06: Whole of Each Breath.
+07: Breath Sensations.
+08: One Point of Sensation.
+09: Sustained Attention.
+10: Whole-Body Breathing.
+11: Sustained Awareness.
+12: Access Concentration.
 
 Meditative Hindrance: Stress Breathing (00).
 Short, shallow stress breathing in the chest.
@@ -123,6 +127,7 @@ How to reengage diaphragmatic breathing:
 SoundCloud: Guided Meditation - https://soundcloud.com/user-677685629/re-engaging-the-diaphragm-for-anxiety
 
 If you notice you are feeling stressed or anxious:
+
 1. First, ground yourself in a present experience in your body by squeezing one hand in the other or feeling your feet on the ground. The nowness of your body will help to withdraw your mind from fearful thoughts.
 2. Next, place your palms just below your belly button, pressing in slightly so that you will be able to feel the movement in your belly as you breathe.
 3. Slowly extend your lower abdomen outwards, as you did in your seated meditation, to draw breath in through your nose. Slowly lower your abdomen back to allow the breath to go out through your nose, using this belly breathing movement like a pump.
@@ -136,8 +141,10 @@ Tip: Stress and anxiety can become habituated, and due to this, they can perpetu
 Progression Criteria:
 
 You are ready to progress to Meditation Skill 01: Body Relaxation when:
+
 - You experience a feeling of relaxation and ease after taking slow breaths in your belly, and diaphragmatic breathing in your belly happens naturally during your meditation and for a while after you have finished meditating.
 
 Cross-References:
+
 - Next: Skill 01 (Body Relaxation)
 - Related: Meditation Markers, Meditative Hindrances, Stillness Meditation (for OCD)

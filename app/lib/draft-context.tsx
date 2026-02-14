@@ -80,7 +80,8 @@ export function DraftProvider({ children }: { children: ReactNode }) {
   const store: DraftStore = {
     // Reflect
     reflectDraft: state.reflect,
-    setReflectDraft: (draft) => dispatch({ type: 'SET_REFLECT_DRAFT', payload: draft }),
+    setReflectDraft: (draft) =>
+      dispatch({ type: 'SET_REFLECT_DRAFT', payload: draft }),
     clearReflectDraft: () => dispatch({ type: 'CLEAR_REFLECT_DRAFT' }),
     // Ask
     askDraft: state.ask,
@@ -89,9 +90,7 @@ export function DraftProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <DraftContext.Provider value={store}>
-      {children}
-    </DraftContext.Provider>
+    <DraftContext.Provider value={store}>{children}</DraftContext.Provider>
   );
 }
 

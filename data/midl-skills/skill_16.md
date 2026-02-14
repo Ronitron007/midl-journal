@@ -61,6 +61,7 @@ Expand and allow the experience of the purity and unmoving equanimity to pervade
 As soon as you begin developing your skill in the fourth pleasure jhana, you can start developing insight into anicca and anatta at the end of each seated meditation session.
 
 Sotapanna (Stream Entry) is the first of four mature insights leading to the experience of Nibbana that will permanently uproot specific fetters (that which binds) from your mind. The first three fetters removed through insight are:
+
 - Attachment to view of permanent self (uprooted through insight into anicca and anatta)
 - Hindrance of doubt (uprooted through saddha/verified faith)
 - Attachment to rites & rituals (uprooted through insight into idappaccayata: specific conditionality)

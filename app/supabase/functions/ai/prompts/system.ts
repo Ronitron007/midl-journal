@@ -1,4 +1,4 @@
-import { SKILLS_DATA } from "../data/skills.ts";
+import { SKILLS_DATA } from '../data/skills.ts';
 
 type UserProfile = {
   current_skill: string;
@@ -31,7 +31,7 @@ GUIDELINES:
     return basePrompt;
   }
 
-  const skill = SKILLS_DATA[profile.current_skill] || SKILLS_DATA["00"];
+  const skill = SKILLS_DATA[profile.current_skill] || SKILLS_DATA['00'];
   const stats = profile.stats;
 
   let contextSection = `
@@ -48,7 +48,7 @@ USER CONTEXT:
 THEIR CURRENT FOCUS:
 - Marker to develop: ${skill.marker}
 - Hindrance to work with: ${skill.hindrance}
-- Key techniques: ${skill.techniques.slice(0, 3).join(", ")}`;
+- Key techniques: ${skill.techniques.slice(0, 3).join(', ')}`;
 
   // Add onboarding context if available
   if (profile.onboarding) {
@@ -58,10 +58,10 @@ THEIR CURRENT FOCUS:
       contextSection += `\n- Experience level: ${meditation_experience}`;
     }
     if (struggles?.length) {
-      contextSection += `\n- Mentioned struggles: ${struggles.join(", ")}`;
+      contextSection += `\n- Mentioned struggles: ${struggles.join(', ')}`;
     }
     if (goals?.length) {
-      contextSection += `\n- Goals: ${goals.join(", ")}`;
+      contextSection += `\n- Goals: ${goals.join(', ')}`;
     }
   }
 
