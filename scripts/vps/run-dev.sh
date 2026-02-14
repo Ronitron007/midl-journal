@@ -1,8 +1,22 @@
 #!/bin/bash
-# Run Expo dev server with tunnel on the VPS
+# Run Expo dev server with tunnel on the VPS inside tmux
 # Usage: SSH into VM, then run this script
+# Reattach later: tmux attach -t expo
 
 set -euo pipefail
+
+SESSION="expo"
+
+# If not already inside tmux, re-exec this script inside a tmux session
+if [ -z "${TMUX:-}" ]; then
+  # Attach if session already exists, otherwise create new
+  if tmux has-session -t "$SESSION" 2>/dev/null; then
+    echo "Existing tmux session found. Attaching..."
+    exec tmux attach -t "$SESSION"
+  else
+    exec tmux new-session -s "$SESSION" "$0"
+  fi
+fi
 
 export NVM_DIR="$HOME/.nvm"
 [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
