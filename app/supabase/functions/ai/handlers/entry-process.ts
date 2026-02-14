@@ -7,7 +7,7 @@ import type {
   ProcessedSignals,
   SkillPhase,
 } from '../types.ts';
-import { getSkillMarkdown } from '../data/skill-markdown.js';
+import { getSkillMarkdown } from '../data/skill-markdown.ts';
 
 /**
  * Build condensed insight section for earlier skills (00 to frontier-2).
