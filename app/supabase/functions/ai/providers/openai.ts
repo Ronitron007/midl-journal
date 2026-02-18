@@ -47,6 +47,7 @@ export class OpenAIProvider {
       messageCount: messages.length,
       maxTokens,
       jsonMode,
+      messages,
     });
     const start = Date.now();
 
@@ -86,6 +87,7 @@ export class OpenAIProvider {
     log.debug('OpenAI tool request', {
       messageCount: messages.length,
       toolCount: tools?.length ?? 0,
+      messages,
     });
     const start = Date.now();
 
@@ -138,6 +140,7 @@ export class OpenAIProvider {
     log.debug('OpenAI stream request', {
       messageCount: messages.length,
       maxTokens,
+      messages,
     });
     const start = Date.now();
 

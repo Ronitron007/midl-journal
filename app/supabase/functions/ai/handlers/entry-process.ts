@@ -8,6 +8,7 @@ import type {
   SkillPhase,
 } from '../types.ts';
 import { getSkillMarkdown } from '../data/skill-markdown.ts';
+import { CHAT_TOOLS } from '../tools/definitions.ts';
 
 /**
  * Build condensed insight section for earlier skills (00 to frontier-2).
@@ -37,7 +38,8 @@ function deriveFlatColumns(
   if (!frontierPhase) {
     return {
       skill_analyzed: frontierSkillId,
-      samatha_tendency: (overallSamatha as ProcessedSignals['samatha_tendency']) || 'none',
+      samatha_tendency:
+        (overallSamatha as ProcessedSignals['samatha_tendency']) || 'none',
       marker_present: false,
       marker_notes: null,
       hindrance_present: false,
@@ -102,7 +104,8 @@ export async function handleEntryProcess(req: AIRequest): Promise<AIResponse> {
   // Build prompt with selective markdown loading
   // Full markdown for frontier + frontier-1
   const frontierMarkdown = getSkillMarkdown(frontierSkill) || '';
-  const prevSkillId = frontierNum > 0 ? String(frontierNum - 1).padStart(2, '0') : null;
+  const prevSkillId =
+    frontierNum > 0 ? String(frontierNum - 1).padStart(2, '0') : null;
   const prevMarkdown = prevSkillId ? getSkillMarkdown(prevSkillId) || '' : '';
 
   // Condensed insight sections for skills 00 to frontier-2
@@ -112,7 +115,9 @@ export async function handleEntryProcess(req: AIRequest): Promise<AIResponse> {
     condensedParts.push(getCondensedInsight(sid));
   }
   const earlierSkillsCondensed =
-    condensedParts.length > 0 ? condensedParts.join('\n') : 'N/A (frontier is skill 00 or 01)';
+    condensedParts.length > 0
+      ? condensedParts.join('\n')
+      : 'N/A (frontier is skill 00 or 01)';
 
   const frontierPlusOne = String(frontierNum + 1).padStart(2, '0');
 
@@ -159,8 +164,12 @@ M12: Access Concentration
 ### Frontier Skill (${skill.id} - ${skill.name}):
 ${frontierMarkdown}
 
-${prevSkillId ? `### Frontier-1 Skill (${prevSkillId}):
-${prevMarkdown}` : ''}
+${
+  prevSkillId
+    ? `### Frontier-1 Skill (${prevSkillId}):
+${prevMarkdown}`
+    : ''
+}
 
 ### Earlier Skills (condensed):
 ${earlierSkillsCondensed}
@@ -204,8 +213,9 @@ Rules:
   const provider = new OpenAIProvider();
 
   try {
-    const result = await provider.complete({
+    const { content: result, tool_calls } = await provider.completeWithTools({
       messages: [{ role: 'user', content: prompt }],
+      tools: CHAT_TOOLS,
       maxTokens: 800,
       jsonMode: true,
     });
@@ -224,7 +234,10 @@ Rules:
       frontier_skill_inferred: parsed.frontier_skill_inferred || frontierSkill,
       skill_phases: skillPhases.length > 0 ? skillPhases : null,
       skill_analyzed: flatColumns.skill_analyzed || frontierSkill,
-      samatha_tendency: flatColumns.samatha_tendency || parsed.overall_samatha_tendency || 'none',
+      samatha_tendency:
+        flatColumns.samatha_tendency ||
+        parsed.overall_samatha_tendency ||
+        'none',
       marker_present: flatColumns.marker_present || false,
       marker_notes: flatColumns.marker_notes || null,
       hindrance_present: flatColumns.hindrance_present || false,

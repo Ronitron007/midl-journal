@@ -1,4 +1,6 @@
-import { View, Text, ScrollView } from 'react-native';
+import { View, Text, Pressable } from 'react-native';
+import { router } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
 import type { PreSitGuidanceData } from '../../shared/types';
 
 export { PreSitGuidanceData };
@@ -77,52 +79,27 @@ export default function PreSitGuidance({ guidance }: Props) {
         Skill {guidance.frontier_skill_id}: {guidance.frontier_skill_name}
       </Text>
 
-      {/* Reading Material — verbatim excerpts */}
+      {/* Reading link */}
       {guidance.reading_material && guidance.reading_material.length > 0 && (
-        <View style={{ marginBottom: 16 }}>
-          <Text
-            style={{
-              fontSize: 12,
-              color: '#707927',
-              marginBottom: 8,
-            }}
-          >
-            From the skill literature:
+        <Pressable
+          onPress={() => router.push('/(main)/guidance')}
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            backgroundColor: '#f8f4e9',
+            borderRadius: 12,
+            padding: 14,
+            marginBottom: 16,
+            borderLeftWidth: 3,
+            borderLeftColor: '#de8649',
+          }}
+        >
+          <Text style={{ fontSize: 14, color: '#3a5222', fontWeight: '500' }}>
+            Reading for your next sit
           </Text>
-          {guidance.reading_material.map((item, i) => (
-            <View
-              key={i}
-              style={{
-                backgroundColor: '#f8f4e9',
-                borderRadius: 12,
-                padding: 14,
-                marginBottom: 8,
-                borderLeftWidth: 3,
-                borderLeftColor: '#de8649',
-              }}
-            >
-              <Text
-                style={{
-                  fontSize: 11,
-                  color: '#707927',
-                  marginBottom: 4,
-                }}
-              >
-                Skill {item.skill_id}: {item.skill_name}
-              </Text>
-              <Text
-                style={{
-                  fontSize: 14,
-                  color: '#3a5222',
-                  lineHeight: 20,
-                  fontStyle: 'italic',
-                }}
-              >
-                {item.excerpt}
-              </Text>
-            </View>
-          ))}
-        </View>
+          <Ionicons name="chevron-forward" size={16} color="#707927" />
+        </Pressable>
       )}
 
       {/* Recurring Patterns */}

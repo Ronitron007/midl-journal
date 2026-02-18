@@ -1,17 +1,10 @@
-import {
-  View,
-  Text,
-  ScrollView,
-  Pressable,
-  LayoutChangeEvent,
-} from 'react-native';
+import { View, Text, Pressable } from 'react-native';
 import {
   SKILLS,
   CULTIVATIONS,
   isSkillCompleted,
   isCurrentSkill,
 } from '../lib/midl-skills';
-import { useState, useEffect, useRef } from 'react';
 import {
   ProgressionStats,
   getProgressPercentage,
@@ -28,176 +21,133 @@ type SkillMapProps = {
 export default function SkillMap({
   currentSkill,
   progressionStats,
-  onSkillPress,
   onAdvance,
 }: SkillMapProps) {
-  // Default to showing current skill info
-  const [selectedSkill, setSelectedSkill] = useState<string | null>(
-    currentSkill
-  );
-  const scrollViewRef = useRef<ScrollView>(null);
-  const [containerWidth, setContainerWidth] = useState(0);
-
-  // Get skills in correct order from CULTIVATIONS
   const allSkills = CULTIVATIONS.flatMap((c) => c.skills);
-
-  // Sync selectedSkill when currentSkill changes
-  useEffect(() => {
-    setSelectedSkill(currentSkill);
-  }, [currentSkill]);
-
-  // Auto-scroll to current skill
-  useEffect(() => {
-    if (!containerWidth || !currentSkill) return;
-
-    const currentIndex = allSkills.indexOf(currentSkill);
-    if (currentIndex === -1) return;
-
-    // Calculate position: each node ~48px + 16px line = 64px per slot
-    // Add extra for cultivation markers (roughly 17px each)
-    let cultivationMarkers = 0;
-    for (let i = 1; i <= currentIndex; i++) {
-      const prevCult = SKILLS[allSkills[i - 1]]?.cultivation;
-      const currCult = SKILLS[allSkills[i]]?.cultivation;
-      if (prevCult !== currCult) cultivationMarkers++;
-    }
-
-    const nodeWidth = 48; // 40px node + 8px margins
-    const lineWidth = 16;
-    const markerWidth = 17;
-    const position =
-      currentIndex * (nodeWidth + lineWidth) + cultivationMarkers * markerWidth;
-
-    // Center the current skill in view
-    const scrollX = Math.max(0, position - containerWidth / 2 + nodeWidth / 2);
-    scrollViewRef.current?.scrollTo({ x: scrollX, animated: false });
-  }, [currentSkill, containerWidth]);
-
-  const handleContainerLayout = (e: LayoutChangeEvent) => {
-    setContainerWidth(e.nativeEvent.layout.width);
-  };
-
-  const handleSkillPress = (skillId: string) => {
-    // Always allow selecting, tap again to go back to current skill
-    setSelectedSkill(skillId === selectedSkill ? currentSkill : skillId);
-    onSkillPress?.(skillId);
-  };
+  const frontierIndex = allSkills.indexOf(currentSkill);
+  const completedCount = frontierIndex === -1 ? 0 : frontierIndex + 1;
 
   return (
-    <View className="bg-white rounded-2xl p-4" onLayout={handleContainerLayout}>
-      {/* Timeline */}
-      <ScrollView
-        ref={scrollViewRef}
-        horizontal
-        showsHorizontalScrollIndicator={false}
+    <View style={{ backgroundColor: '#ffffff', borderRadius: 16, padding: 20 }}>
+      {/* Section 1: Journey Overview */}
+      <View
+        style={{
+          flexDirection: 'row',
+          justifyContent: 'space-between',
+          alignItems: 'center',
+          marginBottom: 16,
+        }}
       >
-        <View className="flex-row items-center py-2">
-          {allSkills.map((skillId, index) => {
-            const skill = SKILLS[skillId];
-            const isCompleted = isSkillCompleted(skillId, currentSkill);
-            const isCurrent = isCurrentSkill(skillId, currentSkill);
-            const isSelected = skillId === selectedSkill && !isCurrent;
+        <Text style={{ fontSize: 11, fontWeight: '600', color: '#707927', letterSpacing: 1 }}>
+          YOUR JOURNEY
+        </Text>
+        <Text style={{ fontSize: 12, color: '#707927' }}>
+          {completedCount} of {allSkills.length}
+        </Text>
+      </View>
 
-            // Check if this is the start of a new cultivation
-            const prevSkill = index > 0 ? SKILLS[allSkills[index - 1]] : null;
-            const isNewCultivation =
-              !prevSkill || prevSkill.cultivation !== skill.cultivation;
+      {CULTIVATIONS.map((cultivation) => {
+        const currentSkillCultivation = SKILLS[currentSkill]?.cultivation;
+        const isCurrentCultivation = cultivation.id === currentSkillCultivation;
 
-            // Determine colors based on state - using new palette
-            const getBackgroundColor = () => {
-              if (isCurrent) return '#de8649'; // terracotta
-              if (isSelected) return '#f8f4e9'; // cream for selected
-              if (isCompleted) return '#707927'; // olive
-              return '#ffffff';
-            };
+        return (
+          <View
+            key={cultivation.id}
+            style={{
+              backgroundColor: isCurrentCultivation ? '#f8f4e9' : 'transparent',
+              borderRadius: 10,
+              paddingHorizontal: 12,
+              paddingVertical: 8,
+              marginBottom: 4,
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 13,
+                color: isCurrentCultivation ? '#3a5222' : '#707927',
+                fontWeight: isCurrentCultivation ? '600' : '400',
+                marginBottom: 6,
+              }}
+            >
+              {cultivation.name}
+            </Text>
+            <View style={{ flexDirection: 'row', alignItems: 'center', gap: 8 }}>
+              {cultivation.skills.map((skillId) => {
+                const completed = isSkillCompleted(skillId, currentSkill);
+                const isFrontier = isCurrentSkill(skillId, currentSkill);
 
-            const getBorderColor = () => {
-              if (isCurrent) return '#de8649'; // terracotta
-              if (isSelected) return '#de8649'; // terracotta border for selected
-              if (isCompleted) return '#707927'; // olive
-              return '#e5e7eb';
-            };
-
-            const getTextColor = () => {
-              if (isCurrent || isCompleted) return '#ffffff';
-              if (isSelected) return '#de8649'; // terracotta
-              return '#707927'; // olive
-            };
-
-            return (
-              <View key={skillId} className="flex-row items-center">
-                {/* Cultivation marker */}
-                {isNewCultivation && index > 0 && (
-                  <View
-                    style={{
-                      width: 1,
-                      height: 32,
-                      backgroundColor: 'rgba(112,121,39,0.2)',
-                      marginHorizontal: 8,
-                    }}
-                  />
-                )}
-
-                {/* Skill node */}
-                <Pressable
-                  onPress={() => handleSkillPress(skillId)}
-                  style={{ alignItems: 'center', marginHorizontal: 4 }}
-                >
-                  <View
-                    style={{
-                      width: 40,
-                      height: 40,
-                      borderRadius: 20,
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      borderWidth: 2,
-                      backgroundColor: getBackgroundColor(),
-                      borderColor: getBorderColor(),
-                    }}
-                  >
-                    <Text
+                if (isFrontier) {
+                  // Frontier dot: terracotta, 14px, with ring
+                  // Use a fixed 12px-wide slot so spacing matches other dots
+                  return (
+                    <View
+                      key={skillId}
                       style={{
-                        fontWeight: '500',
-                        fontSize: 14,
-                        color: getTextColor(),
+                        width: 12,
+                        height: 12,
+                        alignItems: 'center',
+                        justifyContent: 'center',
                       }}
                     >
-                      {skillId}
-                    </Text>
-                  </View>
-                  {isCurrent && (
+                      <View
+                        style={{
+                          width: 18,
+                          height: 18,
+                          borderRadius: 9,
+                          backgroundColor: 'rgba(222,134,73,0.15)',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                        }}
+                      >
+                        <View
+                          style={{
+                            width: 14,
+                            height: 14,
+                            borderRadius: 7,
+                            backgroundColor: '#de8649',
+                          }}
+                        />
+                      </View>
+                    </View>
+                  );
+                }
+
+                if (completed) {
+                  // Practiced dot: olive filled, 12px
+                  return (
                     <View
+                      key={skillId}
                       style={{
-                        width: 8,
-                        height: 8,
-                        borderRadius: 4,
-                        backgroundColor: '#de8649', // terracotta
-                        marginTop: 4,
+                        width: 12,
+                        height: 12,
+                        borderRadius: 6,
+                        backgroundColor: '#707927',
                       }}
                     />
-                  )}
-                </Pressable>
+                  );
+                }
 
-                {/* Connecting line */}
-                {index < allSkills.length - 1 && (
+                // Not yet reached: gray border, 12px
+                return (
                   <View
+                    key={skillId}
                     style={{
-                      width: 16,
-                      height: 2,
-                      backgroundColor: isCompleted
-                        ? '#707927'
-                        : 'rgba(112,121,39,0.2)',
+                      width: 12,
+                      height: 12,
+                      borderRadius: 6,
+                      borderWidth: 1.5,
+                      borderColor: '#e5e7eb',
                     }}
                   />
-                )}
-              </View>
-            );
-          })}
-        </View>
-      </ScrollView>
+                );
+              })}
+            </View>
+          </View>
+        );
+      })}
 
-      {/* Skill details - always shown */}
-      {selectedSkill && SKILLS[selectedSkill] && (
+      {/* Section 2: Frontier Progression */}
+      {progressionStats && (
         <View
           style={{
             marginTop: 16,
@@ -206,32 +156,32 @@ export default function SkillMap({
             borderTopColor: 'rgba(112,121,39,0.1)',
           }}
         >
-          <Text style={{ fontWeight: '500', color: '#3a5222' }}>
-            Skill {selectedSkill}: {SKILLS[selectedSkill].name}
-          </Text>
-          <Text style={{ color: '#707927', fontSize: 14, marginTop: 4 }}>
-            Marker: {SKILLS[selectedSkill].marker}
-          </Text>
-          <Text style={{ color: '#707927', fontSize: 14 }}>
-            Works with: {SKILLS[selectedSkill].hindrance}
-          </Text>
-        </View>
-      )}
-
-      {/* Progression section - only for current skill */}
-      {progressionStats && selectedSkill === currentSkill && (
-        <View
-          style={{
-            marginTop: 16,
-            paddingTop: 16,
-            borderTopWidth: 1,
-            borderTopColor: 'rgba(112,121,39,0.1)',
-          }}
-        >
-          <Text
-            style={{ fontWeight: '500', color: '#3a5222', marginBottom: 8 }}
+          <View
+            style={{
+              flexDirection: 'row',
+              alignItems: 'center',
+              marginBottom: 4,
+            }}
           >
-            Progression
+            <Text
+              style={{
+                fontSize: 11,
+                fontWeight: '600',
+                color: '#707927',
+                letterSpacing: 1,
+              }}
+            >
+              PROGRESSION
+            </Text>
+            {progressionStats.nextSkillId && (
+              <Text style={{ fontSize: 11, color: '#707927', marginLeft: 4 }}>
+                → SKILL {progressionStats.nextSkillId}
+              </Text>
+            )}
+          </View>
+
+          <Text style={{ fontSize: 13, color: '#3a5222', marginBottom: 10 }}>
+            Skill {currentSkill}: {SKILLS[currentSkill]?.name}
           </Text>
 
           {/* Progress bar */}
@@ -268,22 +218,22 @@ export default function SkillMap({
           </View>
 
           {/* Stats row */}
-          <View style={{ flexDirection: 'row', gap: 16, marginBottom: 8 }}>
+          <View style={{ flexDirection: 'row', gap: 16, marginBottom: 10 }}>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <Text style={{ color: '#166534', fontSize: 12 }}>✓ </Text>
               <Text style={{ color: '#707927', fontSize: 12 }}>
-                {progressionStats.markerCount} marker sessions
+                {progressionStats.markerCount}/3 marker sessions
               </Text>
             </View>
             <View style={{ flexDirection: 'row', alignItems: 'center' }}>
               <Text style={{ color: '#166534', fontSize: 12 }}>☯ </Text>
               <Text style={{ color: '#707927', fontSize: 12 }}>
-                {progressionStats.strongSamathaCount} strong samatha
+                {progressionStats.strongSamathaCount}/2 strong samatha
               </Text>
             </View>
           </View>
 
-          {/* Status or advance button */}
+          {/* Advance button or status */}
           {progressionStats.readyToAdvance && progressionStats.nextSkillId ? (
             <Pressable
               onPress={onAdvance}
@@ -308,7 +258,7 @@ export default function SkillMap({
             <Text
               style={{ color: '#707927', fontSize: 13, fontStyle: 'italic' }}
             >
-              You've reached the final skill
+              Final skill reached
             </Text>
           )}
         </View>

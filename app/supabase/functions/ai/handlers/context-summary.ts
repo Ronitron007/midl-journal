@@ -615,7 +615,7 @@ function extractReadingExcerpt(
   // Extract Tips section
   const tipsMatch = markdown.match(/## Tips\n([\s\S]*?)(?=\n## |\n$)/);
   if (tipsMatch) {
-    sections.push(tipsMatch[1].trim().slice(0, 400));
+    sections.push(tipsMatch[1].trim().slice(0, 1500));
   }
 
   // Extract Insight/Antidote section
@@ -626,7 +626,7 @@ function extractReadingExcerpt(
       /- Antidote:\s*([\s\S]*?)(?=\n- |\n$)/
     );
     if (antidoteMatch) {
-      sections.push(antidoteMatch[1].trim().slice(0, 500));
+      sections.push(antidoteMatch[1].trim().slice(0, 1500));
     }
   }
 
@@ -636,7 +636,7 @@ function extractReadingExcerpt(
 /** Extract just the insight section from skill markdown */
 function extractInsightExcerpt(markdown: string): string | null {
   const match = markdown.match(/## Insight\n([\s\S]*?)(?=\n## |\n$)/);
-  return match ? match[1].trim().slice(0, 500) : null;
+  return match ? match[1].trim().slice(0, 1500) : null;
 }
 
 // Hindrance/Marker name lookups
