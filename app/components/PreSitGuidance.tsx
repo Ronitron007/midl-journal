@@ -1,20 +1,15 @@
-import { View, Text } from 'react-native';
+import { View, Text, Pressable } from 'react-native';
+import { router } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
+import type { PreSitGuidanceData } from '../../shared/types';
 
-export type PreSitGuidanceData = {
-  skill_id: string;
-  skill_name: string;
-  patterns: string[];
-  suggestion: string;
-  check_in: string;
-  generated_at: string;
-};
+export { PreSitGuidanceData };
 
 type Props = {
   guidance: PreSitGuidanceData | null;
 };
 
 export default function PreSitGuidance({ guidance }: Props) {
-  // Empty state - no entries yet
   if (!guidance) {
     return (
       <View
@@ -73,7 +68,6 @@ export default function PreSitGuidance({ guidance }: Props) {
         For Your Next Sit
       </Text>
 
-      {/* Current skill */}
       <Text
         style={{
           fontSize: 17,
@@ -82,79 +76,145 @@ export default function PreSitGuidance({ guidance }: Props) {
           marginBottom: 16,
         }}
       >
-        Skill {guidance.skill_id}: {guidance.skill_name}
+        Skill {guidance.frontier_skill_id}: {guidance.frontier_skill_name}
       </Text>
 
-      {/* Patterns from recent entries */}
-      {guidance.patterns && guidance.patterns.length > 0 && (
+      {/* Reading link */}
+      {guidance.reading_material && guidance.reading_material.length > 0 && (
+        <Pressable
+          onPress={() => router.push('/(main)/guidance')}
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            justifyContent: 'space-between',
+            backgroundColor: '#f8f4e9',
+            borderRadius: 12,
+            padding: 14,
+            marginBottom: 16,
+            borderLeftWidth: 3,
+            borderLeftColor: '#de8649',
+          }}
+        >
+          <Text style={{ fontSize: 14, color: '#3a5222', fontWeight: '500' }}>
+            Reading for your next sit
+          </Text>
+          <Ionicons name="chevron-forward" size={16} color="#707927" />
+        </Pressable>
+      )}
+
+      {/* Recurring Patterns */}
+      {((guidance.recurring_hindrances?.length ?? 0) > 0 ||
+        (guidance.recurring_markers?.length ?? 0) > 0) && (
         <View style={{ marginBottom: 16 }}>
           <Text
             style={{
               fontSize: 12,
               color: '#707927',
-              marginBottom: 6,
+              marginBottom: 8,
             }}
           >
-            Observations from your recent sits:
+            Ongoing patterns:
           </Text>
-          {guidance.patterns.map((pattern, i) => (
-            <Text
-              key={i}
+
+          {/* Recurring hindrances */}
+          {(guidance.recurring_hindrances ?? []).map((h, i) => (
+            <View
+              key={`h-${i}`}
               style={{
-                fontSize: 14,
-                color: '#3a5222',
-                textTransform: 'capitalize',
-                marginBottom: 4,
+                flexDirection: 'row',
+                alignItems: 'center',
+                marginBottom: 6,
                 paddingLeft: 8,
               }}
             >
-              • {pattern}
-            </Text>
+              <View
+                style={{
+                  width: 8,
+                  height: 8,
+                  borderRadius: 4,
+                  backgroundColor: '#fef3c7',
+                  borderWidth: 1.5,
+                  borderColor: '#d97706',
+                  marginRight: 8,
+                }}
+              />
+              <Text style={{ fontSize: 14, color: '#3a5222', flex: 1 }}>
+                {h.name}
+                <Text style={{ color: '#707927', fontSize: 12 }}>
+                  {' '}({h.count}x)
+                </Text>
+                {h.conditions.length > 0 && (
+                  <Text style={{ color: '#707927', fontSize: 12, fontStyle: 'italic' }}>
+                    {' '} — {h.conditions.join(', ')}
+                  </Text>
+                )}
+              </Text>
+            </View>
+          ))}
+
+          {/* Recurring markers */}
+          {(guidance.recurring_markers ?? []).map((m, i) => (
+            <View
+              key={`m-${i}`}
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                marginBottom: 6,
+                paddingLeft: 8,
+              }}
+            >
+              <View
+                style={{
+                  width: 8,
+                  height: 8,
+                  borderRadius: 4,
+                  backgroundColor: '#dcfce7',
+                  borderWidth: 1.5,
+                  borderColor: '#16a34a',
+                  marginRight: 8,
+                }}
+              />
+              <Text style={{ fontSize: 14, color: '#3a5222', flex: 1 }}>
+                {m.name}
+                <Text style={{ color: '#707927', fontSize: 12 }}>
+                  {' '}({m.count}x)
+                </Text>
+              </Text>
+            </View>
           ))}
         </View>
       )}
 
-      {/* Suggestion from skill literature */}
-      <View
-        style={{
-          backgroundColor: '#f8f4e9',
-          borderRadius: 12,
-          padding: 14,
-          marginBottom: 16,
-        }}
-      >
-        <Text
+      {/* Self-advice */}
+      {guidance.self_advice && (
+        <View
           style={{
-            fontSize: 14,
-            color: '#3a5222',
-            lineHeight: 20,
-            fontStyle: 'italic',
+            backgroundColor: '#dbeafe',
+            borderRadius: 12,
+            padding: 14,
           }}
         >
-          {guidance.suggestion}
-        </Text>
-      </View>
-
-      {/* Daily check-in question */}
-      <Text
-        style={{
-          fontSize: 15,
-          fontWeight: 'bold',
-          color: '#3a5222',
-          marginBottom: 4,
-        }}
-      >
-        Skill Check-In
-      </Text>
-      <Text
-        style={{
-          fontSize: 13,
-          color: '#707927',
-          fontStyle: 'italic',
-        }}
-      >
-        "{guidance.check_in}"
-      </Text>
+          <Text
+            style={{
+              fontSize: 12,
+              color: '#1e40af',
+              fontWeight: '500',
+              marginBottom: 4,
+            }}
+          >
+            Your note to self
+          </Text>
+          <Text
+            style={{
+              fontSize: 14,
+              color: '#1e40af',
+              lineHeight: 20,
+            }}
+          >
+            {guidance.self_advice}
+          </Text>
+        </View>
+      )}
     </View>
   );
 }

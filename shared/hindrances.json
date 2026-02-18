@@ -1,0 +1,86 @@
+[
+  {
+    "id": "H00",
+    "name": "Stress Breathing",
+    "skill_id": "00",
+    "description": "Habitual stress-driven breathing patterns that hinder the development of calm."
+  },
+  {
+    "id": "H01",
+    "name": "Physical Restlessness",
+    "skill_id": "01",
+    "description": "Restless bodily sensations and inability to settle physically during meditation."
+  },
+  {
+    "id": "H02",
+    "name": "Mental Restlessness",
+    "skill_id": "02",
+    "description": "Agitated, busy mind that resists relaxation and stillness."
+  },
+  {
+    "id": "H03",
+    "name": "Sleepiness & Dullness",
+    "skill_id": "03",
+    "description": "Over-relaxation causing the mind to slip into a sleepy, drifty state."
+  },
+  {
+    "id": "H04",
+    "name": "Habitual Forgetting",
+    "skill_id": "04",
+    "description": "Repeatedly losing awareness and becoming absorbed in thought without noticing."
+  },
+  {
+    "id": "H05",
+    "name": "Habitual Control",
+    "skill_id": "05",
+    "description": "Unconscious tendency to control the breath rather than allowing it to flow naturally."
+  },
+  {
+    "id": "H06",
+    "name": "Mind Wandering",
+    "skill_id": "06",
+    "description": "Mind drifting to sticky thoughts, memories, or fantasies during meditation."
+  },
+  {
+    "id": "H07",
+    "name": "Gross Dullness",
+    "skill_id": "07",
+    "description": "Noticeable loss of clarity and sharpness of awareness during meditation."
+  },
+  {
+    "id": "H08",
+    "name": "Subtle Dullness",
+    "skill_id": "08",
+    "description": "Barely perceptible loss of clarity; awareness present but lacking vividness."
+  },
+  {
+    "id": "H09",
+    "name": "Subtle Wandering",
+    "skill_id": "09",
+    "description": "Brief, barely noticeable drifts of attention away from the meditation object."
+  },
+  {
+    "id": "H10",
+    "name": "Sensory Stimulation",
+    "skill_id": "10",
+    "description": "Instability caused by sensory fields pulling attention away from whole-body awareness."
+  },
+  {
+    "id": "H11",
+    "name": "Anticipation of Pleasure",
+    "skill_id": "11",
+    "description": "Excitement or craving toward pleasant meditative experiences, disrupting sustained awareness."
+  },
+  {
+    "id": "H12",
+    "name": "Fear of Letting Go",
+    "skill_id": "12",
+    "description": "Resistance to deep letting go due to fear, preventing access concentration."
+  },
+  {
+    "id": "H13",
+    "name": "Doubt",
+    "skill_id": "13",
+    "description": "Doubt present at any stage of mindfulness of breathing until Stream Entry."
+  }
+]

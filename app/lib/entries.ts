@@ -1,7 +1,8 @@
 import { supabase } from './supabase';
 import { ai } from './ai';
+import type { SkillPhase, SamathaTendency } from '../../shared/types';
 
-export type SamathaTendency = 'strong' | 'moderate' | 'weak' | 'none';
+export type { SamathaTendency };
 
 export type Entry = {
   id: string;
@@ -14,6 +15,8 @@ export type Entry = {
   raw_content: string;
   duration_seconds: number | null;
   skill_practiced: string | null;
+  frontier_skill: string | null;
+  skill_phases: SkillPhase[] | null;
 
   // MIDL-specific signals (aligned with Stephen's framework)
   skill_analyzed: string | null;
@@ -54,15 +57,21 @@ export async function createEntry(
     track_progress?: boolean;
     duration_seconds?: number;
     skill_practiced?: string;
+    frontier_skill?: string;
     entry_date?: string; // YYYY-MM-DD format
   }
 ): Promise<Entry | null> {
+  // Write frontier_skill alongside skill_practiced for backward compat
+  const insertData = {
+    user_id: userId,
+    ...data,
+    frontier_skill: data.frontier_skill ?? data.skill_practiced ?? null,
+    skill_practiced: data.skill_practiced ?? data.frontier_skill ?? null,
+  };
+
   const { data: entry, error } = await supabase
     .from('entries')
-    .insert({
-      user_id: userId,
-      ...data,
-    })
+    .insert(insertData)
     .select()
     .single();
 

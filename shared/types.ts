@@ -130,3 +130,63 @@ export type CultivationId = '01' | '02' | '03' | '04' | '05';
 
 export type SkillsData = Record<SkillId, Skill>;
 export type CultivationsData = Record<CultivationId, Cultivation>;
+
+// === Sequential skill practice types ===
+
+export type SamathaTendency = 'strong' | 'moderate' | 'weak' | 'none';
+
+export interface HindranceRef {
+  id: string; // "H00" - "H13"
+  name: string;
+  skill_id: string;
+  description: string;
+}
+
+export interface MarkerRef {
+  id: string; // "M00" - "M12"
+  name: string;
+  skill_id: string;
+  description: string;
+}
+
+export interface SkillPhase {
+  skill_id: string;
+  markers_observed: string[]; // e.g. ["M03"]
+  hindrances_observed: string[]; // e.g. ["H04"]
+  samatha_tendency: SamathaTendency;
+  notes: string | null;
+  techniques: string[];
+}
+
+export interface ProgressReport {
+  updated_at: string;
+  frontier_skill: string;
+  skill_summaries: {
+    skill_id: string;
+    status: string;
+    marker_freq: number;
+    hindrance_freq: number;
+    trend: string;
+    note: string | null;
+  }[];
+  recurring_hindrances: { id: string; count: number; conditions: string[] }[];
+  recurring_markers: { id: string; count: number }[];
+  overall_samatha_trend: string;
+  progression_readiness: string;
+  self_advice: string | null;
+}
+
+export interface PreSitGuidanceData {
+  frontier_skill_id: string;
+  frontier_skill_name: string;
+  reading_material: { skill_id: string; skill_name: string; excerpt: string }[];
+  recurring_hindrances: {
+    hindrance_id: string;
+    name: string;
+    count: number;
+    conditions: string[];
+  }[];
+  recurring_markers: { marker_id: string; name: string; count: number }[];
+  self_advice: string | null;
+  generated_at: string;
+}
